@@ -1,3 +1,5 @@
+monitor
+simulador
 monitor.o
 simulador.o
 util.o
