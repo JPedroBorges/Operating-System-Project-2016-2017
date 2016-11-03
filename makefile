@@ -6,12 +6,13 @@
 #*****************************************************************
 
 RUNMO = ./monitor
-CC = gcc
+RUNSI = ./simulador
+CC = gcc -o
 CFLAGS = -g
 LIBS = -lns -lnsl
 LIBS = -lnsl -lpthread
 
-all: clean monitor simulador
+all: clean monitor simulador runm
 
 monitor: monitor.o util.o util_monitor.o
 	$(CC) -g -o monitor monitor.o  util.o util_monitor.o $(LIBS)
@@ -20,7 +21,7 @@ simulador: simulador.o util.o util_simulador.o
 	$(CC) -g -o simulador simulador.o util.o util_simulador.o $(LIBS)\
 
 runm:
-	gnome-terminal; clear;
+	x-terminal-emulator -e "bash -c $(RUNSI);bash"; clear; $(RUNMO);
 
 clean:
 	rm -f *.o *~ simulador
