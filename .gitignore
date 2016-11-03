@@ -1,0 +1,5 @@
+monitor.o
+simulador.o
+util.o
+util_monitor.o
+util_simulador.o
