@@ -19,3 +19,5 @@
 #include <stdbool.h>
 
 #define DEBUG 1
+
+#define CONFIGURATION_PARAMS_NUMBER 10
