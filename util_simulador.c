@@ -7,12 +7,23 @@
 
 #include "unix.h"
 
-int * read_method(){
+int * read_method(int numberargs, char file_selected[50]){
 	static int retorna [CONFIGURATION_PARAMS_NUMBER];
-	FILE *configuration_file = fopen("configuration.cfg", "r");
+	char file_name[50];
+
+	if(numberargs==1) strcpy(file_name, "configuration.cfg");
+	else strcpy(file_name, file_selected);
+
+	FILE *configuration_file = fopen(file_name, "r");
 	if(configuration_file == NULL){
 		printf("Error: opening configuration file\n");
-		return 0;
+		strcpy(file_name, "configuration.cfg");
+		configuration_file = fopen(file_name, "r");
+		if(configuration_file == NULL){
+			printf("Error: opening configuration file\n");
+			return 0;
+		}
+		printf("Loaded default file insted\n");
 	}
 
 	int configurations[CONFIGURATION_PARAMS_NUMBER];
@@ -34,5 +45,6 @@ int * read_method(){
 	}
 
 	fclose(configuration_file);
+	printf("Running simulation %s\n", file_name);
 	return retorna;
 }

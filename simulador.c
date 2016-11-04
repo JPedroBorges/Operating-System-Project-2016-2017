@@ -8,6 +8,6 @@
 #include "unix.h"
 
 int main(int argc, char **argv){
-	printf("%s\n", "Running simulador");
-	int *configuration_values = read_method();
+
+	int *configuration_values = read_method(argc, argv[1]);
 }
