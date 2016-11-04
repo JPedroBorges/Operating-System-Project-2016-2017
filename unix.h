@@ -21,3 +21,6 @@
 #define DEBUG 1
 
 #define CONFIGURATION_PARAMS_NUMBER 10
+
+// util_simulador
+int * read_method();

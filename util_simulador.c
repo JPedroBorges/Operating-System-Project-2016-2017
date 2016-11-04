@@ -8,18 +8,18 @@
 #include "unix.h"
 
 int * read_method(){
-	int retorna [CONFIGURATION_PARAMS_NUMBER];
+	static int retorna [CONFIGURATION_PARAMS_NUMBER];
 	FILE *configuration_file = fopen("configuration.cfg", "r");
 	if(configuration_file == NULL){
 		printf("Error: opening configuration file\n");
-		return -1;
+		return 0;
 	}
 
 	int configurations[CONFIGURATION_PARAMS_NUMBER];
 	int value;
-	char param[30];
+	char param[23];
+
 	while(fscanf(configuration_file, "%s : %d", param, &value)!=EOF){
-		printf("%s\n", param);
 		if(!strcmp("simulation_time",param))retorna[0] = value;
 		else if(!strcmp("simulation_population",param))retorna[1] = value;
 		else if(!strcmp("aquapark_start",param))retorna[2] = value;
@@ -32,7 +32,6 @@ int * read_method(){
 		else if(!strcmp("couple_chance",param))retorna[9] = value;
 		else printf("Error: Not a valid configuration file\n");
 	}
-
 	fclose(configuration_file);
 	return retorna;
 }

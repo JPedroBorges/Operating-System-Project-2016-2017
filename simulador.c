@@ -9,5 +9,5 @@
 
 int main(int argc, char **argv){
 	printf("%s\n", "Running simulador");
-	read_method();
+	int *configuration_values = read_method();
 }
