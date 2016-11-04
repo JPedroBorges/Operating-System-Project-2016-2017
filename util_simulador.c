@@ -41,7 +41,10 @@ int * read_method(int numberargs, char file_selected[50]){
 		else if(!strcmp("person_max_waiting_time",param))retorna[7] = value;
 		else if(!strcmp("family_chance",param))retorna[8] = value;
 		else if(!strcmp("couple_chance",param))retorna[9] = value;
-		else printf("Error: %s Not a valid configuration file\n", param);
+		else{
+			printf("Error: %s Not a valid configuration setting\n", param);
+			return 0;
+		}
 	}
 
 	fclose(configuration_file);
