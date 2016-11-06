@@ -5,3 +5,4 @@ simulador.o
 util.o
 util_monitor.o
 util_simulador.o
+unix.h.gch

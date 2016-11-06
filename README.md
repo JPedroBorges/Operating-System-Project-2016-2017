@@ -16,10 +16,15 @@ O **Simulador** deverá ser lançado tendo por parâmetro o ficheiro de configur
 O **Simulador** deverá no seu arranque ligar-se ao **Monitor**. Durante a simulação devem ser apresentados alguns dados sobre o estado da simulação. Por exemplo:
 
 >. . .
+
 >Chegou um u t i l i z a d o r . Numero 234.
+
 >O u t i l i z a d o r 123 entrou na zona A.
+
 >O u t i l i z a d o r 136 entrou na zona B.
+
 >O u t i l i z a d o r 129 d e s i s t i u .
+
 >. . .
 
 O **Simulador** deverá ter métodos para gerar aleatoriamente a chegada dos utilizadores (cada utilizador será um thread) aos recursos, que permitam a correta coordenação e sincronização dos utilizadores (por via de semáforos) e que enviem mensagens para o **Monitor** (comunicação via *sockets* – Unix ou Internet).

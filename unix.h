@@ -18,9 +18,21 @@
 #include <time.h>
 #include <stdbool.h>
 
+#define ADDRESS      "champ_socket"
+
+#define UNIXSTR_PATH "/tmp/socket.unix.stream"
+#define UNIXDG_PATH  "/tmp/socket.unix.datagram"
+#define UNIXDG_TMP   "/tmp/socket.unix.dgXXXXXXX"
+
 #define DEBUG 1
-
 #define CONFIGURATION_PARAMS_NUMBER 10
+#define MAX_LINE 512
 
-// util_simulador
+/******************************* util *******************************/
+char * make_hours();
+
+/************************** util_simulador **************************/
 int * read_method();
+
+/*************************** util_monitor ***************************/
+int write_log();
