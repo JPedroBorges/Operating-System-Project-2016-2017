@@ -22,4 +22,6 @@ int main(){
 	write_log(4,32,2);
 	write_log(4,21,2);
 	write_log(5,21,1);
+
+	write_report();
 }

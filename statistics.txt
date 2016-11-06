@@ -1,0 +1,33 @@
+---------------------------Simulation statistics--------------------------
+Clientes:
+	Total clients on AquaPark : 2
+	Total clients on swimming pool : 1
+	Total clients on Toboggan : 0
+	Total clients on Race : 0
+	Total clients on Sunbath : 0
+	Average of VIP clients on AquaPark : 0
+	Average of VIP clients on swimming pool : 0
+	Average of VIP clients on Toboggan : 0
+	Average of VIP clients on Race : 0
+	Average of VIP clients on Sunbath : 0
+Drops:
+	Total drops on queue : 0
+	Drops on AquaPark : 0
+	Drops on swimming pool : 1
+	Drops on Toboggan : 0
+	Drops on  Race : 0
+	Drops on  Sunbath : 0
+Average time:
+	Average time on AquaPark : 0.000000
+	Average time on swimming pool : 0.000000
+	Average time on Toboggan : 0.000000
+	Average time on Race : 0.000000
+	Average time on Sunbath : 0.000000
+Max time:
+	Max time on AquaPark : 0.000000
+	Max time on swimming pool : 0.000000
+	Max time on Toboggan : 0.000000
+	Max time on Race : 0.000000
+	Max time on Sunbath : 0.000000
+
+--------------------------------------------------------------------------

@@ -41,3 +41,47 @@ int write_log(int hour, int state , int client_id){
 	fclose(file_log);
 	return 1;
 }
+
+int write_report(){
+	FILE *file_report = fopen("statistics.txt", "w");
+	if(file_report == NULL){
+		printf("Erro ao abrir o ficheiro Relatorio.txt\n");
+		return 0;
+	}
+
+	fprintf(file_report,"%s","---------------------------Simulation statistics--------------------------\n");
+	fprintf(file_report,"%s","Clientes:\n");
+	fprintf(file_report,"	%s : %d\n","Total clients on AquaPark", 2);
+	fprintf(file_report,"	%s : %d\n","Total clients on swimming pool", 1);
+	fprintf(file_report,"	%s : %d\n","Total clients on Toboggan", 0);
+	fprintf(file_report,"	%s : %d\n","Total clients on Race", 0);
+	fprintf(file_report,"	%s : %d\n","Total clients on Sunbath", 0);
+	fprintf(file_report,"	%s : %d\n","Average of VIP clients on AquaPark", 0);
+	fprintf(file_report,"	%s : %d\n","Average of VIP clients on swimming pool", 0);
+	fprintf(file_report,"	%s : %d\n","Average of VIP clients on Toboggan", 0);
+	fprintf(file_report,"	%s : %d\n","Average of VIP clients on Race", 0);
+	fprintf(file_report,"	%s : %d\n","Average of VIP clients on Sunbath", 0);
+	fprintf(file_report,"%s","Drops:\n");
+	fprintf(file_report,"	%s : %d\n","Total drops on queue",0);
+	fprintf(file_report,"	%s : %d\n","Drops on AquaPark",0);
+	fprintf(file_report,"	%s : %d\n","Drops on swimming pool",1);
+	fprintf(file_report,"	%s : %d\n","Drops on Toboggan",0);
+	fprintf(file_report,"	%s : %d\n","Drops on  Race",0);
+	fprintf(file_report,"	%s : %d\n","Drops on  Sunbath",0);
+	fprintf(file_report,"%s","Average time:\n");
+	fprintf(file_report,"	%s : %f\n","Average time on AquaPark",0.0);
+	fprintf(file_report,"	%s : %f\n","Average time on swimming pool",0.0);
+	fprintf(file_report,"	%s : %f\n","Average time on Toboggan",0.0);
+	fprintf(file_report,"	%s : %f\n","Average time on Race",0.0);
+	fprintf(file_report,"	%s : %f\n","Average time on Sunbath",0.0);
+	fprintf(file_report,"%s","Max time:\n");
+	fprintf(file_report,"	%s : %f\n","Max time on AquaPark",0.0);
+	fprintf(file_report,"	%s : %f\n","Max time on swimming pool",0.0);
+	fprintf(file_report,"	%s : %f\n","Max time on Toboggan",0);
+	fprintf(file_report,"	%s : %f\n","Max time on Race",0.0);
+	fprintf(file_report,"	%s : %f\n","Max time on Sunbath",0.0);
+	fprintf(file_report,"%s","\n--------------------------------------------------------------------------\n");
+	fclose(file_report);
+
+	return 1;
+}
