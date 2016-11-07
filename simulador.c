@@ -69,9 +69,6 @@ void * race(){ // leves evary minute
 	printf("The Race tobogan is now closed!\n");
 }
 
-
-
-
 int main(int argc, char **argv){
 
 	int *configuration_values = read_method(argc, argv[1]);
