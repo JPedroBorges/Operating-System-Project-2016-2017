@@ -7,6 +7,9 @@
 
 #include "unix.h"
 
+/********************************* Global Variables **************************************/
+int aquapark_open;
+
 /************************** Threads, Mutex & Semaphores **********************************/
 pthread_t t_swimming_pool;
 pthread_t t_toboggan;
@@ -17,10 +20,12 @@ pthread_t t_sunbath;
 
 void * sunbath(){
 	printf("The Solario is now open!\n");
-	sleep(20);
+	while(aquapark_open){
+		// recives clients
+	}
 	//aquapark is closing
 	printf("The Solario will close in 30 minuts!\n");
-	sleep(10);
+	sleep(5);
 	//after 30 minuts
 	printf("The Solario is now closed!\n");
 }
@@ -28,10 +33,12 @@ void * sunbath(){
 
 void * swimming_pool(){
 	printf("The Swimming Pool is now open!\n");
-	sleep(20);
+	while(aquapark_open){
+		// recives clients
+	}
 	//aquapark is closing
 	printf("The he Swimming Pool will close in 30 minuts!\n");
-	sleep(10);
+	sleep(5);
 	//after 30 minuts
 	printf("The he Swimming Pool is now closed!\n");
 }
@@ -44,7 +51,7 @@ void * toboggan(){ // leaves when 2 or 4 clients are ready waiting at least a mi
 		printf("The tobogan is ready to get more costumers!\n");
 		//whaits for 2 costumres then departures
 		printf("The tobogan is departing!\n");	
-		sleep(10);
+		sleep(2);
 		// waits a minute so the constumers get to the end 
 	}
 	printf("The tobogan is now closed!\n");
@@ -55,7 +62,7 @@ void * race(){ // leves evary minute
 
 	while(aquapark_open){
 		printf("The Race tobogan is ready to get more costumers!\n");
-		sleep(10);
+		sleep(1);
 		// waits a minute
 		printf("The Race tobogan is departing!\n");	 
 	}
@@ -71,8 +78,8 @@ int main(int argc, char **argv){
 
 
 	// Open the aquapark
-
-
+	aquapark_open=1;
+	printf("The Aquapark is now open!\n");
 
 	//thread sunbath
 	if(pthread_create(&(t_sunbath), NULL ,(void *)&sunbath,NULL) != 0){
@@ -89,7 +96,7 @@ int main(int argc, char **argv){
 	//thread toboggan
 	if(pthread_create(&(t_toboggan), NULL ,(void *)&toboggan,NULL) != 0){
 			printf("Error creating thread\n");
-			exit(1)
+			exit(1);
 		}
 
 	//thread race
@@ -98,4 +105,18 @@ int main(int argc, char **argv){
 			exit(1);
 		}
 
+	sleep(30);
+	// closes aquapark
+	aquapark_open = 0;
+	printf("The Aquapark is closing in 30 minuts!\n");
+
+	//closes in the next departure
+	pthread_join(t_race , NULL);
+	pthread_join(t_toboggan , NULL);
+
+	//closes 30 minuts after the park is closing
+	pthread_join(t_swimming_pool , NULL);
+	pthread_join(t_sunbath , NULL);
+
+	printf("The Aquapark is now closed!\n");
 }
