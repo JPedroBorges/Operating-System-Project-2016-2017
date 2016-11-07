@@ -52,7 +52,7 @@ void * toboggan(){ // leaves when 2 or 4 clients are ready waiting at least a mi
 		//whaits for 2 costumres then departures
 		printf("The tobogan is departing!\n");	
 		sleep(2);
-		// waits a minute so the constumers get to the end 
+		// waits a minute so the constumers get to the end
 	}
 	printf("The tobogan is now closed!\n");
 }
@@ -64,13 +64,10 @@ void * race(){ // leves evary minute
 		printf("The Race tobogan is ready to get more costumers!\n");
 		sleep(1);
 		// waits a minute
-		printf("The Race tobogan is departing!\n");	 
+		printf("The Race tobogan is departing!\n");
 	}
 	printf("The Race tobogan is now closed!\n");
 }
-
-
-
 
 int main(int argc, char **argv){
 
