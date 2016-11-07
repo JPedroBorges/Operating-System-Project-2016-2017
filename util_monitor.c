@@ -77,7 +77,7 @@ int write_report(){
 	fprintf(file_report,"%s","Max time:\n");
 	fprintf(file_report,"	%s : %f\n","Max time on AquaPark",0.0);
 	fprintf(file_report,"	%s : %f\n","Max time on swimming pool",0.0);
-	fprintf(file_report,"	%s : %f\n","Max time on Toboggan",0);
+	fprintf(file_report,"	%s : %f\n","Max time on Toboggan",0.0);
 	fprintf(file_report,"	%s : %f\n","Max time on Race",0.0);
 	fprintf(file_report,"	%s : %f\n","Max time on Sunbath",0.0);
 	fprintf(file_report,"%s","\n--------------------------------------------------------------------------\n");

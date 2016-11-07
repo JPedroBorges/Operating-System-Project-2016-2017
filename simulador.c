@@ -10,4 +10,9 @@
 int main(int argc, char **argv){
 
 	int *configuration_values = read_method(argc, argv[1]);
+
+	if(DEBUG){
+		int i;
+		for(int i=0;i<10;i++) printf("%d\n", configuration_values[i]);
+	}
 }
