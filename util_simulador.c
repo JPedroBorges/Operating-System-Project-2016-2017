@@ -31,7 +31,7 @@ int * read_method(int numberargs, char file_selected[50]){
 	char param[23];
 
 	while(fscanf(configuration_file, "%s : %d // %*[^\n]s", param, &value)!=EOF){
-		if(!strcmp("simulation_time",param))retorna[0] = value;
+		if(!strcmp("simulation_debug",param))retorna[0] = value;
 		else if(!strcmp("simulation_population",param))retorna[1] = value;
 		else if(!strcmp("aquapark_start",param))retorna[2] = value;
 		else if(!strcmp("aquapark_close",param))retorna[3] = value;
