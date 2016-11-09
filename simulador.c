@@ -29,12 +29,30 @@ typedef struct{
 int aquapark_open;
 int attraction_open;
 s_simulator simulator;
+s_cliente cliente[10]; //--
 
 /************************** Threads, Mutex & Semaphores **********************************/
 pthread_t t_swimming_pool;
 pthread_t t_toboggan;
 pthread_t t_race;
 pthread_t t_sunbath;
+pthread_t t_cliente[10]; //--
+
+int * trata_clientes(){
+
+}
+int * create_client(){ //----------------------------------
+	int i;
+	for(i=0; i<10 && simulator.minute < simulator.end_time; i++){
+		if(pthread_create(&(t_cliente[i]), NULL ,(void *)&trata_clientes,NULL) != 0){
+			printf("Erro na criacao da tarefa\n");
+			exit(1);
+		}
+		printf("Pessoa criada!\n");
+		sleep(2);
+	}
+}
+
 
 void * sunbath(){
 	printf("[%s] The Solario is now open!\n", make_hours(simulator.minute));
@@ -110,6 +128,7 @@ int main(int argc, char **argv){
 	}
 
 
+	create_client();
 
 	while(simulator.minute < (simulator.end_time)){
 		if(((simulator.end_time)-30) == simulator.minute){
@@ -122,7 +141,10 @@ int main(int argc, char **argv){
 		sleep(1);
 		simulator.minute++;
 	}
-
+	int i;
+	for (i = 0; i < 10; i++){
+		pthread_join(t_cliente[i], NULL);
+	}
 	// closes aquapark
 	aquapark_open = 0;
 	pthread_join(t_sunbath , NULL);
