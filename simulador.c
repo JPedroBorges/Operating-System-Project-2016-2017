@@ -24,36 +24,19 @@ typedef struct{
 	int exit_time;
 	int max_waiting_time;
 } s_cliente;
-
 /********************************* Global Variables **************************************/
 int aquapark_open;
 int attraction_open;
 s_simulator simulator;
-s_cliente cliente[10]; //--
-
+s_cliente cliente[267785];
 /************************** Threads, Mutex & Semaphores **********************************/
+pthread_t t_aquapark;
 pthread_t t_swimming_pool;
 pthread_t t_toboggan;
 pthread_t t_race;
 pthread_t t_sunbath;
-pthread_t t_cliente[10]; //--
-
-int * trata_clientes(){
-
-}
-int * create_client(){ //----------------------------------
-	int i;
-	for(i=0; i<10 && simulator.minute < simulator.end_time; i++){
-		if(pthread_create(&(t_cliente[i]), NULL ,(void *)&trata_clientes,NULL) != 0){
-			printf("Erro na criacao da tarefa\n");
-			exit(1);
-		}
-		printf("Pessoa criada!\n");
-		sleep(2);
-	}
-}
-
-
+pthread_t t_cliente[267785];
+/*********************************** Functions *******************************************/
 void * sunbath(){
 	printf("[%s] The Solario is now open!\n", make_hours(simulator.minute));
 	while(aquapark_open){
@@ -89,9 +72,59 @@ void * race(){ // leves evary minute
 	}
 	printf("[%s] The Race tobogan is now closed!\n", make_hours(simulator.minute));
 }
+int * trata_clientes(){
 
+}
+int * create_client(){
+	int i;
+	for(i=0; i<=simulator.max_population && simulator.minute < simulator.end_time; i++){
+		if(i<simulator.max_population){
+			if(pthread_create(&(t_cliente[i]), NULL ,(void *)&trata_clientes,NULL) != 0){
+				printf("Error creating thread\n");
+				exit(1);
+			}
+			printf("[%s] A person arrived to the Park entrance\n", make_hours(simulator.minute));
+			sleep(2);
+		}else printf("[%s] There is no more people living in Madeira\n", make_hours(simulator.minute));
+	}
+}
+int * aquapark(){
+	if(pthread_create(&(t_sunbath), NULL ,(void *)&sunbath,NULL) != 0){ //thread sunbath
+		printf("Error creating thread\n");
+		exit(1);
+	}
+	if(pthread_create(&(t_swimming_pool), NULL ,(void *)&swimming_pool,NULL) != 0){ //thread swimming pool
+		printf("Error creating thread\n");
+		exit(1);
+	}
+	if(pthread_create(&(t_toboggan), NULL ,(void *)&toboggan,NULL) != 0){ //thread toboggan
+		printf("Error creating thread\n");
+		exit(1);
+	}
+	if(pthread_create(&(t_race), NULL ,(void *)&race,NULL) != 0){ //thread race
+		printf("Error creating thread\n");
+		exit(1);
+	}
+
+	while(simulator.minute < (simulator.end_time)){
+		if(((simulator.end_time)-30) == simulator.minute){
+			printf("[%s] The Aquapark is closing in 30 minuts!\n", make_hours(simulator.minute));
+			attraction_open=0;
+			//closes in the next departure
+			pthread_join(t_race , NULL);
+			pthread_join(t_toboggan , NULL);
+		}
+		sleep(1);
+		simulator.minute++;
+	}
+	aquapark_open = 0;
+
+	// closes aquapark
+	pthread_join(t_sunbath , NULL);
+	pthread_join(t_swimming_pool , NULL);
+	printf("[%s] The Aquapark is now closed!\n", make_hours(simulator.minute));
+}
 int main(int argc, char **argv){
-
 	int *configuration_values = read_method(argc, argv[1]);
 
 	DEBUG = configuration_values[0];
@@ -109,45 +142,9 @@ int main(int argc, char **argv){
 	attraction_open=1;
 	printf("[%s] The Aquapark is now open!\n", make_hours(simulator.minute));
 
-
-	if(pthread_create(&(t_sunbath), NULL ,(void *)&sunbath,NULL) != 0){ //thread sunbath
-		printf("Erro na criacao da tarefa\n");
-		exit(1);
-	}
-	if(pthread_create(&(t_swimming_pool), NULL ,(void *)&swimming_pool,NULL) != 0){ //thread swimming pool
+	if(pthread_create(&(t_aquapark), NULL ,(void *)&aquapark,NULL) != 0){ //thread sunbath
 		printf("Error creating thread\n");
 		exit(1);
 	}
-	if(pthread_create(&(t_toboggan), NULL ,(void *)&toboggan,NULL) != 0){ //thread toboggan
-		printf("Error creating thread\n");
-		exit(1);
-	}
-	if(pthread_create(&(t_race), NULL ,(void *)&race,NULL) != 0){ //thread race
-		printf("Erro na criacao da tarefa\n");
-		exit(1);
-	}
-
-
 	create_client();
-
-	while(simulator.minute < (simulator.end_time)){
-		if(((simulator.end_time)-30) == simulator.minute){
-			printf("[%s] The Aquapark is closing in 30 minuts!\n", make_hours(simulator.minute));
-			attraction_open=0;
-			//closes in the next departure
-			pthread_join(t_race , NULL);
-			pthread_join(t_toboggan , NULL);
-		}
-		sleep(1);
-		simulator.minute++;
-	}
-	int i;
-	for (i = 0; i < 10; i++){
-		pthread_join(t_cliente[i], NULL);
-	}
-	// closes aquapark
-	aquapark_open = 0;
-	pthread_join(t_sunbath , NULL);
-	pthread_join(t_swimming_pool , NULL);
-	printf("[%s] The Aquapark is now closed!\n", make_hours(simulator.minute));
 }
