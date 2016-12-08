@@ -87,13 +87,21 @@ int write_report(){
 	return 1;
 }
 
-int decode(char[] str){
+int * decode (char str){
+	
+	char[4] s_hours;
+	char[3] s_state;
+	char[4] s_client_id;
+	int[3] final;
+	
+	s_hours = strtok(str,",");
+	s_state = strtok(str,",");
+	strcpy(s_client_id, str);
+	
+	final[0] = atoi(s_hours);
+	final[1] = atoi(s_state);
+	final[2] = atoi(s_client_id);
+	
+	return final;
 
-	string -> int[] :: separado por virgulas
-
-	str = "100,20,30"
-
-	int hours = 100
-	int state = 20
-	int client_id = 30
 }
