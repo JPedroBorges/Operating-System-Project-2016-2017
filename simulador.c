@@ -40,7 +40,6 @@ pthread_t t_cliente[267785];
 /*********************************** Functions *******************************************/
 void * sunbath(){
 	printf("[%s] The Solario is now open!\n", make_hours(simulator.minute));
-	send_message(newsockfd, simulator.minute, 5,-1);
 	while(aquapark_open){
 		// recives clients
 	}
@@ -74,14 +73,20 @@ void * race(){ // leves evary minute
 	}
 	printf("[%s] The Race tobogan is now closed!\n", make_hours(simulator.minute));
 }
-int * trata_clientes(){
-
+int * handle_client(int id){
+	send_message(newsockfd,simulator.minute,1,id);
+	sleep(10);
+	send_message(newsockfd,simulator.minute,2,id);
+	send_message(newsockfd,simulator.minute,12,id);
+	sleep(30);
+	send_message(newsockfd,simulator.minute,22,id);
+	send_message(newsockfd,simulator.minute,21,id);
 }
 int * create_client(){
 	int i;
-	for(i=0; i<=simulator.max_population && simulator.minute < simulator.end_time; i++){
+	for(i=0; i<=simulator.max_population && simulator.minute < simulator.end_time-30; i++){
 		if(i<simulator.max_population){
-			if(pthread_create(&(t_cliente[i]), NULL ,(void *)&trata_clientes,NULL) != 0){
+			if(pthread_create(&(t_cliente[i]), NULL ,(void *)&handle_client,i) != 0){
 				printf("Error creating thread\n");
 				exit(1);
 			}
@@ -91,6 +96,8 @@ int * create_client(){
 	}
 }
 int * aquapark(){
+	aquapark_open=1;
+	attraction_open=1;
 	if(pthread_create(&(t_sunbath), NULL ,(void *)&sunbath,NULL) != 0){ //thread sunbath
 		printf("Error creating thread\n");
 		exit(1);
@@ -107,6 +114,8 @@ int * aquapark(){
 		printf("Error creating thread\n");
 		exit(1);
 	}
+
+
 
 	while(simulator.minute < (simulator.end_time)){
 		if(((simulator.end_time)-30) == simulator.minute){
@@ -171,6 +180,7 @@ int main(int argc, char **argv){
 
 
 
+	send_message(newsockfd,simulator.minute,101,-1);
 
 	close(sockfd);
 }

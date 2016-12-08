@@ -87,13 +87,13 @@ int write_report(){
 	return 1;
 }
 
-int decode(char[] str){
-
-	string -> int[] :: separado por virgulas
-
-	str = "100,20,30"
-
-	int hours = 100
-	int state = 20
-	int client_id = 30
-}
+//int decode(char str){
+//
+//	string -> int[] :: separado por virgulas
+//
+//	str = "100,20,30"
+//
+//	int hours = 100
+//	int state = 20
+//	int client_id = 30
+//}
