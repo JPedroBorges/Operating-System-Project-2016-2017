@@ -32,7 +32,9 @@
 
 int static debuging=0;
 /******************************* util *******************************/
-char * make_hours();
+char * make_hours(int);
+void send_message(int,int,int,int);
+char * read_message(int);
 
 /************************** util_simulador **************************/
 int * read_method();

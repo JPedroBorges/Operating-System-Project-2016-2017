@@ -37,6 +37,8 @@ pthread_t t_toboggan;
 pthread_t t_race;
 pthread_t t_sunbath;
 pthread_t t_cliente[267785];
+
+pthread_mutex_t t_comunicate;
 /*********************************** Functions *******************************************/
 void * sunbath(){
 	printf("[%s] The Solario is now open!\n", make_hours(simulator.minute));
@@ -74,13 +76,30 @@ void * race(){ // leves evary minute
 	printf("[%s] The Race tobogan is now closed!\n", make_hours(simulator.minute));
 }
 int * handle_client(int id){
+	pthread_mutex_lock(&t_comunicate);
 	send_message(newsockfd,simulator.minute,1,id);
+	usleep(300000);
+	pthread_mutex_unlock(&t_comunicate);
 	sleep(10);
+	pthread_mutex_lock(&t_comunicate);
 	send_message(newsockfd,simulator.minute,2,id);
+	usleep(300000);
+	pthread_mutex_unlock(&t_comunicate);
+	sleep(1);
+	pthread_mutex_lock(&t_comunicate);
 	send_message(newsockfd,simulator.minute,12,id);
+	usleep(300000);
+	pthread_mutex_unlock(&t_comunicate);
 	sleep(30);
+	pthread_mutex_lock(&t_comunicate);
 	send_message(newsockfd,simulator.minute,22,id);
+	usleep(300000);
+	pthread_mutex_unlock(&t_comunicate);
+	sleep(1);
+	pthread_mutex_lock(&t_comunicate);
 	send_message(newsockfd,simulator.minute,21,id);
+	usleep(300000);
+	pthread_mutex_unlock(&t_comunicate);
 }
 int * create_client(){
 	int i;
@@ -144,6 +163,8 @@ int main(int argc, char **argv){
 	simulator.vip = configuration_values[6];
 	if(DEBUG) printf("max_population:%d\tstart_time:%d\tminute:%d\nend_time:%d\tcapacity:%d\tqueue:%d\tvip:%d\n", simulator.max_population,	simulator.start_time,simulator.minute,simulator.end_time,simulator.capacity,simulator.queue,simulator.vip);
 
+
+	pthread_mutex_init(&t_comunicate,NULL);
 /************************************ Socket **********************************************/
 	int clilen;
 	char buffer[256];
@@ -164,7 +185,7 @@ int main(int argc, char **argv){
 
 	n = read(newsockfd,buffer,255);
 	if(n<0) printf("ERROR reading from socket\n");
-	printf("%s\n", buffer);
+	printf("Simulation started\n");
 
 	if(pthread_create(&(t_aquapark), NULL ,(void *)&aquapark,NULL) != 0){ //thread sunbath
 		printf("Error creating thread\n");
@@ -182,8 +203,9 @@ int main(int argc, char **argv){
 	pthread_join(t_swimming_pool , NULL);
 	printf("[%s] The Aquapark is now closed!\n", make_hours(simulator.minute));
 
-
+	pthread_mutex_lock(&t_comunicate);
 	send_message(newsockfd,simulator.minute,101,-1);
+	pthread_mutex_unlock(&t_comunicate);
 
 	close(sockfd);
 }

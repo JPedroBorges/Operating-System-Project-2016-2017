@@ -50,6 +50,7 @@ int main(){
 
 
 	while(simulation){
+
 		bzero(buffer,256);
 		n = read(sockfd,buffer,255);
 		if(n<0) printf("ERROR reading from socket\n");
