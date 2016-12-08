@@ -136,6 +136,50 @@ int main(int argc, char **argv){
 	simulator.capacity = configuration_values[4];
 	simulator.queue = configuration_values[5];
 	simulator.vip = configuration_values[6];
+	if(DEBUG) printf("max_population:%d\tstart_time:%d\tminute:%d\tend_time:%d\tcapacity:%d\tqueue:%d\tvip:%d\n", simulator.max_population,	simulator.start_time,simulator.minute,simulator.end_time,simulator.capacity,simulator.queue,simulator.vip);
+
+
+
+
+
+
+
+	int sockfd, newsockfd, portno, clilen;
+	char buffer[256];
+	struct sockaddr_in serv_addr, cli_addr;
+	int n;
+	sockfd = socket(AF_INET, SOCK_STREAM, 0);
+	if(sockfd<0) printf("ERROR opening socket\n");
+	bzero((char *) &serv_addr, sizeof(serv_addr));
+	serv_addr.sin_family = AF_INET;
+	serv_addr.sin_addr.s_addr = INADDR_ANY;
+	serv_addr.sin_port = htons(1024);
+	if(bind(sockfd,(struct sockaddr *) &serv_addr, sizeof(serv_addr))<0) printf("ERROR on binding\n");
+
+	listen(sockfd,5);
+	clilen = sizeof(cli_addr);
+	newsockfd = accept(sockfd, (struct sockaddr *) &cli_addr, &clilen);
+	int m;
+	while(DEBUG){
+		if(newsockfd<0) printf("ERROR on accept\n");
+		bzero(buffer,256);
+		n = read(newsockfd,buffer,255);
+		if(n<0) printf("ERROR reading from socket\n");
+		n = write(newsockfd,"I got your message",18);
+		if(n<0) printf("ERROR writing to socket\n");
+		m = scanf("%d", &m);
+	}
+	close(sockfd);
+	//unlink(sockfd);
+
+
+
+
+
+
+
+
+
 
 	// Open the aquapark
 	aquapark_open=1;

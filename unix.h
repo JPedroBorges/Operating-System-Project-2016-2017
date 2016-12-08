@@ -17,6 +17,8 @@
 #include <semaphore.h>
 #include <time.h>
 #include <stdbool.h>
+#include <netinet/in.h>
+#include <netdb.h>
 
 #define ADDRESS      "champ_socket"
 

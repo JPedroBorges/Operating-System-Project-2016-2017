@@ -14,13 +14,46 @@ int main(){
 	fprintf(file_log,"-------------------------------Monitor Log-------------------------------\n");
 	fclose(file_log);
 
-	write_log(0,1,1);
-	write_log(1,2,1);
-	write_log(1,12,1);
-	write_log(2,1,2);
-	write_log(2,2,2);
-	write_log(4,32,2);
-	write_log(4,21,2);
-	write_log(5,21,1);
+//adicionar ---------------------------- no final do ficheiro
+
+
+
+
+	int sockfd, portno, n;
+	struct sockaddr_in serv_addr;
+	struct hostent *server;
+
+    char buffer[256];
+
+	sockfd = socket(AF_INET, SOCK_STREAM, 0);
+	if(sockfd<0) printf("ERROR opening socket\n");
+	server = gethostbyname("localhost");
+	bzero((char *) &serv_addr, sizeof(serv_addr));
+	serv_addr.sin_family = AF_INET;
+	bcopy((char *)server->h_addr,
+         (char *)&serv_addr.sin_addr.s_addr,
+         server->h_length);
+    serv_addr.sin_port = htons(1024);
+	if(connect(sockfd,(struct sockaddr *)&serv_addr,sizeof(serv_addr))<0) printf("ERROR connecting\n");
+
+	bzero(buffer,256);
+	fgets(buffer,255,stdin);
+
+	int m;
+	while(DEBUG){
+		n = write(sockfd,buffer,strlen(buffer));
+    	if(n<0) printf("ERROR writing to socket\n");
+		bzero(buffer,256);
+		n = read(sockfd,buffer,255);
+		if(n<0) printf("ERROR reading from socket\n");
+    	printf("%s\n",buffer);
+		m = scanf("%d", &i);
+	}
+
+	close(sockfd);
+//	unlink(sockfd);
+
+
+
 
 }
