@@ -138,12 +138,7 @@ int main(int argc, char **argv){
 	simulator.vip = configuration_values[6];
 	if(DEBUG) printf("max_population:%d\tstart_time:%d\tminute:%d\tend_time:%d\tcapacity:%d\tqueue:%d\tvip:%d\n", simulator.max_population,	simulator.start_time,simulator.minute,simulator.end_time,simulator.capacity,simulator.queue,simulator.vip);
 
-
-
-
-
-
-
+/************************************ Socket **********************************************/
 	int sockfd, newsockfd, portno, clilen;
 	char buffer[256];
 	struct sockaddr_in serv_addr, cli_addr;
@@ -155,23 +150,25 @@ int main(int argc, char **argv){
 	serv_addr.sin_addr.s_addr = INADDR_ANY;
 	serv_addr.sin_port = htons(1024);
 	if(bind(sockfd,(struct sockaddr *) &serv_addr, sizeof(serv_addr))<0) printf("ERROR on binding\n");
-
 	listen(sockfd,5);
 	clilen = sizeof(cli_addr);
 	newsockfd = accept(sockfd, (struct sockaddr *) &cli_addr, &clilen);
-	//int m;
-	//while(DEBUG){
-		if(newsockfd<0) printf("ERROR on accept\n");
-		bzero(buffer,256);
-		n = read(newsockfd,buffer,255);
-		if(n<0) printf("ERROR reading from socket\n");
-		printf("\nEsta aqui a tua mensagem seu undersnight: %s\n",buffer);
-		n = write(newsockfd,"I got your message",18);
+	if(newsockfd<0) printf("ERROR on accept\n");
+	bzero(buffer,256);
+
+	n = read(newsockfd,buffer,255);
+	if(n<0) printf("ERROR reading from socket\n");
+
+	int i;
+	char str[27];
+	for(i=0; i<10; i++){
+		sprintf(str, "I got your message %d times", i);
+		n = write(newsockfd,str,28);
 		if(n<0) printf("ERROR writing to socket\n");
-	//	m = scanf("%d", &m);
-	//}
-	close(sockfd);
-	//unlink(sockfd);
+		sleep(1);
+	}
+
+
 
 
 
@@ -192,4 +189,7 @@ int main(int argc, char **argv){
 		exit(1);
 	}
 	create_client();
+
+
+	close(sockfd);
 }

@@ -35,7 +35,8 @@ int write_log(int hour, int state , int client_id){
 		case 33: fprintf(file_log,"[%s] ❌ Client %d gave up on Toboggan, was waiting for too long\n", make_hours(hour), client_id); break;
 		case 34: fprintf(file_log,"[%s] ❌ Client %d gave up on Race, was waiting for too long\n", make_hours(hour), client_id); break;
 		case 35: fprintf(file_log,"[%s] ❌ Client %d gave up on Sunbath, was waiting for too long\n", make_hours(hour), client_id); break;
-		case 100: fprintf(file_log,"[%s] ⛬ Simulation is over.\n", make_hours(hour)); break;
+		case 100: fprintf(file_log,"[%s] ⛬ Simulation is starting.\n", make_hours(hour)); break;
+		case 101: fprintf(file_log,"[%s] ⛬ Simulation is over.\n", make_hours(hour)); break;
 		default: fprintf(file_log,"[%s] Error: didnt get what you mean", make_hours(hour)); break;
 	}
 	fclose(file_log);

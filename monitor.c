@@ -18,13 +18,11 @@ int main(){
 
 
 
-
+/************************************ Socket **********************************************/
 	int sockfd, portno, n;
 	struct sockaddr_in serv_addr;
 	struct hostent *server;
-
     char buffer[256];
-
 	sockfd = socket(AF_INET, SOCK_STREAM, 0);
 	if(sockfd<0) printf("ERROR opening socket\n");
 	server = gethostbyname("localhost");
@@ -34,27 +32,27 @@ int main(){
          (char *)&serv_addr.sin_addr.s_addr,
          server->h_length);
     serv_addr.sin_port = htons(1024);
-	if(connect(sockfd,(struct sockaddr *)&serv_addr,sizeof(serv_addr))<0) printf("ERROR connecting\n");
-    printf("\n");
-	printf("Escreve algo para enviar: \n");
+	if(connect(sockfd,(struct sockaddr *)&serv_addr,sizeof(serv_addr))<0){
+		printf("ERROR connecting\n");
+		return 0;
+	}
+
+	printf("press enter to start\n");
 	bzero(buffer,256);
 	fgets(buffer,255,stdin);
+	n = write(sockfd,buffer,strlen(buffer));
 
-	//int m;
-	//while(DEBUG){
-		n = write(sockfd,buffer,strlen(buffer));
-    	if(n<0) printf("ERROR writing to socket\n");
+
+	while(1){
 		bzero(buffer,256);
 		n = read(sockfd,buffer,255);
 		if(n<0) printf("ERROR reading from socket\n");
-    	printf("%s\n",buffer);
+		printf("%s\n",buffer);
+	}
 
-	//}
+
+
+
 
 	close(sockfd);
-//	unlink(sockfd);
-
-
-
-
 }

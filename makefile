@@ -4,7 +4,7 @@
 # /█\		Nuno Rodrigues			-
 # .Π.		Vitor Paixão			-
 #*****************************************************************
-#x-terminal-emulator -e "bash -c $(RUNSI);bash"; clear; $(RUNMO);
+
 RUNMO = ./monitor
 RUNSI = ./simulador
 CC = gcc -o
@@ -21,7 +21,7 @@ simulador: simulador.o util.o util_simulador.o
 	$(CC) -g -o simulador simulador.o util.o util_simulador.o $(LIBS)\
 
 runm:
-	x-terminal-emulator -e "bash -c $(RUNSI);bash"; $(RUNMO);
+	x-terminal-emulator -e "bash -c $(RUNSI);bash"; clear; $(RUNMO);
 
 clean:
 	rm -f *.o *~ simulador
