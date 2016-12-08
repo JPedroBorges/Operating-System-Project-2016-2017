@@ -40,3 +40,5 @@ int * read_method();
 /*************************** util_monitor ***************************/
 int write_log();
 int write_report();
+int * decode();
+void write_decoder();
