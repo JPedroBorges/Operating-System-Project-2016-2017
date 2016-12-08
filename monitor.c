@@ -29,27 +29,27 @@ int main(){
          (char *)&serv_addr.sin_addr.s_addr,
          server->h_length);
     serv_addr.sin_port = htons(1024);
-	if(connect(sockfd,(struct sockaddr *)&serv_addr,sizeof(serv_addr))<0) printf("ERROR connecting\n");
-	bzero(buffer,256);
-	//fgets(buffer,255,stdin);
+	if(connect(sockfd,(struct sockaddr *)&serv_addr,sizeof(serv_addr))<0){
+		printf("ERROR connecting\n");
+		return 0;
+	}
 
-	printf("\n\nPress Enter to start the simulation");
-	char enter = 0;
-	while (enter != '\r' && enter != '\n') { enter = getchar(); }
-	n = write(sockfd,"100",strlen(buffer));
-	if(n<0) printf("ERROR writing to socket\n");
-
+	printf("press enter to start\n");
 	bzero(buffer,256);
-	n = read(sockfd,buffer,255);
-	if(n<0) printf("ERROR reading from socket\n");
-	printf("%s\n",buffer);
+	fgets(buffer,255,stdin);
+	n = write(sockfd,buffer,strlen(buffer));
+
+
+	while(1){
+		bzero(buffer,256);
+		n = read(sockfd,buffer,255);
+		if(n<0) printf("ERROR reading from socket\n");
+		printf("%s\n",buffer);
+	}
+
+
 
 
 
 	close(sockfd);
-
-
-
-
-
 }
