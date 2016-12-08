@@ -159,16 +159,17 @@ int main(int argc, char **argv){
 	listen(sockfd,5);
 	clilen = sizeof(cli_addr);
 	newsockfd = accept(sockfd, (struct sockaddr *) &cli_addr, &clilen);
-	int m;
-	while(DEBUG){
+	//int m;
+	//while(DEBUG){
 		if(newsockfd<0) printf("ERROR on accept\n");
 		bzero(buffer,256);
 		n = read(newsockfd,buffer,255);
 		if(n<0) printf("ERROR reading from socket\n");
+		printf("\nEsta aqui a tua mensagem seu undersnight: %s\n",buffer);
 		n = write(newsockfd,"I got your message",18);
 		if(n<0) printf("ERROR writing to socket\n");
-		m = scanf("%d", &m);
-	}
+	//	m = scanf("%d", &m);
+	//}
 	close(sockfd);
 	//unlink(sockfd);
 

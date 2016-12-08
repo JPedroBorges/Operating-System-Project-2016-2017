@@ -35,20 +35,21 @@ int main(){
          server->h_length);
     serv_addr.sin_port = htons(1024);
 	if(connect(sockfd,(struct sockaddr *)&serv_addr,sizeof(serv_addr))<0) printf("ERROR connecting\n");
-
+    printf("\n");
+	printf("Escreve algo para enviar: \n");
 	bzero(buffer,256);
 	fgets(buffer,255,stdin);
 
-	int m;
-	while(DEBUG){
+	//int m;
+	//while(DEBUG){
 		n = write(sockfd,buffer,strlen(buffer));
     	if(n<0) printf("ERROR writing to socket\n");
 		bzero(buffer,256);
 		n = read(sockfd,buffer,255);
 		if(n<0) printf("ERROR reading from socket\n");
     	printf("%s\n",buffer);
-		m = scanf("%d", &m);
-	}
+
+	//}
 
 	close(sockfd);
 //	unlink(sockfd);
