@@ -46,13 +46,13 @@ int main(){
 	strcpy(buffer,"100");
 	n = write(sockfd,buffer,strlen(buffer));
 
+	simulation=1;
 
-
-
-	while(1){
+	while(simulation){
 		bzero(buffer,256);
 		n = read(sockfd,buffer,255);
 		if(n<0) printf("ERROR reading from socket\n");
+		//if()
 		printf("%s\n",buffer);
 	}
 
