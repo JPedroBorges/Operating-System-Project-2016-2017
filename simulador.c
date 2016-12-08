@@ -138,12 +138,18 @@ int main(int argc, char **argv){
 	simulator.vip = configuration_values[6];
 	if(DEBUG) printf("max_population:%d\tstart_time:%d\tminute:%d\tend_time:%d\tcapacity:%d\tqueue:%d\tvip:%d\n", simulator.max_population,	simulator.start_time,simulator.minute,simulator.end_time,simulator.capacity,simulator.queue,simulator.vip);
 
+	// Open the aquapark
+	aquapark_open=1;
+	attraction_open=1;
+	printf("[%s] The Aquapark is now open!\n", make_hours(simulator.minute));
 
+	if(pthread_create(&(t_aquapark), NULL ,(void *)&aquapark,NULL) != 0){ //thread sunbath
+		printf("Error creating thread\n");
+		exit(1);
+	}
+	create_client();
 
-
-
-
-
+/************************************ Socket *********************************************/
 	int sockfd, newsockfd, portno, clilen;
 	char buffer[256];
 	struct sockaddr_in serv_addr, cli_addr;
@@ -155,21 +161,24 @@ int main(int argc, char **argv){
 	serv_addr.sin_addr.s_addr = INADDR_ANY;
 	serv_addr.sin_port = htons(1024);
 	if(bind(sockfd,(struct sockaddr *) &serv_addr, sizeof(serv_addr))<0) printf("ERROR on binding\n");
-
 	listen(sockfd,5);
 	clilen = sizeof(cli_addr);
 	newsockfd = accept(sockfd, (struct sockaddr *) &cli_addr, &clilen);
-	//int m;
-	//while(DEBUG){
-		if(newsockfd<0) printf("ERROR on accept\n");
-		bzero(buffer,256);
+
+	if(newsockfd<0) printf("ERROR on accept\n");
+	bzero(buffer,256);
+	while(n!=100){
 		n = read(newsockfd,buffer,255);
 		if(n<0) printf("ERROR reading from socket\n");
-		printf("\nEsta aqui a tua mensagem seu undersnight: %s\n",buffer);
-		n = write(newsockfd,"I got your message",18);
-		if(n<0) printf("ERROR writing to socket\n");
-	//	m = scanf("%d", &m);
-	//}
+	}
+
+
+
+
+	printf("\nEsta aqui a tua mensagem seu undersnight: %s\n",buffer);
+	n = write(newsockfd,"I got your message",18);
+	if(n<0) printf("ERROR writing to socket\n");
+
 	close(sockfd);
 	//unlink(sockfd);
 
@@ -182,14 +191,5 @@ int main(int argc, char **argv){
 
 
 
-	// Open the aquapark
-	aquapark_open=1;
-	attraction_open=1;
-	printf("[%s] The Aquapark is now open!\n", make_hours(simulator.minute));
 
-	if(pthread_create(&(t_aquapark), NULL ,(void *)&aquapark,NULL) != 0){ //thread sunbath
-		printf("Error creating thread\n");
-		exit(1);
-	}
-	create_client();
 }

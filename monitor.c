@@ -15,16 +15,11 @@ int main(){
 	fclose(file_log);
 
 //adicionar ---------------------------- no final do ficheiro
-
-
-
-
+/************************************ Socket *********************************************/
 	int sockfd, portno, n;
 	struct sockaddr_in serv_addr;
 	struct hostent *server;
-
     char buffer[256];
-
 	sockfd = socket(AF_INET, SOCK_STREAM, 0);
 	if(sockfd<0) printf("ERROR opening socket\n");
 	server = gethostbyname("localhost");
@@ -35,24 +30,24 @@ int main(){
          server->h_length);
     serv_addr.sin_port = htons(1024);
 	if(connect(sockfd,(struct sockaddr *)&serv_addr,sizeof(serv_addr))<0) printf("ERROR connecting\n");
-    printf("\n");
-	printf("Escreve algo para enviar: \n");
 	bzero(buffer,256);
-	fgets(buffer,255,stdin);
+	//fgets(buffer,255,stdin);
 
-	//int m;
-	//while(DEBUG){
-		n = write(sockfd,buffer,strlen(buffer));
-    	if(n<0) printf("ERROR writing to socket\n");
-		bzero(buffer,256);
-		n = read(sockfd,buffer,255);
-		if(n<0) printf("ERROR reading from socket\n");
-    	printf("%s\n",buffer);
+	printf("\n\nPress Enter to start the simulation");
+	char enter = 0;
+	while (enter != '\r' && enter != '\n') { enter = getchar(); }
+	n = write(sockfd,"100",strlen(buffer));
+	if(n<0) printf("ERROR writing to socket\n");
 
-	//}
+	bzero(buffer,256);
+	n = read(sockfd,buffer,255);
+	if(n<0) printf("ERROR reading from socket\n");
+	printf("%s\n",buffer);
+
+
 
 	close(sockfd);
-//	unlink(sockfd);
+
 
 
 
