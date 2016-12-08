@@ -31,9 +31,17 @@ char * make_hours(int input){
 }
 void send_message(int sockfd, int hour, int state, int client_id){
 	int i;
+	char buffer[27];
 	char str[27];
-	sprintf(str, "I got your message %d times", i);
-	int n = write(sockfd,str,28);
+
+	sprintf(str, "%d,", hour);
+	strcat(buffer, str);
+	sprintf(str, "%d,", state);
+	strcat(buffer, str);
+	sprintf(str, "%d", client_id);
+	strcat(buffer, str);
+
+	int n = write(sockfd,buffer,28);
 	if(n<0) printf("ERROR writing to socket\n");
 }
 char * read_message(int newsockfd){

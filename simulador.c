@@ -25,10 +25,11 @@ typedef struct{
 	int max_waiting_time;
 } s_cliente;
 /********************************* Global Variables **************************************/
-int aquapark_open;
-int attraction_open;
-s_simulator simulator;
-s_cliente cliente[267785];
+int static sockfd, newsockfd;
+int static aquapark_open;
+int static attraction_open;
+s_simulator static simulator;
+s_cliente static cliente[267785];
 /************************** Threads, Mutex & Semaphores **********************************/
 pthread_t t_aquapark;
 pthread_t t_swimming_pool;
@@ -39,6 +40,7 @@ pthread_t t_cliente[267785];
 /*********************************** Functions *******************************************/
 void * sunbath(){
 	printf("[%s] The Solario is now open!\n", make_hours(simulator.minute));
+	send_message(newsockfd, simulator.minute, 5,-1);
 	while(aquapark_open){
 		// recives clients
 	}
@@ -139,7 +141,7 @@ int main(int argc, char **argv){
 	if(DEBUG) printf("max_population:%d\tstart_time:%d\tminute:%d\nend_time:%d\tcapacity:%d\tqueue:%d\tvip:%d\n", simulator.max_population,	simulator.start_time,simulator.minute,simulator.end_time,simulator.capacity,simulator.queue,simulator.vip);
 
 /************************************ Socket **********************************************/
-	int sockfd, newsockfd, clilen;
+	int clilen;
 	char buffer[256];
 	struct sockaddr_in serv_addr, cli_addr;
 	int n;
@@ -158,6 +160,7 @@ int main(int argc, char **argv){
 
 	n = read(newsockfd,buffer,255);
 	if(n<0) printf("ERROR reading from socket\n");
+	printf("%s\n", buffer);
 
 	if(pthread_create(&(t_aquapark), NULL ,(void *)&aquapark,NULL) != 0){ //thread sunbath
 		printf("Error creating thread\n");

@@ -7,6 +7,8 @@
 
 #include "unix.h"
 
+int static sockfd;
+
 int main(){
 	printf("%s\n", "Running monitor");
 
@@ -16,7 +18,7 @@ int main(){
 
 //adicionar ---------------------------- no final do ficheiro
 /************************************ Socket *********************************************/
-	int sockfd, portno, n;
+	int n;
 	struct sockaddr_in serv_addr;
 	struct hostent *server;
     char buffer[256];
@@ -40,9 +42,12 @@ int main(){
 
 	char enter;
 	while (enter != '\r' && enter != '\n') { enter = getchar(); }
-	
+
 	strcpy(buffer,"100");
 	n = write(sockfd,buffer,strlen(buffer));
+
+
+
 
 	while(1){
 		bzero(buffer,256);
