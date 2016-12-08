@@ -136,10 +136,10 @@ int main(int argc, char **argv){
 	simulator.capacity = configuration_values[4];
 	simulator.queue = configuration_values[5];
 	simulator.vip = configuration_values[6];
-	if(DEBUG) printf("max_population:%d\tstart_time:%d\tminute:%d\tend_time:%d\tcapacity:%d\tqueue:%d\tvip:%d\n", simulator.max_population,	simulator.start_time,simulator.minute,simulator.end_time,simulator.capacity,simulator.queue,simulator.vip);
+	if(DEBUG) printf("max_population:%d\tstart_time:%d\tminute:%d\nend_time:%d\tcapacity:%d\tqueue:%d\tvip:%d\n", simulator.max_population,	simulator.start_time,simulator.minute,simulator.end_time,simulator.capacity,simulator.queue,simulator.vip);
 
 /************************************ Socket **********************************************/
-	int sockfd, newsockfd, portno, clilen;
+	int sockfd, newsockfd, clilen;
 	char buffer[256];
 	struct sockaddr_in serv_addr, cli_addr;
 	int n;
@@ -159,32 +159,14 @@ int main(int argc, char **argv){
 	n = read(newsockfd,buffer,255);
 	if(n<0) printf("ERROR reading from socket\n");
 
-	int i;
-	char str[27];
-	for(i=0; i<10; i++){
-		sprintf(str, "I got your message %d times", i);
-		n = write(newsockfd,str,28);
-		if(n<0) printf("ERROR writing to socket\n");
-		sleep(1);
-	}
-
-
-
-
-
-
-
-
-
-
-
-
-
 	if(pthread_create(&(t_aquapark), NULL ,(void *)&aquapark,NULL) != 0){ //thread sunbath
 		printf("Error creating thread\n");
 		exit(1);
 	}
 	create_client();
+
+
+
 
 
 	close(sockfd);

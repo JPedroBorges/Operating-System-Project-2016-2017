@@ -29,3 +29,18 @@ char * make_hours(int input){
 
 	return string;
 }
+void send_message(int sockfd, int hour, int state, int client_id){
+	int i;
+	char str[27];
+	sprintf(str, "I got your message %d times", i);
+	int n = write(sockfd,str,28);
+	if(n<0) printf("ERROR writing to socket\n");
+}
+char * read_message(int newsockfd){
+	char buffer[256];
+	bzero(buffer,256);
+	int n = read(newsockfd,buffer,255);
+	if(n<0) printf("ERROR reading from socket\n");
+
+	return buffer;
+}

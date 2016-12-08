@@ -36,9 +36,13 @@ int main(){
 
 	printf("press enter to start\n");
 	bzero(buffer,256);
-	fgets(buffer,255,stdin);
-	n = write(sockfd,buffer,strlen(buffer));
+	//fgets(buffer,255,stdin);
 
+	char enter;
+	while (enter != '\r' && enter != '\n') { enter = getchar(); }
+	
+	strcpy(buffer,"100");
+	n = write(sockfd,buffer,strlen(buffer));
 
 	while(1){
 		bzero(buffer,256);

@@ -7,7 +7,7 @@
 
 #include "unix.h"
 
-int write_log(int hour, int state , int client_id){
+int write_log(int hour, int state, int client_id){
 	FILE *file_log = fopen("simulation.log", "a");
 	if(file_log == NULL){
 		printf("Error: opening simulation.log\n");
