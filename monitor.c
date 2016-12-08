@@ -47,7 +47,7 @@ int main(){
 		n = read(sockfd,buffer,255);
 		if(n<0) printf("ERROR reading from socket\n");
     	printf("%s\n",buffer);
-		m = scanf("%d", &i);
+		m = scanf("%d", &m);
 	}
 
 	close(sockfd);
