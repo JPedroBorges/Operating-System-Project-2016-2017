@@ -87,21 +87,53 @@ int write_report(){
 	return 1;
 }
 
-int * decode (char str){
+int * decode (char str[28]){
 
-	char[4] s_hours;
-	char[3] s_state;
-	char[4] s_client_id;
-	int[3] final;
+	char s_hours[4];
+	char s_state[3];
+	char s_client_id[4];
+	int static final[3];
 
-	s_hours = strtok(str,",");
-	s_state = strtok(str,",");
-	strcpy(s_client_id, str);
+	stpcpy(s_hours, strtok(str,","));
+	stpcpy(s_state, strtok(NULL,","));
+	strcpy(s_client_id, strtok(NULL,","));
 
 	final[0] = atoi(s_hours);
 	final[1] = atoi(s_state);
 	final[2] = atoi(s_client_id);
 
 	return final;
+
+}
+
+void write_decoder(int final[3]) {
+
+	int state = final[1];
+
+	switch(state) {
+		case 1: printf("[%s] ❤ Client %d arrived to AquaPark.\n", make_hours(final[0]), final[2]);break;
+		case 2: printf("[%s] ➤ Client %d arrived to swimming pool.\n", make_hours(final[0]), final[2]); break;
+		case 3: printf("[%s] ➤ Client %d arrived to Toboggan.\n", make_hours(final[0]), final[2]); break;
+		case 4: printf("[%s] ➤ Client %d arrived to Race.\n", make_hours(final[0]), final[2]); break;
+		case 5: printf("[%s] ➤ Client %d arrived to Sunbath\n", make_hours(final[0]), final[2]); break;
+		case 11: printf("[%s] ☀ Client %d entered to AquaPark.\n", make_hours(final[0]), final[2]); break;
+		case 12: printf("[%s] ☀ Client %d entered to swimming pool.\n", make_hours(final[0]), final[2]); break;
+		case 13: printf("[%s] ☀ Client %d entered to Toboggan.\n", make_hours(final[0]), final[2]); break;
+		case 14: printf("[%s] ☀ Client %d entered to Race.\n", make_hours(final[0]), final[2]); break;
+		case 15: printf("[%s] ☀ Client %d entered to Sunbath\n", make_hours(final[0]), final[2]); break;
+		case 21: printf("[%s] ★ Client %d went out of AquaPark.\n", make_hours(final[0]), final[2]); break;
+		case 22: printf("[%s] ⚫ Client %d went out of swimming pool.\n", make_hours(final[0]), final[2]); break;
+		case 23: printf("[%s] ⚫ Client %d went out of Toboggan.\n", make_hours(final[0]), final[2]); break;
+		case 24: printf("[%s] ⚫ Client %d went out of Race.\n", make_hours(final[0]), final[2]); break;
+		case 25: printf("[%s] ⚫ Client %d went out of Sunbath\n", make_hours(final[0]), final[2]); break;
+		case 31: printf("[%s] ❌ Client %d gave up on AquaPark, was waiting for too long\n", make_hours(final[0]), final[2]); break;
+		case 32: printf("[%s] ❌ Client %d gave up on swimming pool, was waiting for too long\n", make_hours(final[0]), final[2]); break;
+		case 33: printf("[%s] ❌ Client %d gave up on Toboggan, was waiting for too long\n", make_hours(final[0]), final[2]); break;
+		case 34: printf("[%s] ❌ Client %d gave up on Race, was waiting for too long\n", make_hours(final[0]), final[2]); break;
+		case 35: printf("[%s] ❌ Client %d gave up on Sunbath, was waiting for too long\n", make_hours(final[0]), final[2]); break;
+		case 100: printf("[%s] ⛬ Simulation started.\n", make_hours(final[0])); break;
+		case 101: printf("[%s] ⛬ Simulation is over.\n", make_hours(final[0])); break;
+		default: printf("[%s] Error: didnt get what you mean", make_hours(final[0])); break;
+	}
 
 }

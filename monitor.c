@@ -48,12 +48,15 @@ int main(){
 
 	simulation=1;
 
-	while(simulation){
+
+	while(1){
 		bzero(buffer,256);
 		n = read(sockfd,buffer,255);
 		if(n<0) printf("ERROR reading from socket\n");
-		//if()
-		printf("%s\n",buffer);
+	//	printf("%s\n",buffer);
+		int* info = decode(buffer);
+		write_decoder(info);
+
 	}
 
 
