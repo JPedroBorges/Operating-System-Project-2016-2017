@@ -30,7 +30,7 @@ int main(){
 	bcopy((char *)server->h_addr,
          (char *)&serv_addr.sin_addr.s_addr,
          server->h_length);
-    serv_addr.sin_port = htons(1024);
+    serv_addr.sin_port = htons((rand()%9999)+1024);
 	if(connect(sockfd,(struct sockaddr *)&serv_addr,sizeof(serv_addr))<0){
 		printf("ERROR connecting\n");
 		return 0;
@@ -46,15 +46,16 @@ int main(){
 	strcpy(buffer,"100");
 	n = write(sockfd,buffer,strlen(buffer));
 
-	simulation=1;
+	int simulation=1;
 
 
-	while(1){
+	while(simulation){
 		bzero(buffer,256);
 		n = read(sockfd,buffer,255);
 		if(n<0) printf("ERROR reading from socket\n");
 	//	printf("%s\n",buffer);
 		int* info = decode(buffer);
+		if(info[1]==101) simulation=0;
 		write_decoder(info);
 
 	}

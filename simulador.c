@@ -84,7 +84,8 @@ int * handle_client(int id){
 }
 int * create_client(){
 	int i;
-	for(i=0; i<=simulator.max_population && simulator.minute < simulator.end_time-30; i++){
+	int finaltimeforarrival = simulator.end_time-30;
+	for(i=0; i<=simulator.max_population && simulator.minute < finaltimeforarrival; i++){
 		if(i<simulator.max_population){
 			if(pthread_create(&(t_cliente[i]), NULL ,(void *)&handle_client,i) != 0){
 				printf("Error creating thread\n");
@@ -121,19 +122,13 @@ int * aquapark(){
 		if(((simulator.end_time)-30) == simulator.minute){
 			printf("[%s] The Aquapark is closing in 30 minuts!\n", make_hours(simulator.minute));
 			attraction_open=0;
-			//closes in the next departure
-			pthread_join(t_race , NULL);
-			pthread_join(t_toboggan , NULL);
 		}
 		sleep(1);
 		simulator.minute++;
 	}
 	aquapark_open = 0;
 
-	// closes aquapark
-	pthread_join(t_sunbath , NULL);
-	pthread_join(t_swimming_pool , NULL);
-	printf("[%s] The Aquapark is now closed!\n", make_hours(simulator.minute));
+
 }
 int main(int argc, char **argv){
 	int *configuration_values = read_method(argc, argv[1]);
@@ -159,7 +154,7 @@ int main(int argc, char **argv){
 	bzero((char *) &serv_addr, sizeof(serv_addr));
 	serv_addr.sin_family = AF_INET;
 	serv_addr.sin_addr.s_addr = INADDR_ANY;
-	serv_addr.sin_port = htons(1024);
+	serv_addr.sin_port = htons((rand()%9999)+1024);
 	if(bind(sockfd,(struct sockaddr *) &serv_addr, sizeof(serv_addr))<0) printf("ERROR on binding\n");
 	listen(sockfd,5);
 	clilen = sizeof(cli_addr);
@@ -178,6 +173,14 @@ int main(int argc, char **argv){
 	create_client();
 
 
+	//closes in the next departure
+	pthread_join(t_race , NULL);
+	pthread_join(t_toboggan , NULL);
+
+	// closes aquapark
+	pthread_join(t_sunbath , NULL);
+	pthread_join(t_swimming_pool , NULL);
+	printf("[%s] The Aquapark is now closed!\n", make_hours(simulator.minute));
 
 
 	send_message(newsockfd,simulator.minute,101,-1);

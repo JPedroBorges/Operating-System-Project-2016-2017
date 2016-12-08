@@ -88,7 +88,7 @@ int write_report(){
 }
 
 int * decode (char str[28]){
-
+	if(1) printf("%s ----- ", str);
 	char s_hours[4];
 	char s_state[3];
 	char s_client_id[4];
@@ -102,12 +102,13 @@ int * decode (char str[28]){
 	final[1] = atoi(s_state);
 	final[2] = atoi(s_client_id);
 
+	if(1) printf("%d,%d,%d ----", final[0] ,final[1] ,final[2] );
 	return final;
 
 }
 
 void write_decoder(int final[3]) {
-
+	if(1) printf("%d,%d,%d - ", final[0] ,final[1] ,final[2] );
 	int state = final[1];
 
 	switch(state) {
