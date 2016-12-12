@@ -21,7 +21,7 @@ simulador: simulador.o util.o util_simulador.o
 	$(CC) -g -o simulador simulador.o util.o util_simulador.o $(LIBS)\
 
 runm:
-	x-terminal-emulator -e "bash -c $(RUNSI);bash"; clear; $(RUNMO);
+	x-terminal-emulator --geometry "5x5" -e "bash -c $(RUNSI);bash"; resize -s 37 80; clear; $(RUNMO);
 
 clean:
 	rm -f *.o *~ simulador

@@ -48,9 +48,7 @@ int main(){
 
 	int simulation=1;
 
-
 	while(simulation){
-
 		bzero(buffer,256);
 		n = read(sockfd,buffer,255);
 		if(n<0) printf("ERROR reading from socket\n");
@@ -58,12 +56,8 @@ int main(){
 		int* info = decode(buffer);
 		if(info[1]==101) simulation=0;
 		write_decoder(info);
-
+		write_log(info);
 	}
-
-
-
-
-
+	
 	close(sockfd);
 }

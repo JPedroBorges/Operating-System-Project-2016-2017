@@ -135,8 +135,6 @@ int * aquapark(){
 		exit(1);
 	}
 
-
-
 	while(simulator.minute < (simulator.end_time)){
 		if(((simulator.end_time)-30) == simulator.minute){
 			printf("[%s] The Aquapark is closing in 30 minuts!\n", make_hours(simulator.minute));
@@ -146,8 +144,6 @@ int * aquapark(){
 		simulator.minute++;
 	}
 	aquapark_open = 0;
-
-
 }
 int main(int argc, char **argv){
 	int *configuration_values = read_method(argc, argv[1]);
@@ -162,7 +158,6 @@ int main(int argc, char **argv){
 	simulator.queue = configuration_values[5];
 	simulator.vip = configuration_values[6];
 	if(DEBUG) printf("max_population:%d\tstart_time:%d\tminute:%d\nend_time:%d\tcapacity:%d\tqueue:%d\tvip:%d\n", simulator.max_population,	simulator.start_time,simulator.minute,simulator.end_time,simulator.capacity,simulator.queue,simulator.vip);
-
 
 	pthread_mutex_init(&t_comunicate,NULL);
 /************************************ Socket **********************************************/
@@ -183,8 +178,11 @@ int main(int argc, char **argv){
 	if(newsockfd<0) printf("ERROR on accept\n");
 	bzero(buffer,256);
 
-	n = read(newsockfd,buffer,255);
-	if(n<0) printf("ERROR reading from socket\n");
+	do{
+		n = read(newsockfd,buffer,255);
+		if(n<0) printf("ERROR reading from socket\n");
+	}while(strcmp(buffer,"100"));
+
 	printf("Simulation started\n");
 
 	if(pthread_create(&(t_aquapark), NULL ,(void *)&aquapark,NULL) != 0){ //thread sunbath
@@ -192,7 +190,6 @@ int main(int argc, char **argv){
 		exit(1);
 	}
 	create_client();
-
 
 	//closes in the next departure
 	pthread_join(t_race , NULL);
