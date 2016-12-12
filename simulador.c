@@ -204,5 +204,11 @@ int main(int argc, char **argv){
 	send_message(newsockfd,simulator.minute,101,-1);
 	pthread_mutex_unlock(&t_comunicate);
 
+
+	do{
+		n = read(newsockfd,buffer,255);
+		if(n<0) printf("ERROR reading from socket\n");
+	}while(strcmp(buffer,"101"));
+
 	close(sockfd);
 }

@@ -45,6 +45,7 @@ int main(){
 
 	strcpy(buffer,"100");
 	n = write(sockfd,buffer,strlen(buffer));
+	bzero(buffer,256);
 
 	int simulation=1;
 
@@ -52,12 +53,15 @@ int main(){
 		bzero(buffer,256);
 		n = read(sockfd,buffer,255);
 		if(n<0) printf("ERROR reading from socket\n");
-	//	printf("%s\n",buffer);
 		int* info = decode(buffer);
 		if(info[1]==101) simulation=0;
 		write_decoder(info);
 		write_log(info);
 	}
-	
+
+	strcpy(buffer,"101");
+	n = write(sockfd,buffer,strlen(buffer));
+	bzero(buffer,256);
+
 	close(sockfd);
 }
