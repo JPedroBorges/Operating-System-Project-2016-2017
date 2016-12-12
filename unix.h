@@ -44,3 +44,7 @@ int write_log();
 int write_report();
 int * decode();
 void write_decoder();
+void fill_empty(int);
+void print_header(int,int);
+void print_body(int);
+void print_footer();

@@ -88,25 +88,20 @@ int write_report(){
 }
 
 int * decode (char str[28]){
-
 	char s_hours[4];
 	char s_state[3];
 	char s_client_id[4];
 	int static final[3];
-
 	stpcpy(s_hours, strtok(str,","));
 	stpcpy(s_state, strtok(NULL,","));
 	strcpy(s_client_id, strtok(NULL,","));
-
 	final[0] = atoi(s_hours);
 	final[1] = atoi(s_state);
 	final[2] = atoi(s_client_id);
-
 	return final;
 }
 
 void write_decoder(int final[3]) {
-
 	int state = final[1];
 
 	switch(state) {
@@ -134,5 +129,41 @@ void write_decoder(int final[3]) {
 		case 101: printf("[%s] ⛬ Simulation is over.\n", make_hours(final[0])); break;
 		default: printf("[%s] Error: didnt get what you mean", make_hours(final[0])); break;
 	}
-
+}
+void fill_empty(int qto){
+	int i=0;
+	for(i=0;i<qto;i++) printf("   │                                                                         │\n");
+}
+void print_header(int tab, int hour){
+	// cria cabeçalho
+	printf("   ┌─────────────────────────────────────────────────────────────────────────┐\n   │                      Sistemas Operativos 2015/2016                      │\n   └─────────────────────────────────────────────────────────────────────────┘\n ┌────────────────┌────────────────────────────────────────────────────────────┐\n");
+	switch(tab){
+		case 1: printf(" │      Log       │  ■ 1- Log  ■ 2- Statistics  ■ 3- Graph    ■ 4- About       │\n"); break;
+		case 2: printf(" │   Statistics   │  ■ 1- Log  ■ 2- Statistics  ■ 3- Graph    ■ 4- About       │\n"); break;
+		case 3: printf(" │     Graph      │  ■ 1- Log  ■ 2- Statistics  ■ 3- Graph    ■ 4- About       │\n"); break;
+		case 4: printf(" │     About      │  ■ 1- Log  ■ 2- Statistics  ■ 3- Graph    ■ 4- About       │\n"); break;
+		case 0: printf(" │     Start      │  ■ 1- Log  ■ 2- Statistics  ■ 3- Graph    ■ 4- About       │\n"); break;
+	   default: printf(" │     UPS!!      │  ■ 1- Log  ■ 2- Statistics  ■ 3- Graph    ■ 4- About       │\n"); break;
+	}
+	printf(" └─┬──────────────┘────────────────────────────────────────────────────────────┘\n");
+	if(hour>-1) printf("   ├─────────────────────────────[ ·∙   %s  ∙· ]──────────────────────────┤\n", make_hours(hour));
+	else printf("   ├─────────────────────────────[ ·∙   wait!  ∙· ]──────────────────────────┤\n");
+}
+void print_body(int state){
+	if(state==0){
+		fill_empty(12);
+		printf("   │                          PRESS ENTER TO START                           │\n");
+		fill_empty(13);
+	}else if(state==1){
+		fill_empty(26);
+	}else if(state==2){
+		fill_empty(26);
+	}else if(state==3){
+		fill_empty(26);
+	}else if(state==4){
+		printf("   │                                                                         │\n   │   ■─[ Joao Borges ]─────────────────────────────────────────────────┐   │\n   │   │                                                                 │   │\n   │   │   2016311                                                     ┌─┤   │\n   │   └───────────────────────────────────────────────────────────────┴─┘   │\n   │                                                                         │\n   │   ■─[ Nuno Rodrigues ]──────────────────────────────────────────────┐   │\n   │   │                                                                 │   │\n   │   │   2044009                                                     ┌─┤   │\n   │   └───────────────────────────────────────────────────────────────┴─┘   │\n   │                                                                         │\n   │   ■─[ Vitor Paixao ]────────────────────────────────────────────────┐   │\n   │   │                                                                 │   │\n   │   │   XXXXXXX                                                     ┌─┤   │\n   │   └───────────────────────────────────────────────────────────────┴─┘   │\n   │                                                                         │\n   │                                                                         │\n   │                                                                         │\n   │                                                                         │\n   │                                                                         │\n   │                                                                         │\n   │                                                                         │\n   │                                                                         │\n");
+	}
+}
+void print_footer(){
+	printf("   └─────────────────────────────────────────────────────────────────────────┘\n   ┌─────────────────────────────────────────────────────────────────────────┐\n   │  Aquapark Simulation                                        ■ 5 - Exit  │\n");
 }
