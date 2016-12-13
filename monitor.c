@@ -9,6 +9,7 @@
 
 int static sockfd;
 pthread_t t_monitor;
+pthread_t t_reader;
 int static simulation=0;
 int static tab=0;
 int static hour=0;
@@ -22,11 +23,66 @@ int * monitor(){
 
 	while(monitor_on==0){}
 	while(tab!=5){
+		printf("\n");
 		print_header(tab,hour);
 		print_body(tab);
 		print_footer();
-		tab=5;
+		printf("$");
+		int choice;
+		// this should go to the reader at some point
+	//	while(monitor_on){
+		scanf("%d",&choice);
+		switch(choice){
+			case 1:
+				tab=1;
+				break;
+			case 2:
+				tab=2;
+				break;
+			case 3:
+				tab=3;
+				break;
+			case 4:
+				tab=4;
+				break;
+			case 5:
+				tab=3;
+				wait(1);
+				tab=5;
+				simulation=0;
+				break;
+			default:
+				tab = 6;
+				break;
+		}
+	//	}
 	}
+}
+int * reader(){
+	/*int choice;
+	while(monitor_on){
+		scanf("%d",&choice);
+		switch(choice){
+			case 1:
+
+				break;
+			case 2:
+				break;
+			case 3:
+				break;
+			case 4:
+				break;
+			case 5:
+				tab=3;
+				wait(1);
+				tab=5;
+				simulation=0;
+				break;
+			default:
+				tab = 6;
+				break;
+		}
+	}*/
 }
 int main(){
 	printf("%s\n", "Running monitor");
@@ -74,6 +130,11 @@ int main(){
 	tab=1;
 	monitor_on=1;
 
+	if(pthread_create(&(t_reader), NULL ,(void *)&reader,NULL) != 0){ //thread sunbath
+		printf("Error creating thread\n");
+		exit(1);
+	}
+
 	while(simulation){
 		bzero(buffer,256);
 		n = read(sockfd,buffer,255);
@@ -81,11 +142,12 @@ int main(){
 		int* info = decode(buffer);
 		if(info[1]==101) simulation=0;
 		hour=info[0];
-		write_decoder(info);
+		//write_decoder(info);
 		write_log(info[0],info[1],info[2]);
 	}
 
 	pthread_join(t_monitor , NULL);
+	pthread_join(t_reader , NULL);
 
 	strcpy(buffer,"101");
 	n = write(sockfd,buffer,strlen(buffer));
