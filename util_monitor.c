@@ -117,28 +117,27 @@ int * decode (char str[28]){
 }
 
 void write_decoder(int hour, int state, int client_id) {
-	printf("%s,%s\n", three_digit_number(client_id),three_digit_number(client_id));
 	switch(state) {
-		case 1: printf("   │  [%s] ❤ Client %s arrived to AquaPark.                               │\n", make_hours(hour), three_digit_number(client_id)); break;
-		case 2: printf("   │  [%s] ➤ Client %s arrived to swimming pool.                          │\n", make_hours(hour), three_digit_number(client_id)); break;
-		case 3: printf("   │  [%s] ➤ Client %s arrived to Toboggan.                               │\n", make_hours(hour), three_digit_number(client_id)); break;
-		case 4: printf("   │  [%s] ➤ Client %s arrived to Race.                                   │\n", make_hours(hour), three_digit_number(client_id)); break;
-		case 5: printf("   │  [%s] ➤ Client %s arrived to Sunbath.                                │\n", make_hours(hour), three_digit_number(client_id)); break;
-		case 11: printf("   │  [%s] ☀ Client %s entered to AquaPark.                               │\n", make_hours(hour), three_digit_number(client_id)); break;
-		case 12: printf("   │  [%s] ☀ Client %s entered to swimming pool.                          │\n", make_hours(hour), three_digit_number(client_id)); break;
-		case 13: printf("   │  [%s] ☀ Client %s entered to Toboggan.                               │\n", make_hours(hour), three_digit_number(client_id)); break;
-		case 14: printf("   │  [%s] ☀ Client %s entered to Race.                                   │\n", make_hours(hour), three_digit_number(client_id)); break;
-		case 15: printf("   │  [%s] ☀ Client %s entered to Sunbath                                 │\n", make_hours(hour), three_digit_number(client_id)); break;
-		case 21: printf("   │  [%s] ★ Client %s went out of AquaPark.                              │\n", make_hours(hour), three_digit_number(client_id)); break;
-		case 22: printf("   │  [%s] ⚫ Client %s went out of swimming pool.                         │\n", make_hours(hour), three_digit_number(client_id)); break;
-		case 23: printf("   │  [%s] ⚫ Client %s went out of Toboggan.                              │\n", make_hours(hour), three_digit_number(client_id)); break;
-		case 24: printf("   │  [%s] ⚫ Client %s went out of Race.                                  │\n", make_hours(hour), three_digit_number(client_id)); break;
-		case 25: printf("   │  [%s] ⚫ Client %s went out of Sunbath                                │\n", make_hours(hour), three_digit_number(client_id)); break;
-		case 31: printf("   │  [%s] ❌ Client %s gave up on AquaPark, was waiting for too long      │\n", make_hours(hour), three_digit_number(client_id)); break;
-		case 32: printf("   │  [%s] ❌ Client %s gave up on swimming pool, was waiting for too long │\n", make_hours(hour), three_digit_number(client_id)); break;
-		case 33: printf("   │  [%s] ❌ Client %s gave up on Toboggan, was waiting for too long      │\n", make_hours(hour), three_digit_number(client_id)); break;
-		case 34: printf("   │  [%s] ❌ Client %s gave up on Race, was waiting for too long          │\n", make_hours(hour), three_digit_number(client_id)); break;
-		case 35: printf("   │  [%s] ❌ Client %s gave up on Sunbath, was waiting for too long       │\n", make_hours(hour), three_digit_number(client_id)); break;
+		case 1: printf("   │  [%s] ❤ Client",make_hours(hour)); printf(" %s arrived to AquaPark.                              │\n", three_digit_number(client_id)); break;
+		case 2: printf("   │  [%s] ➤ Client",make_hours(hour)); printf(" %s arrived to swimming pool.                         │\n", three_digit_number(client_id)); break;
+		case 3: printf("   │  [%s] ➤ Client",make_hours(hour)); printf(" %s arrived to Toboggan.                              │\n", three_digit_number(client_id)); break;
+		case 4: printf("   │  [%s] ➤ Client",make_hours(hour)); printf(" %s arrived to Race.                                  │\n", three_digit_number(client_id)); break;
+		case 5: printf("   │  [%s] ➤ Client",make_hours(hour)); printf(" %s arrived to Sunbath.                               │\n", three_digit_number(client_id)); break;
+		case 11: printf("   │  [%s] ☀ Client",make_hours(hour)); printf(" %s entered to AquaPark.                              │\n", three_digit_number(client_id)); break;
+		case 12: printf("   │  [%s] ☀ Client",make_hours(hour)); printf(" %s entered to swimming pool.                         │\n", three_digit_number(client_id)); break;
+		case 13: printf("   │  [%s] ☀ Client",make_hours(hour)); printf(" %s entered to Toboggan.                              │\n", three_digit_number(client_id)); break;
+		case 14: printf("   │  [%s] ☀ Client",make_hours(hour)); printf(" %s entered to Race.                                  │\n", three_digit_number(client_id)); break;
+		case 15: printf("   │  [%s] ☀ Client",make_hours(hour)); printf(" %s entered to Sunbath                                │\n", three_digit_number(client_id)); break;
+		case 21: printf("   │  [%s] ★ Client",make_hours(hour)); printf(" %s went out of AquaPark.                             │\n", three_digit_number(client_id)); break;
+		case 22: printf("   │  [%s] ⚫ Client",make_hours(hour)); printf(" %s went out of swimming pool.                        │\n", three_digit_number(client_id)); break;
+		case 23: printf("   │  [%s] ⚫ Client",make_hours(hour)); printf(" %s went out of Toboggan.                             │\n", three_digit_number(client_id)); break;
+		case 24: printf("   │  [%s] ⚫ Client",make_hours(hour)); printf(" %s went out of Race.                                 │\n", three_digit_number(client_id)); break;
+		case 25: printf("   │  [%s] ⚫ Client",make_hours(hour)); printf(" %s went out of Sunbath                               │\n", three_digit_number(client_id)); break;
+		case 31: printf("   │  [%s] ❌ Client",make_hours(hour)); printf(" %s gave up on AquaPark, was waiting for too long     │\n", three_digit_number(client_id)); break;
+		case 32: printf("   │  [%s] ❌ Client",make_hours(hour)); printf(" %s gave up on swimming pool, was waiting for too long│\n", three_digit_number(client_id)); break;
+		case 33: printf("   │  [%s] ❌ Client",make_hours(hour)); printf(" %s gave up on Toboggan, was waiting for too long     │\n", three_digit_number(client_id)); break;
+		case 34: printf("   │  [%s] ❌ Client",make_hours(hour)); printf(" %s gave up on Race, was waiting for too long         │\n", three_digit_number(client_id)); break;
+		case 35: printf("   │  [%s] ❌ Client",make_hours(hour)); printf(" %s gave up on Sunbath, was waiting for too long      │\n", three_digit_number(client_id)); break;
 		case 100: printf("   │  [%s] ⛬ Simulation started.                                          │\n", make_hours(hour)); break;
 		case 101: printf("   │  [%s] ⛬ Simulation is over.                                          │\n", make_hours(hour)); break;
 		case -1: printf("   │                                                                         │\n"); break;
@@ -165,39 +164,32 @@ void print_header(int tab, int hour){
 	else printf("   ├─────────────────────────────[ ·∙   wait!  ∙· ]──────────────────────────┤\n");
 }
 
-void creat_graph(/*int aqua, int pool, int race, int race_status, int tobogan, int tobogan_status*/){
-
-	// int percent_aqua = ((aqua*20)/max_person_aqua);
-	 //printf("%d", percent_aqua);
-	 printf("   │                             ┌──────────────────────────────────────────┐│\n   │ ┌───────────────────────────┤             Real time events             ││\n   │ │        Aquapark     Pool  └┬────────────────────────────────────────┬┘│\n   │ │                            │                  Race                  │ │\n");
-	 printf("   │ │100 % ┫                     │ ┌────────────────────────────────────┐ │ │\n");
-	 printf("   │ │      ┃                     │ │               Waiting              │ │ │\n");
-	 printf("   │ │ 90 % ┫                     │ ├─────────────────┰──────────────────┤ │ │\n");
-	 printf("   │ │      ┃                     │ │        0        ╏                  │ │ │\n");
-	 printf("   │ │ 80 % ┫                     │ │       /█\\       ╏                  │ │ │\n");
-	 printf("   │ │      ┃    ██               │ │       .Π.       ╏                  │ │ │\n");
-   printf("   │ │ 70 % ┫    ██               │ │╸╸╸╸╸╸╸╸╸╸╸╸╸╸╸╸╸╏╺╺╺╺╺╺╺╺╺╺╺╺╺╺╺╺╺╺│ │ │\n");
-   printf("   │ │      ┃    ██               │ │                 ╏                  │ │ │\n");
-   printf("   │ │ 60 % ┫    ██               │ │                 ╏                  │ │ │\n");
-   printf("   │ │      ┃    ██               │ │                 ╏                  │ │ │\n");
-   printf("   │ │ 50 % ┫    ██               │ └─────────────────┸──────────────────┘ │ │\n");
-   printf("   │ │      ┃    ██         ██    ├────────────────────────────────────────┤ │\n");
-   printf("   │ │ 40 % ┫    ██         ██    │                Tobogan                 │ │\n");
-   printf("   │ │      ┃    ██         ██    │ ┌────────────────────────────────────┐ │ │\n");
-   printf("   │ │ 30 % ┫    ██         ██    │ │              On going              │ │ │\n");
-   printf("   │ │      ┃    ██         ██    │ ├─────────────────┰──────────────────┤ │ │\n");
-   printf("   │ │ 20 % ┫    ██         ██    │ │        0        ╏                  │ │ │\n");
-   printf("   │ │      ┃    ██         ██    │ │       /█\\       ╏                  │ │ │\n");
-   printf("   │ │ 10 % ┫    ██         ██    │ │       .Π.       ╏                  │ │ │\n");
-   printf("   │ │      ┃    ██         ██    │ └─────────────────┸──────────────────┘ │ │\n");
-   printf("   │ │      ┛                     │                                        │ │\n");
-   printf("   │ └────────────────────────────┴────────────────────────────────────────┘ │\n");
-	//for(i=0; i<20; i++){
-		//if(i<percent_aqua) printf("██         \n", );
-	}
-
-
-void print_body(int state){
+void creat_graph(){
+	printf("   │                             ┌──────────────────────────────────────────┐│\n   │ ┌───────────────────────────┤             Real time events             ││\n   │ │        Aquapark     Pool  └┬────────────────────────────────────────┬┘│\n   │ │                            │                  Race                  │ │\n");
+	printf("   │ │100 % ┫                     │ ┌────────────────────────────────────┐ │ │\n");
+	printf("   │ │      ┃                     │ │               Waiting              │ │ │\n");
+	printf("   │ │ 90 % ┫                     │ ├─────────────────┰──────────────────┤ │ │\n");
+	printf("   │ │      ┃                     │ │        0        ╏                  │ │ │\n");
+	printf("   │ │ 80 % ┫                     │ │       /█\\       ╏                  │ │ │\n");
+	printf("   │ │      ┃    ██               │ │       .Π.       ╏                  │ │ │\n");
+	printf("   │ │ 70 % ┫    ██               │ │╸╸╸╸╸╸╸╸╸╸╸╸╸╸╸╸╸╏╺╺╺╺╺╺╺╺╺╺╺╺╺╺╺╺╺╺│ │ │\n");
+	printf("   │ │      ┃    ██               │ │                 ╏                  │ │ │\n");
+	printf("   │ │ 60 % ┫    ██               │ │                 ╏                  │ │ │\n");
+	printf("   │ │      ┃    ██               │ │                 ╏                  │ │ │\n");
+	printf("   │ │ 50 % ┫    ██               │ └─────────────────┸──────────────────┘ │ │\n");
+	printf("   │ │      ┃    ██         ██    ├────────────────────────────────────────┤ │\n");
+	printf("   │ │ 40 % ┫    ██         ██    │                Tobogan                 │ │\n");
+	printf("   │ │      ┃    ██         ██    │ ┌────────────────────────────────────┐ │ │\n");
+	printf("   │ │ 30 % ┫    ██         ██    │ │              On going              │ │ │\n");
+	printf("   │ │      ┃    ██         ██    │ ├─────────────────┰──────────────────┤ │ │\n");
+	printf("   │ │ 20 % ┫    ██         ██    │ │        0        ╏                  │ │ │\n");
+	printf("   │ │      ┃    ██         ██    │ │       /█\\       ╏                  │ │ │\n");
+	printf("   │ │ 10 % ┫    ██         ██    │ │       .Π.       ╏                  │ │ │\n");
+	printf("   │ │      ┃    ██         ██    │ └─────────────────┸──────────────────┘ │ │\n");
+	printf("   │ │      ┛                     │                                        │ │\n");
+	printf("   │ └────────────────────────────┴────────────────────────────────────────┘ │\n");
+}
+void print_body(int tab){
 	int i;
 	switch(tab){
 		case 0:
