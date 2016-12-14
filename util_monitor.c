@@ -206,6 +206,7 @@ void creat_graph(/*int aqua, int pool, int race, int race_status, int tobogan, i
 		printf("   │   │   Number of clients have been in Sunbath :                %s   │   │\n",three_digit_number(20));
 		printf("   │   │   Number of clients have been in Slow River :             %s ┌─┤   │\n",three_digit_number(60));
 	  printf("   │   └───────────────────────────────────────────────────────────────┴─┘   │\n");
+	  printf("   │                                                                         │\n");
 		printf("   │   ■─[ Desistencias ]────────────────────────────────────────────────┐   │\n");
 		printf("   │   │   Total number of drops in queue :                        %s   │   │\n",three_digit_number(50));
 		printf("   │   │   Number of drops in Aquapark :                           %s   │   │\n",three_digit_number(69));
@@ -214,18 +215,20 @@ void creat_graph(/*int aqua, int pool, int race, int race_status, int tobogan, i
 		printf("   │   │   Number of drops in Tobogan :                            %s   │   │\n",three_digit_number(5));
 		printf("   │   │   Number of drops in Slow River :                         %s ┌─┤   │\n",three_digit_number(45));
 	  printf("   │   └───────────────────────────────────────────────────────────────┴─┘   │\n");
+	  printf("   │                                                                         │\n");
 		printf("   │   ■─[ Tempos Medios ]───────────────────────────────────────────────┐   │\n");
-		printf("   │   │   Average time in queue to get in Aquapark :            %s   │   │\n",three_digit_number(2));
-		printf("   │   │   Average time in queue to get in Pool :                %s   │   │\n",three_digit_number(4));
-		printf("   │   │   Average time in queue to get in Race :                %s   │   │\n",three_digit_number(3));
-		printf("   │   │   Average time in queue to get in Tobogan :             %s   │   │\n",three_digit_number(2));
-		printf("   │   │   Average time in queue to get in Slow River :          %s ┌─┤   │\n",three_digit_number(1));
+		printf("   │   │   Average time in queue to get in Aquapark :              %s   │   │\n",three_digit_number(2));
+		printf("   │   │   Average time in queue to get in Pool :                  %s   │   │\n",three_digit_number(4));
+		printf("   │   │   Average time in queue to get in Race :                  %s   │   │\n",three_digit_number(3));
+		printf("   │   │   Average time in queue to get in Tobogan :               %s   │   │\n",three_digit_number(2));
+		printf("   │   │   Average time in queue to get in Slow River :            %s ┌─┤   │\n",three_digit_number(1));
 
 		printf("   │   └───────────────────────────────────────────────────────────────┴─┘   │\n");
+		printf("   │                                                                         │\n");
 
 	}
 
-void print_body(int state){
+void print_body(int tab){
 	int i;
 	switch(tab){
 		case 0:
