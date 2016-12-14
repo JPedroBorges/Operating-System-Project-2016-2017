@@ -15,11 +15,14 @@ int static tab=0;
 int static hour=0;
 int static monitor_on=0;
 
-int * monitor(){
-	if(simulation==0) tab=0;
-	print_header(tab,-1);
+int print_screen(int hour, int state, int client_id){
+	fill_realtimelog(hour,state,client_id);
+	if(simulation==0 && monitor_on==0) tab=0;
+	printf("\n");
+	print_header(tab,hour);
 	print_body(tab);
 	print_footer();
+	printf("$");
 
 	while(monitor_on==0){}
 	while(tab!=5){
@@ -111,11 +114,6 @@ int main(){
 		return 0;
 	}
 
-	if(pthread_create(&(t_monitor), NULL ,(void *)&monitor,NULL) != 0){ //thread sunbath
-		printf("Error creating thread\n");
-		exit(1);
-	}
-
 	bzero(buffer,256);
 	//fgets(buffer,255,stdin);
 
@@ -144,8 +142,11 @@ int main(){
 		hour=info[0];
 		//write_decoder(info);
 		write_log(info[0],info[1],info[2]);
+		print_screen(info[0],info[1],info[2]);
+		//write_decoder(info);
 	}
 
+	pthread_join(t_reader , NULL);
 	pthread_join(t_monitor , NULL);
 	pthread_join(t_reader , NULL);
 

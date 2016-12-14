@@ -48,3 +48,6 @@ void fill_empty(int);
 void print_header(int,int);
 void print_body(int);
 void print_footer();
+void fill_realtimelog(int,int,int);
+void creat_graph();
+void creat_stats();

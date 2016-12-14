@@ -11,18 +11,13 @@ int real_time_log[24][3]={{-1,-1,-1},{-1,-1,-1},{-1,-1,-1},{-1,-1,-1},{-1,-1,-1}
 void fill_realtimelog(int hour, int state, int client_id){
 	int i;
 	for(i=24;i>1;i--){
-		printf("%d::",real_time_log[i][1]);
 		real_time_log[i-1][0]=real_time_log[i][0];
 		real_time_log[i-1][1]=real_time_log[i][1];
 		real_time_log[i-1][2]=real_time_log[i][2];
-		printf("%d\n",real_time_log[i][1]);
 	}
-	printf("-->%d::",real_time_log[i][1]);
 	real_time_log[24][0]=hour;
 	real_time_log[24][1]=state;
 	real_time_log[24][2]=client_id;
-	printf("%d::",real_time_log[i][1]);
-	printf("%d\n",state);
 }
 
 int write_log(int hour, int state, int client_id){
@@ -167,10 +162,72 @@ void print_header(int tab, int hour){
 		case 0: printf(" │     Start      │  ■ 1- Log  ■ 2- Statistics  ■ 3- Graph    ■ 4- About       │\n"); break;
 	   default: printf(" │     UPS!!      │  ■ 1- Log  ■ 2- Statistics  ■ 3- Graph    ■ 4- About       │\n"); break;
 	}
-	printf(" └─┬──────────────┘────────────────────────────────────────────────────────────┘\n");
+	printf(" └─┬──────────────┘──────────────────────────────────────────────────────────┬─┘\n");
 	if(hour>-1) printf("   ├─────────────────────────────[ ·∙   %s  ∙· ]──────────────────────────┤\n", make_hours(hour));
 	else printf("   ├─────────────────────────────[ ·∙   wait!  ∙· ]──────────────────────────┤\n");
 }
+
+void creat_graph(/*int aqua, int pool, int race, int race_status, int tobogan, int tobogan_status*/){
+
+	// int percent_aqua = ((aqua*20)/max_person_aqua);
+	 //printf("%d", percent_aqua);
+	 printf("   │                             ┌──────────────────────────────────────────┐│\n   │ ┌───────────────────────────┤             Real time events             ││\n   │ │        Aquapark     Pool  └┬────────────────────────────────────────┬┘│\n   │ │                            │                  Race                  │ │\n");
+	 printf("   │ │100 % ┫                     │ ┌────────────────────────────────────┐ │ │\n");
+	 printf("   │ │      ┃                     │ │               Waiting              │ │ │\n");
+	 printf("   │ │ 90 % ┫                     │ ├─────────────────┰──────────────────┤ │ │\n");
+	 printf("   │ │      ┃                     │ │        0        ╏                  │ │ │\n");
+	 printf("   │ │ 80 % ┫                     │ │       /█\\       ╏                  │ │ │\n");
+	 printf("   │ │      ┃    ██               │ │       .Π.       ╏                  │ │ │\n");
+   printf("   │ │ 70 % ┫    ██               │ │╸╸╸╸╸╸╸╸╸╸╸╸╸╸╸╸╸╏╺╺╺╺╺╺╺╺╺╺╺╺╺╺╺╺╺╺│ │ │\n");
+   printf("   │ │      ┃    ██               │ │                 ╏                  │ │ │\n");
+   printf("   │ │ 60 % ┫    ██               │ │                 ╏                  │ │ │\n");
+   printf("   │ │      ┃    ██               │ │                 ╏                  │ │ │\n");
+   printf("   │ │ 50 % ┫    ██               │ └─────────────────┸──────────────────┘ │ │\n");
+   printf("   │ │      ┃    ██         ██    ├────────────────────────────────────────┤ │\n");
+   printf("   │ │ 40 % ┫    ██         ██    │                Tobogan                 │ │\n");
+   printf("   │ │      ┃    ██         ██    │ ┌────────────────────────────────────┐ │ │\n");
+   printf("   │ │ 30 % ┫    ██         ██    │ │              On going              │ │ │\n");
+   printf("   │ │      ┃    ██         ██    │ ├─────────────────┰──────────────────┤ │ │\n");
+   printf("   │ │ 20 % ┫    ██         ██    │ │        0        ╏                  │ │ │\n");
+   printf("   │ │      ┃    ██         ██    │ │       /█\\       ╏                  │ │ │\n");
+   printf("   │ │ 10 % ┫    ██         ██    │ │       .Π.       ╏                  │ │ │\n");
+   printf("   │ │      ┃    ██         ██    │ └─────────────────┸──────────────────┘ │ │\n");
+   printf("   │ │      ┛                     │                                        │ │\n");
+   printf("   │ └────────────────────────────┴────────────────────────────────────────┘ │\n");
+	//for(i=0; i<20; i++){
+		//if(i<percent_aqua) printf("██         \n", );
+	}
+
+	void creat_stats (/*int Numero_Entradas_Discoteca,int Numero_Entradas_Sala_Rock,int Numero_Entradas_Sala_Comercial,int Numero_Entradas_Sala_House,int Numero_Entradas_Sala_Sofas,int Total_Clientes_Normais_Discoteca,int Total_Clientes_Normais_Sala_Rock,int Total_Clientes_Normais_Sala_Comercial,int Total_Clientes_Normais_Sala_House,int Total_Clientes_Normais_Sala_Sofas,int Total_Clientes_VIPS_Discoteca,int Total_Clientes_VIPS_Sala_Rock,int Total_Clientes_VIPS_Sala_Comercial,int Total_Clientes_VIPS_Sala_House,int Total_Clientes_VIPS_Sala_Sofas,int Numero_Desistencias_Fila_Discoteca,int Numero_Desistencias_Fila_Sala_Rock,int Numero_Desistencias_Fila_Sala_Comercial,int Numero_Desistencias_Fila_Sala_House,int Numero_Desistencias_Fila_Sala_Sofas,float Tempo_Medio_Espera_Fila_Antes_Entrar_Discoteca,float Tempo_Medio_Espera_Fila_Antes_Entrar_Sala_Rock,float Tempo_Medio_Espera_Fila_Antes_Entrar_Sala_Comercial,float Tempo_Medio_Espera_Fila_Antes_Entrar_Sala_House,float Tempo_Medio_Espera_Fila_Antes_Entrar_Sala_Sofas,float Tempo_Medio_Espera_Fila_Antes_Desistir_Discoteca,float Tempo_Medio_Espera_Fila_Antes_Desistir_Sala_Rock,float Tempo_Medio_Espera_Fila_Antes_Desistir_Sala_Comercial,float Tempo_Medio_Espera_Fila_Antes_Desistir_Sala_House,float Tempo_Medio_Espera_Fila_Antes_Desistir_Sala_Sofas,int Tempo_Estadia_Maximo_Fila_Antes_Entrar_Discoteca,int Tempo_Estadia_Maximo_Fila_Antes_Entrar_Sala_Rock,int Tempo_Estadia_Maximo_Fila_Antes_Entrar_Sala_Comercial,int Tempo_Estadia_Maximo_Fila_Antes_Entrar_Sala_House,int Tempo_Estadia_Maximo_Fila_Antes_Entrar_Sala_Sofas, int Tempo_Estadia_Maximo_Fila_Antes_Desistir_Discoteca, int Tempo_Estadia_Maximo_Fila_Antes_Desistir_Sala_Rock, int Tempo_Estadia_Maximo_Fila_Antes_Desistir_Sala_Comercial, int Tempo_Estadia_Maximo_Fila_Antes_Desistir_Sala_House, int Tempo_Estadia_Maximo_Fila_Antes_Desistir_Sala_Sofas*/ ){
+		//char * recebido = "0";
+	//	int Total_Desistencia_Filas=Numero_Desistencias_Fila_Discoteca+Numero_Desistencias_Fila_Sala_Rock+Numero_Desistencias_Fila_Sala_Comercial+Numero_Desistencias_Fila_Sala_House+Numero_Desistencias_Fila_Sala_Sofas;//Soma de todas as desistencias
+		printf("   │   ■─[ Clientes ]────────────────────────────────────────────────────┐   │\n");
+		printf("   │   │   Number of clients have been in Aquapark :               %s   │   │\n",three_digit_number(60));
+		printf("   │   │   number of VIP clients have been in pool :               %s   │   │\n",three_digit_number(67));
+		printf("   │   │   Number of clients have been in Race :                   %s   │   │\n",three_digit_number(54));
+		printf("   │   │   Number of clients have been in Tobogan :                %s   │   │\n",three_digit_number(34));
+		printf("   │   │   Number of clients have been in Sunbath :                %s   │   │\n",three_digit_number(20));
+		printf("   │   │   Number of clients have been in Slow River :             %s ┌─┤   │\n",three_digit_number(60));
+	  printf("   │   └───────────────────────────────────────────────────────────────┴─┘   │\n");
+		printf("   │   ■─[ Desistencias ]────────────────────────────────────────────────┐   │\n");
+		printf("   │   │   Total number of drops in queue :                        %s   │   │\n",three_digit_number(50));
+		printf("   │   │   Number of drops in Aquapark :                           %s   │   │\n",three_digit_number(69));
+		printf("   │   │   Number of drops in Pool :                               %s   │   │\n",three_digit_number(6));
+		printf("   │   │   Number of drops in Race :                               %s   │   │\n",three_digit_number(89));
+		printf("   │   │   Number of drops in Tobogan :                            %s   │   │\n",three_digit_number(5));
+		printf("   │   │   Number of drops in Slow River :                         %s ┌─┤   │\n",three_digit_number(45));
+	  printf("   │   └───────────────────────────────────────────────────────────────┴─┘   │\n");
+		printf("   │   ■─[ Tempos Medios ]───────────────────────────────────────────────┐   │\n");
+		printf("   │   │   Average time in queue to get in Aquapark :            %s   │   │\n",three_digit_number(2));
+		printf("   │   │   Average time in queue to get in Pool :                %s   │   │\n",three_digit_number(4));
+		printf("   │   │   Average time in queue to get in Race :                %s   │   │\n",three_digit_number(3));
+		printf("   │   │   Average time in queue to get in Tobogan :             %s   │   │\n",three_digit_number(2));
+		printf("   │   │   Average time in queue to get in Slow River :          %s ┌─┤   │\n",three_digit_number(1));
+
+		printf("   │   └───────────────────────────────────────────────────────────────┴─┘   │\n");
+
+	}
+
 void print_body(int state){
 	int i;
 	switch(state){
@@ -184,10 +241,10 @@ void print_body(int state){
 			for(i=0; i<24;i++) write_decoder(real_time_log[i]);
 			fill_empty(1);
 			break;
-		case 2: fill_empty(26); break;
-		case 3: fill_empty(26); break;
+		case 2: creat_stats(); break;
+		case 3: creat_graph(); break;
 		case 4:
-			printf("   │                                                                         │\n   │   ■─[ Joao Borges ]─────────────────────────────────────────────────┐   │\n   │   │                                                                 │   │\n   │   │   2016311                                                     ┌─┤   │\n   │   └───────────────────────────────────────────────────────────────┴─┘   │\n   │                                                                         │\n   │   ■─[ Nuno Rodrigues ]──────────────────────────────────────────────┐   │\n   │   │                                                                 │   │\n   │   │   2044009                                                     ┌─┤   │\n   │   └───────────────────────────────────────────────────────────────┴─┘   │\n   │                                                                         │\n   │   ■─[ Vitor Paixao ]────────────────────────────────────────────────┐   │\n   │   │                                                                 │   │\n   │   │   XXXXXXX                                                     ┌─┤   │\n   │   └───────────────────────────────────────────────────────────────┴─┘   │\n");
+			printf("   │                                                                         │\n   │   ■─[ Joao Borges ]─────────────────────────────────────────────────┐   │\n   │   │                                                                 │   │\n   │   │   2016311                                                     ┌─┤   │\n   │   └───────────────────────────────────────────────────────────────┴─┘   │\n   │                                                                         │\n   │   ■─[ Nuno Rodrigues ]──────────────────────────────────────────────┐   │\n   │   │                                                                 │   │\n   │   │   2044009                                                     ┌─┤   │\n   │   └───────────────────────────────────────────────────────────────┴─┘   │\n   │                                                                         │\n   │   ■─[ Vitor Paixao ]────────────────────────────────────────────────┐   │\n   │   │                                                                 │   │\n   │   │   2023212                                                     ┌─┤   │\n   │   └───────────────────────────────────────────────────────────────┴─┘   │\n");
 			fill_empty(11);
 			break;
 		default: print_body(1); break;
