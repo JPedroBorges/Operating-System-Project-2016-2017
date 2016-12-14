@@ -16,11 +16,10 @@ int static hour=0;
 int static monitor_on=0;
 
 int print_screen(int hour, int state, int client_id){
-	fill_realtimelog(hour,state,client_id);
 	if(simulation==0 && monitor_on==0) tab=0;
 	printf("\n");
 	print_header(tab,hour);
-	print_body(tab);
+	print_body(tab, hour, state, client_id);
 	print_footer();
 	printf("$");
 
@@ -108,9 +107,9 @@ int main(){
 		int* info = decode(buffer);
 		if(info[1]==101) simulation=0;
 		hour=info[0];
+		fill_realtimelog(info[0],info[1],info[2]);
 		write_log(info[0],info[1],info[2]);
 		print_screen(info[0],info[1],info[2]);
-		//write_decoder(info);
 	}
 
 	pthread_join(t_reader , NULL);
