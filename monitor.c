@@ -42,10 +42,8 @@ int * reader(){
 				tab=4;
 				break;
 			case 5:
-				tab=3;
-				wait(1);
-				tab=5;
 				simulation=0;
+				monitor_on=0;
 				break;
 			default:
 				tab = 6;

@@ -9,17 +9,14 @@
 int real_time_log[24][3]={{-1,-1,-1},{-1,-1,-1},{-1,-1,-1},{-1,-1,-1},{-1,-1,-1},{-1,-1,-1},{-1,-1,-1},{-1,-1,-1},{-1,-1,-1},{-1,-1,-1},{-1,-1,-1},{-1,-1,-1},{-1,-1,-1},{-1,-1,-1},{-1,-1,-1},{-1,-1,-1},{-1,-1,-1},{-1,-1,-1},{-1,-1,-1},{-1,-1,-1},{-1,-1,-1},{-1,-1,-1},{-1,-1,-1},{-1,-1,-1}};
 void fill_realtimelog(int hour, int state, int client_id){
 	int i;
-	printf("%d::", real_time_log[23][0]);
 	for(i=1;i<24;i++){
 		real_time_log[(i-1)][0]=real_time_log[i][0];
 		real_time_log[(i-1)][1]=real_time_log[i][1];
 		real_time_log[(i-1)][2]=real_time_log[i][2];
 	}
-	printf("%d::", real_time_log[23][0]);
 	real_time_log[23][0]=hour;
 	real_time_log[23][1]=state;
 	real_time_log[23][2]=client_id;
-	printf("%d\n", real_time_log[23][0]);
 }
 
 int write_log(int hour, int state, int client_id){
@@ -117,28 +114,28 @@ int * decode (char str[28]){
 }
 
 void write_decoder(int hour, int state, int client_id) {
-
+	printf("%s,%s\n", three_digit_number(client_id),three_digit_number(client_id));
 	switch(state) {
-		case 1: printf("   │  [%s] ❤ Client %d arrived to AquaPark.                               │\n", make_hours(hour), client_id);break;
-		case 2: printf("   │  [%s] ➤ Client %d arrived to swimming pool.                          │\n", make_hours(hour), client_id); break;
-		case 3: printf("   │  [%s] ➤ Client %d arrived to Toboggan.                               │\n", make_hours(hour), client_id); break;
-		case 4: printf("   │  [%s] ➤ Client %d arrived to Race.                                   │\n", make_hours(hour), client_id); break;
-		case 5: printf("   │  [%s] ➤ Client %d arrived to Sunbath.                                │\n", make_hours(hour), client_id); break;
-		case 11: printf("   │  [%s] ☀ Client %d entered to AquaPark.                               │\n", make_hours(hour), client_id); break;
-		case 12: printf("   │  [%s] ☀ Client %d entered to swimming pool.                          │\n", make_hours(hour), client_id); break;
-		case 13: printf("   │  [%s] ☀ Client %d entered to Toboggan.                               │\n", make_hours(hour), client_id); break;
-		case 14: printf("   │  [%s] ☀ Client %d entered to Race.                                   │\n", make_hours(hour), client_id); break;
-		case 15: printf("   │  [%s] ☀ Client %d entered to Sunbath                                 │\n", make_hours(hour), client_id); break;
-		case 21: printf("   │  [%s] ★ Client %d went out of AquaPark.                              │\n", make_hours(hour), client_id); break;
-		case 22: printf("   │  [%s] ⚫ Client %d went out of swimming pool.                         │\n", make_hours(hour), client_id); break;
-		case 23: printf("   │  [%s] ⚫ Client %d went out of Toboggan.                              │\n", make_hours(hour), client_id); break;
-		case 24: printf("   │  [%s] ⚫ Client %d went out of Race.                                  │\n", make_hours(hour), client_id); break;
-		case 25: printf("   │  [%s] ⚫ Client %d went out of Sunbath                                │\n", make_hours(hour), client_id); break;
-		case 31: printf("   │  [%s] ❌ Client %d gave up on AquaPark, was waiting for too long      │\n", make_hours(hour), client_id); break;
-		case 32: printf("   │  [%s] ❌ Client %d gave up on swimming pool, was waiting for too long │\n", make_hours(hour), client_id); break;
-		case 33: printf("   │  [%s] ❌ Client %d gave up on Toboggan, was waiting for too long      │\n", make_hours(hour), client_id); break;
-		case 34: printf("   │  [%s] ❌ Client %d gave up on Race, was waiting for too long          │\n", make_hours(hour), client_id); break;
-		case 35: printf("   │  [%s] ❌ Client %d gave up on Sunbath, was waiting for too long       │\n", make_hours(hour), client_id); break;
+		case 1: printf("   │  [%s] ❤ Client %s arrived to AquaPark.                               │\n", make_hours(hour), three_digit_number(client_id)); break;
+		case 2: printf("   │  [%s] ➤ Client %s arrived to swimming pool.                          │\n", make_hours(hour), three_digit_number(client_id)); break;
+		case 3: printf("   │  [%s] ➤ Client %s arrived to Toboggan.                               │\n", make_hours(hour), three_digit_number(client_id)); break;
+		case 4: printf("   │  [%s] ➤ Client %s arrived to Race.                                   │\n", make_hours(hour), three_digit_number(client_id)); break;
+		case 5: printf("   │  [%s] ➤ Client %s arrived to Sunbath.                                │\n", make_hours(hour), three_digit_number(client_id)); break;
+		case 11: printf("   │  [%s] ☀ Client %s entered to AquaPark.                               │\n", make_hours(hour), three_digit_number(client_id)); break;
+		case 12: printf("   │  [%s] ☀ Client %s entered to swimming pool.                          │\n", make_hours(hour), three_digit_number(client_id)); break;
+		case 13: printf("   │  [%s] ☀ Client %s entered to Toboggan.                               │\n", make_hours(hour), three_digit_number(client_id)); break;
+		case 14: printf("   │  [%s] ☀ Client %s entered to Race.                                   │\n", make_hours(hour), three_digit_number(client_id)); break;
+		case 15: printf("   │  [%s] ☀ Client %s entered to Sunbath                                 │\n", make_hours(hour), three_digit_number(client_id)); break;
+		case 21: printf("   │  [%s] ★ Client %s went out of AquaPark.                              │\n", make_hours(hour), three_digit_number(client_id)); break;
+		case 22: printf("   │  [%s] ⚫ Client %s went out of swimming pool.                         │\n", make_hours(hour), three_digit_number(client_id)); break;
+		case 23: printf("   │  [%s] ⚫ Client %s went out of Toboggan.                              │\n", make_hours(hour), three_digit_number(client_id)); break;
+		case 24: printf("   │  [%s] ⚫ Client %s went out of Race.                                  │\n", make_hours(hour), three_digit_number(client_id)); break;
+		case 25: printf("   │  [%s] ⚫ Client %s went out of Sunbath                                │\n", make_hours(hour), three_digit_number(client_id)); break;
+		case 31: printf("   │  [%s] ❌ Client %s gave up on AquaPark, was waiting for too long      │\n", make_hours(hour), three_digit_number(client_id)); break;
+		case 32: printf("   │  [%s] ❌ Client %s gave up on swimming pool, was waiting for too long │\n", make_hours(hour), three_digit_number(client_id)); break;
+		case 33: printf("   │  [%s] ❌ Client %s gave up on Toboggan, was waiting for too long      │\n", make_hours(hour), three_digit_number(client_id)); break;
+		case 34: printf("   │  [%s] ❌ Client %s gave up on Race, was waiting for too long          │\n", make_hours(hour), three_digit_number(client_id)); break;
+		case 35: printf("   │  [%s] ❌ Client %s gave up on Sunbath, was waiting for too long       │\n", make_hours(hour), three_digit_number(client_id)); break;
 		case 100: printf("   │  [%s] ⛬ Simulation started.                                          │\n", make_hours(hour)); break;
 		case 101: printf("   │  [%s] ⛬ Simulation is over.                                          │\n", make_hours(hour)); break;
 		case -1: printf("   │                                                                         │\n"); break;
