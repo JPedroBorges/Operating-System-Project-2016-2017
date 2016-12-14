@@ -19,39 +19,43 @@ int print_screen(int hour, int state, int client_id){
 	if(simulation==0 && monitor_on==0) tab=0;
 	printf("\n");
 	print_header(tab,hour);
-	print_body(tab, hour, state, client_id);
+	print_body(tab);
 	print_footer();
 	printf("$");
-
 }
 int * reader(){
 	// this should go to the reader at some point
 	int choice;
 	while(monitor_on){
-	scanf("%d",&choice);
-	switch(choice){
-		case 1:
-			tab=1;
-			break;
-		case 2:
-			tab=2;
-			break;
-		case 3:
-			tab=3;
-			break;
-		case 4:
-			tab=4;
-			break;
-		case 5:
-			tab=3;
-			wait(1);
-			tab=5;
-			simulation=0;
-			break;
-		default:
-			tab = 6;
-			break;
-	}
+		scanf("%d",&choice);
+		switch(choice){
+			case 1:
+				tab=1;
+				break;
+			case 2:
+				tab=2;
+				break;
+			case 3:
+				tab=3;
+				break;
+			case 4:
+				tab=4;
+				break;
+			case 5:
+				tab=3;
+				wait(1);
+				tab=5;
+				simulation=0;
+				break;
+			default:
+				tab = 6;
+				break;
+		}
+		printf("\n");
+		print_header(tab,hour);
+		print_body(tab);
+		print_footer();
+		printf("$");
 	}
 }
 int main(){
@@ -84,6 +88,7 @@ int main(){
 	bzero(buffer,256);
 	//fgets(buffer,255,stdin);
 
+	print_screen(-1,0,0);
 	char enter;
 	while (enter != '\r' && enter != '\n') { enter = getchar(); }
 

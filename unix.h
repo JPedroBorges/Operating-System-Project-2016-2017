@@ -46,5 +46,5 @@ int * decode();
 void write_decoder();
 void fill_empty(int);
 void print_header(int,int);
-void print_body(int,int,int,int);
+void print_body(int);
 void print_footer();

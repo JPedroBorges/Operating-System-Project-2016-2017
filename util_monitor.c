@@ -164,7 +164,7 @@ void print_header(int tab, int hour){
 	if(hour>-1) printf("   ├─────────────────────────────[ ·∙   %s  ∙· ]──────────────────────────┤\n", make_hours(hour));
 	else printf("   ├─────────────────────────────[ ·∙   wait!  ∙· ]──────────────────────────┤\n");
 }
-void print_body(int tab, int hour, int state, int client_id){
+void print_body(int tab){
 	int i;
 	switch(tab){
 		case 0:
@@ -183,7 +183,7 @@ void print_body(int tab, int hour, int state, int client_id){
 			printf("   │                                                                         │\n   │   ■─[ Joao Borges ]─────────────────────────────────────────────────┐   │\n   │   │                                                                 │   │\n   │   │   2016311                                                     ┌─┤   │\n   │   └───────────────────────────────────────────────────────────────┴─┘   │\n   │                                                                         │\n   │   ■─[ Nuno Rodrigues ]──────────────────────────────────────────────┐   │\n   │   │                                                                 │   │\n   │   │   2044009                                                     ┌─┤   │\n   │   └───────────────────────────────────────────────────────────────┴─┘   │\n   │                                                                         │\n   │   ■─[ Vitor Paixao ]────────────────────────────────────────────────┐   │\n   │   │                                                                 │   │\n   │   │   XXXXXXX                                                     ┌─┤   │\n   │   └───────────────────────────────────────────────────────────────┴─┘   │\n");
 			fill_empty(11);
 			break;
-		default: print_body(1, hour, state, client_id);break;
+		default: print_body(1);break;
 	}
 }
 void print_footer(){
