@@ -16,76 +16,25 @@ int static hour=0;
 int static monitor_on=0;
 
 int print_screen(int hour, int state, int client_id){
-	fill_realtimelog(hour,state,client_id);
 	if(simulation==0 && monitor_on==0) tab=0;
 	printf("\n");
 	print_header(tab,hour);
 	print_body(tab);
 	print_footer();
 	printf("$");
+}
+int * reader(){
+	int choice;
+	while(monitor_on){
 
-	while(monitor_on==0){}
-	while(tab!=5){
+
 		printf("\n");
 		print_header(tab,hour);
 		print_body(tab);
 		print_footer();
 		printf("$");
-		int choice;
-		// this should go to the reader at some point
-	//	while(monitor_on){
-		scanf("%d",&choice);
-		switch(choice){
-			case 1:
-				tab=1;
-				break;
-			case 2:
-				tab=2;
-				break;
-			case 3:
-				tab=3;
-				break;
-			case 4:
-				tab=4;
-				break;
-			case 5:
-				tab=3;
-				wait(1);
-				tab=5;
-				simulation=0;
-				break;
-			default:
-				tab = 6;
-				break;
-		}
-	//	}
 	}
-}
-int * reader(){
-	/*int choice;
-	while(monitor_on){
-		scanf("%d",&choice);
-		switch(choice){
-			case 1:
 
-				break;
-			case 2:
-				break;
-			case 3:
-				break;
-			case 4:
-				break;
-			case 5:
-				tab=3;
-				wait(1);
-				tab=5;
-				simulation=0;
-				break;
-			default:
-				tab = 6;
-				break;
-		}
-	}*/
 }
 int main(){
 	printf("%s\n", "Running monitor");
@@ -117,6 +66,7 @@ int main(){
 	bzero(buffer,256);
 	//fgets(buffer,255,stdin);
 
+	print_screen(-1,0,0);
 	char enter;
 	while (enter != '\r' && enter != '\n') { enter = getchar(); }
 
@@ -140,10 +90,9 @@ int main(){
 		int* info = decode(buffer);
 		if(info[1]==101) simulation=0;
 		hour=info[0];
-		//write_decoder(info);
+		fill_realtimelog(info[0],info[1],info[2]);
 		write_log(info[0],info[1],info[2]);
 		print_screen(info[0],info[1],info[2]);
-		//write_decoder(info);
 	}
 
 	pthread_join(t_reader , NULL);

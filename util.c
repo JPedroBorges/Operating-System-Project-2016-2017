@@ -47,3 +47,16 @@ char * read_message(int newsockfd){
 
 	return buffer;
 }
+char * three_digit_number(int value){
+	//printf("%d\n", value);
+	static char string[3];
+	if (value>99){
+		 sprintf(string, "%d", value);
+	}else if (value>9){
+			sprintf(string, " %d", value);
+	}else{
+		sprintf(string, "  %d", value);
+	}
+	//printf("%s\n", string);
+	return string;
+}

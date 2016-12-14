@@ -10,14 +10,14 @@
 int real_time_log[24][3]={{-1,-1,-1},{-1,-1,-1},{-1,-1,-1},{-1,-1,-1},{-1,-1,-1},{-1,-1,-1},{-1,-1,-1},{-1,-1,-1},{-1,-1,-1},{-1,-1,-1},{-1,-1,-1},{-1,-1,-1},{-1,-1,-1},{-1,-1,-1},{-1,-1,-1},{-1,-1,-1},{-1,-1,-1},{-1,-1,-1},{-1,-1,-1},{-1,-1,-1},{-1,-1,-1},{-1,-1,-1},{-1,-1,-1},{-1,-1,-1}};
 void fill_realtimelog(int hour, int state, int client_id){
 	int i;
-	for(i=24;i>1;i--){
-		real_time_log[i-1][0]=real_time_log[i][0];
-		real_time_log[i-1][1]=real_time_log[i][1];
-		real_time_log[i-1][2]=real_time_log[i][2];
+	for(i=1;i<24;i++){
+		real_time_log[(i-1)][0]=real_time_log[i][0];
+		real_time_log[(i-1)][1]=real_time_log[i][1];
+		real_time_log[(i-1)][2]=real_time_log[i][2];
 	}
-	real_time_log[24][0]=hour;
-	real_time_log[24][1]=state;
-	real_time_log[24][2]=client_id;
+	real_time_log[23][0]=hour;
+	real_time_log[23][1]=state;
+	real_time_log[23][2]=client_id;
 }
 
 int write_log(int hour, int state, int client_id){
@@ -117,34 +117,32 @@ int * decode (char str[28]){
 	return final;
 }
 
-void write_decoder(int final[3]){
-	int state = final[1];
-
+void write_decoder(int hour, int state, int client_id) {
 	switch(state) {
-		case 1: printf("   │  [%s] ❤ Client %d arrived to AquaPark.                               │\n", make_hours(final[0]), final[2]);break;
-		case 2: printf("   │  [%s] ➤ Client %d arrived to swimming pool.                          │\n", make_hours(final[0]), final[2]); break;
-		case 3: printf("   │  [%s] ➤ Client %d arrived to Toboggan.                               │\n", make_hours(final[0]), final[2]); break;
-		case 4: printf("   │  [%s] ➤ Client %d arrived to Race.                                   │\n", make_hours(final[0]), final[2]); break;
-		case 5: printf("   │  [%s] ➤ Client %d arrived to Sunbath.                                │\n", make_hours(final[0]), final[2]); break;
-		case 11: printf("   │  [%s] ☀ Client %d entered to AquaPark.                               │\n", make_hours(final[0]), final[2]); break;
-		case 12: printf("   │  [%s] ☀ Client %d entered to swimming pool.                          │\n", make_hours(final[0]), final[2]); break;
-		case 13: printf("   │  [%s] ☀ Client %d entered to Toboggan.                               │\n", make_hours(final[0]), final[2]); break;
-		case 14: printf("   │  [%s] ☀ Client %d entered to Race.                                   │\n", make_hours(final[0]), final[2]); break;
-		case 15: printf("   │  [%s] ☀ Client %d entered to Sunbath                                 │\n", make_hours(final[0]), final[2]); break;
-		case 21: printf("   │  [%s] ★ Client %d went out of AquaPark.                              │\n", make_hours(final[0]), final[2]); break;
-		case 22: printf("   │  [%s] ⚫ Client %d went out of swimming pool.                         │\n", make_hours(final[0]), final[2]); break;
-		case 23: printf("   │  [%s] ⚫ Client %d went out of Toboggan.                              │\n", make_hours(final[0]), final[2]); break;
-		case 24: printf("   │  [%s] ⚫ Client %d went out of Race.                                  │\n", make_hours(final[0]), final[2]); break;
-		case 25: printf("   │  [%s] ⚫ Client %d went out of Sunbath                                │\n", make_hours(final[0]), final[2]); break;
-		case 31: printf("   │  [%s] ❌ Client %d gave up on AquaPark, was waiting for too long      │\n", make_hours(final[0]), final[2]); break;
-		case 32: printf("   │  [%s] ❌ Client %d gave up on swimming pool, was waiting for too long │\n", make_hours(final[0]), final[2]); break;
-		case 33: printf("   │  [%s] ❌ Client %d gave up on Toboggan, was waiting for too long      │\n", make_hours(final[0]), final[2]); break;
-		case 34: printf("   │  [%s] ❌ Client %d gave up on Race, was waiting for too long          │\n", make_hours(final[0]), final[2]); break;
-		case 35: printf("   │  [%s] ❌ Client %d gave up on Sunbath, was waiting for too long       │\n", make_hours(final[0]), final[2]); break;
-		case 100: printf("   │  [%s] ⛬ Simulation started.                                          │\n", make_hours(final[0])); break;
-		case 101: printf("   │  [%s] ⛬ Simulation is over.                                          │\n", make_hours(final[0])); break;
+		case 1: printf("   │  [%s] ❤ Client",make_hours(hour)); printf(" %s arrived to AquaPark.                              │\n", three_digit_number(client_id)); break;
+		case 2: printf("   │  [%s] ➤ Client",make_hours(hour)); printf(" %s arrived to swimming pool.                         │\n", three_digit_number(client_id)); break;
+		case 3: printf("   │  [%s] ➤ Client",make_hours(hour)); printf(" %s arrived to Toboggan.                              │\n", three_digit_number(client_id)); break;
+		case 4: printf("   │  [%s] ➤ Client",make_hours(hour)); printf(" %s arrived to Race.                                  │\n", three_digit_number(client_id)); break;
+		case 5: printf("   │  [%s] ➤ Client",make_hours(hour)); printf(" %s arrived to Sunbath.                               │\n", three_digit_number(client_id)); break;
+		case 11: printf("   │  [%s] ☀ Client",make_hours(hour)); printf(" %s entered to AquaPark.                              │\n", three_digit_number(client_id)); break;
+		case 12: printf("   │  [%s] ☀ Client",make_hours(hour)); printf(" %s entered to swimming pool.                         │\n", three_digit_number(client_id)); break;
+		case 13: printf("   │  [%s] ☀ Client",make_hours(hour)); printf(" %s entered to Toboggan.                              │\n", three_digit_number(client_id)); break;
+		case 14: printf("   │  [%s] ☀ Client",make_hours(hour)); printf(" %s entered to Race.                                  │\n", three_digit_number(client_id)); break;
+		case 15: printf("   │  [%s] ☀ Client",make_hours(hour)); printf(" %s entered to Sunbath                                │\n", three_digit_number(client_id)); break;
+		case 21: printf("   │  [%s] ★ Client",make_hours(hour)); printf(" %s went out of AquaPark.                             │\n", three_digit_number(client_id)); break;
+		case 22: printf("   │  [%s] ⚫ Client",make_hours(hour)); printf(" %s went out of swimming pool.                        │\n", three_digit_number(client_id)); break;
+		case 23: printf("   │  [%s] ⚫ Client",make_hours(hour)); printf(" %s went out of Toboggan.                             │\n", three_digit_number(client_id)); break;
+		case 24: printf("   │  [%s] ⚫ Client",make_hours(hour)); printf(" %s went out of Race.                                 │\n", three_digit_number(client_id)); break;
+		case 25: printf("   │  [%s] ⚫ Client",make_hours(hour)); printf(" %s went out of Sunbath                               │\n", three_digit_number(client_id)); break;
+		case 31: printf("   │  [%s] ❌ Client",make_hours(hour)); printf(" %s gave up on AquaPark, was waiting for too long     │\n", three_digit_number(client_id)); break;
+		case 32: printf("   │  [%s] ❌ Client",make_hours(hour)); printf(" %s gave up on swimming pool, was waiting for too long│\n", three_digit_number(client_id)); break;
+		case 33: printf("   │  [%s] ❌ Client",make_hours(hour)); printf(" %s gave up on Toboggan, was waiting for too long     │\n", three_digit_number(client_id)); break;
+		case 34: printf("   │  [%s] ❌ Client",make_hours(hour)); printf(" %s gave up on Race, was waiting for too long         │\n", three_digit_number(client_id)); break;
+		case 35: printf("   │  [%s] ❌ Client",make_hours(hour)); printf(" %s gave up on Sunbath, was waiting for too long      │\n", three_digit_number(client_id)); break;
+		case 100: printf("   │  [%s] ⛬ Simulation started.                                          │\n", make_hours(hour)); break;
+		case 101: printf("   │  [%s] ⛬ Simulation is over.                                          │\n", make_hours(hour)); break;
 		case -1: printf("   │                                                                         │\n"); break;
-		default: printf("   │  [%s] Error: didnt get what you mean                                 │\n", make_hours(final[0])); break;
+		default: printf("   │  [%s] Error: didnt get what you mean                                 │\n", make_hours(hour)); break;
 	}
 }
 void fill_empty(int qto){
@@ -238,7 +236,7 @@ void print_body(int state){
 			break;
 		case 1:
 			fill_empty(1);
-			for(i=0; i<24;i++) write_decoder(real_time_log[i]);
+			for(i=0; i<24;i++) write_decoder(real_time_log[i][0], real_time_log[i][1], real_time_log[i][2]);
 			fill_empty(1);
 			break;
 		case 2: creat_stats(); break;
@@ -247,7 +245,7 @@ void print_body(int state){
 			printf("   │                                                                         │\n   │   ■─[ Joao Borges ]─────────────────────────────────────────────────┐   │\n   │   │                                                                 │   │\n   │   │   2016311                                                     ┌─┤   │\n   │   └───────────────────────────────────────────────────────────────┴─┘   │\n   │                                                                         │\n   │   ■─[ Nuno Rodrigues ]──────────────────────────────────────────────┐   │\n   │   │                                                                 │   │\n   │   │   2044009                                                     ┌─┤   │\n   │   └───────────────────────────────────────────────────────────────┴─┘   │\n   │                                                                         │\n   │   ■─[ Vitor Paixao ]────────────────────────────────────────────────┐   │\n   │   │                                                                 │   │\n   │   │   2023212                                                     ┌─┤   │\n   │   └───────────────────────────────────────────────────────────────┴─┘   │\n");
 			fill_empty(11);
 			break;
-		default: print_body(1); break;
+		default: print_body(1);break;
 	}
 }
 void print_footer(){

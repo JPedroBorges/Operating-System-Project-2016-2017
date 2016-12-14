@@ -35,6 +35,7 @@ int static debuging=0;
 char * make_hours(int);
 void send_message(int,int,int,int);
 char * read_message(int);
+char * three_digit_number(int);
 
 /************************** util_simulador **************************/
 int * read_method();
