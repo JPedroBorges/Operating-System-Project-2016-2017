@@ -198,30 +198,30 @@ void creat_graph(/*int aqua, int pool, int race, int race_status, int tobogan, i
 	}
 
 	void creat_stats (/*int Numero_Entradas_Discoteca,int Numero_Entradas_Sala_Rock,int Numero_Entradas_Sala_Comercial,int Numero_Entradas_Sala_House,int Numero_Entradas_Sala_Sofas,int Total_Clientes_Normais_Discoteca,int Total_Clientes_Normais_Sala_Rock,int Total_Clientes_Normais_Sala_Comercial,int Total_Clientes_Normais_Sala_House,int Total_Clientes_Normais_Sala_Sofas,int Total_Clientes_VIPS_Discoteca,int Total_Clientes_VIPS_Sala_Rock,int Total_Clientes_VIPS_Sala_Comercial,int Total_Clientes_VIPS_Sala_House,int Total_Clientes_VIPS_Sala_Sofas,int Numero_Desistencias_Fila_Discoteca,int Numero_Desistencias_Fila_Sala_Rock,int Numero_Desistencias_Fila_Sala_Comercial,int Numero_Desistencias_Fila_Sala_House,int Numero_Desistencias_Fila_Sala_Sofas,float Tempo_Medio_Espera_Fila_Antes_Entrar_Discoteca,float Tempo_Medio_Espera_Fila_Antes_Entrar_Sala_Rock,float Tempo_Medio_Espera_Fila_Antes_Entrar_Sala_Comercial,float Tempo_Medio_Espera_Fila_Antes_Entrar_Sala_House,float Tempo_Medio_Espera_Fila_Antes_Entrar_Sala_Sofas,float Tempo_Medio_Espera_Fila_Antes_Desistir_Discoteca,float Tempo_Medio_Espera_Fila_Antes_Desistir_Sala_Rock,float Tempo_Medio_Espera_Fila_Antes_Desistir_Sala_Comercial,float Tempo_Medio_Espera_Fila_Antes_Desistir_Sala_House,float Tempo_Medio_Espera_Fila_Antes_Desistir_Sala_Sofas,int Tempo_Estadia_Maximo_Fila_Antes_Entrar_Discoteca,int Tempo_Estadia_Maximo_Fila_Antes_Entrar_Sala_Rock,int Tempo_Estadia_Maximo_Fila_Antes_Entrar_Sala_Comercial,int Tempo_Estadia_Maximo_Fila_Antes_Entrar_Sala_House,int Tempo_Estadia_Maximo_Fila_Antes_Entrar_Sala_Sofas, int Tempo_Estadia_Maximo_Fila_Antes_Desistir_Discoteca, int Tempo_Estadia_Maximo_Fila_Antes_Desistir_Sala_Rock, int Tempo_Estadia_Maximo_Fila_Antes_Desistir_Sala_Comercial, int Tempo_Estadia_Maximo_Fila_Antes_Desistir_Sala_House, int Tempo_Estadia_Maximo_Fila_Antes_Desistir_Sala_Sofas*/ ){
-		char * recebido = "0";
+		//char * recebido = "0";
 	//	int Total_Desistencia_Filas=Numero_Desistencias_Fila_Discoteca+Numero_Desistencias_Fila_Sala_Rock+Numero_Desistencias_Fila_Sala_Comercial+Numero_Desistencias_Fila_Sala_House+Numero_Desistencias_Fila_Sala_Sofas;//Soma de todas as desistencias
 		printf("   │   ■─[ Clientes ]────────────────────────────────────────────────────┐   │\n");
-		printf("   │   │   Numero Clientes que Estiveram na Discoteca :            %s   │   │\n",three_digit_number(60));
-		printf("   │   │   Numero Clientes VIPS que Estiveram na Discoteca :       %s   │   │\n",three_digit_number(67));
-		printf("   │   │   Numero Clientes que Estiveram na Sala de Rock :         %s   │   │\n",three_digit_number(54));
-		printf("   │   │   Numero Clientes que Estiveram na Sala de Comercial :    %s   │   │\n",three_digit_number(34));
-		printf("   │   │   Numero Clientes que Estiveram na Sala de House :        %s   │   │\n",three_digit_number(20));
-		printf("   │   │   Numero Clientes que Estiveram na Sala de Sofas :        %s ┌─┤   │\n",three_digit_number(60));
+		printf("   │   │   Number of clients have been in Aquapark :               %s   │   │\n",three_digit_number(60));
+		printf("   │   │   number of VIP clients have been in pool :               %s   │   │\n",three_digit_number(67));
+		printf("   │   │   Number of clients have been in Race :                   %s   │   │\n",three_digit_number(54));
+		printf("   │   │   Number of clients have been in Tobogan :                %s   │   │\n",three_digit_number(34));
+		printf("   │   │   Number of clients have been in Sunbath :                %s   │   │\n",three_digit_number(20));
+		printf("   │   │   Number of clients have been in Slow River :             %s ┌─┤   │\n",three_digit_number(60));
 	  printf("   │   └───────────────────────────────────────────────────────────────┴─┘   │\n");
 		printf("   │   ■─[ Desistencias ]────────────────────────────────────────────────┐   │\n");
-		printf("   │   │   Numero Total de Desistencias nas Filas :                %s   │   │\n",three_digit_number(50));
-		printf("   │   │   Numero Desistencias na Fila da Discoteca :              %s   │   │\n",three_digit_number(69));
-		printf("   │   │   Numero Desistencias na Fila da Sala Rock :              %s   │   │\n",three_digit_number(6));
-		printf("   │   │   Numero Desistencias na Fila da Sala Comercial :         %s   │   │\n",three_digit_number(89));
-		printf("   │   │   Numero Desistencias na Fila da Sala House :             %s   │   │\n",three_digit_number(5));
-		printf("   │   │   Numero Desistencias na Fila da Sala Sofas :             %s ┌─┤   │\n",three_digit_number(45));
+		printf("   │   │   Total number of drops in queue :                        %s   │   │\n",three_digit_number(50));
+		printf("   │   │   Number of drops in Aquapark :                           %s   │   │\n",three_digit_number(69));
+		printf("   │   │   Number of drops in Pool :                               %s   │   │\n",three_digit_number(6));
+		printf("   │   │   Number of drops in Race :                               %s   │   │\n",three_digit_number(89));
+		printf("   │   │   Number of drops in Tobogan :                            %s   │   │\n",three_digit_number(5));
+		printf("   │   │   Number of drops in Slow River :                         %s ┌─┤   │\n",three_digit_number(45));
 	  printf("   │   └───────────────────────────────────────────────────────────────┴─┘   │\n");
 		printf("   │   ■─[ Tempos Medios ]───────────────────────────────────────────────┐   │\n");
-		printf("   │   │   Tempo Medio na Fila para Entrar na Discoteca :        %s   │   │\n",three_digit_number(2));
-		printf("   │   │   Tempo Medio na Fila para Entrar na Sala Rock :        %s   │   │\n",three_digit_number(4));
-		printf("   │   │   Tempo Medio na Fila para Entrar na Sala Comercial :   %s   │   │\n",three_digit_number(3));
-		printf("   │   │   Tempo Medio na Fila para Entrar na Sala House :       %s   │   │\n",three_digit_number(2));
-		printf("   │   │   Tempo Medio na Fila para Entrar na Sala Sofas :       %s ┌─┤   │\n",three_digit_number(1));
+		printf("   │   │   Average time in queue to get in Aquapark :            %s   │   │\n",three_digit_number(2));
+		printf("   │   │   Average time in queue to get in Pool :                %s   │   │\n",three_digit_number(4));
+		printf("   │   │   Average time in queue to get in Race :                %s   │   │\n",three_digit_number(3));
+		printf("   │   │   Average time in queue to get in Tobogan :             %s   │   │\n",three_digit_number(2));
+		printf("   │   │   Average time in queue to get in Slow River :          %s ┌─┤   │\n",three_digit_number(1));
 
 		printf("   │   └───────────────────────────────────────────────────────────────┴─┘   │\n");
 
