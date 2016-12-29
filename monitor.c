@@ -14,6 +14,7 @@ int static simulation=0;
 int static tab=0;
 int static hour=0;
 int static monitor_on=0;
+int ola = 0;
 
 int print_screen(int hour, int state, int client_id){
 	if(simulation==0 && monitor_on==0) tab=0;
@@ -110,6 +111,7 @@ int main(){
 		int* info = decode(buffer);
 		if(info[1]==101) simulation=0;
 		hour=info[0];
+		save_info(info[0],info[1],info[2]);
 		fill_realtimelog(info[0],info[1],info[2]);
 		write_log(info[0],info[1],info[2]);
 		print_screen(info[0],info[1],info[2]);
@@ -123,4 +125,5 @@ int main(){
 	bzero(buffer,256);
 
 	close(sockfd);
+	clear_memory();
 }

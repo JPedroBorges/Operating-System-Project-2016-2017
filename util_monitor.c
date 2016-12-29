@@ -6,6 +6,25 @@
 //*****************************************************************
 
 #include "unix.h"
+
+typedef struct s_aquapark {
+		int ID;
+		int entrada;
+		int saida;
+		struct s_aquapark *next;
+}s_aquapark;
+
+struct s_aquapark activity[5];
+
+s_aquapark *inicio = NULL;
+//int activity[5];
+int numStruct = 0;
+int teste;
+int hora;
+int hora_saida;
+
+
+
 int max_person_aqua = 10000;
 int max_person_pool = 100;
 
@@ -21,6 +40,63 @@ void fill_realtimelog(int hour, int state, int client_id){
 	real_time_log[23][1]=state;
 	real_time_log[23][2]=client_id;
 }
+
+void save_info(int hour, int state, int client_id){
+
+struct s_aquapark *pAquapark = (struct s_aquapark*) malloc(sizeof(struct s_aquapark));
+	s_aquapark *aux1 = inicio;
+	if(state == 1 ){
+
+		//activity[1] = *pAquapark;
+		pAquapark -> ID = client_id;
+		pAquapark -> entrada = hour;
+		pAquapark -> saida = 0;
+		pAquapark -> next = NULL;
+		teste = pAquapark -> ID;
+		hora = pAquapark -> entrada;
+		if( inicio == NULL){
+			inicio = pAquapark;
+		}
+		else{
+			s_aquapark *aux = inicio;
+			while(aux -> next != NULL){
+					aux = aux -> next;
+			}
+			aux-> next = pAquapark;
+		}
+	}
+	else if (state == 21){
+		//activity[1] = *aux1;
+		while (aux1 != NULL){
+			if(aux1 -> ID == client_id){
+				aux1 -> saida = hour;
+				teste = aux1 -> ID;
+				hora = aux1 -> entrada;
+				hora_saida = aux1 -> saida;
+			}
+			aux1 = aux1 -> next;
+		}
+
+	}
+
+//	activity[state] = *pAquapark;
+	//aquapark *pAquapark = new aquapark;
+	//int teste;
+	//pAquapark -> ID = client_id;
+//	pAquapark -> entrada = hour;
+//	pAquapark -> saida = 0;
+//	pAquapark -> next = NULL;
+//	teste = pAquapark -> ID;
+//	hora = pAquapark -> entrada;
+	numStruct ++;
+
+
+
+}
+
+
+
+
 
 int write_log(int hour, int state, int client_id){
 	FILE *file_log = fopen("simulation.log", "a");
@@ -46,10 +122,7 @@ int write_log(int hour, int state, int client_id){
 		case 24: fprintf(file_log,"[%s] ⚫ Client %d went out of Race.\n", make_hours(hour), client_id); break;
 		case 25: fprintf(file_log,"[%s] ⚫ Client %d went out of Sunbath\n", make_hours(hour), client_id); break;
 		case 31: fprintf(file_log,"[%s] ❌ Client %d gave up on AquaPark, was waiting for too long\n", make_hours(hour), client_id); break;
-		case 32: fprintf(file_log,"[%s] ❌ Client %d gave up on swimming pool, was waiting for too long\n", make_hours(hour), client_id); break;
-		case 33: fprintf(file_log,"[%s] ❌ Client %d gave up on Toboggan, was waiting for too long\n", make_hours(hour), client_id); break;
-		case 34: fprintf(file_log,"[%s] ❌ Client %d gave up on Race, was waiting for too long\n", make_hours(hour), client_id); break;
-		case 35: fprintf(file_log,"[%s] ❌ Client %d gave up on Sunbath, was waiting for too long\n", make_hours(hour), client_id); break;
+		case 32: fprintf(file_log,"[%s] ❌ Client %d gave up on swimming was waiting for too long\n", make_hours(hour), client_id); break;
 
 		case 43: fprintf(file_log,"[%s] ➤ Toboggan wooooooo.\n", make_hours(hour)); break;
 		case 44: fprintf(file_log,"[%s] ➤ Race wooooooo.\n", make_hours(hour)); break;
@@ -207,13 +280,13 @@ void creat_graph(/*int aqua, int pool, int race, int race_status, int tobogan, i
 		//if(i<percent_aqua) printf("██         \n", );
 	}
 
-	void creat_stats (/*int Numero_Entradas_Discoteca,int Numero_Entradas_Sala_Rock,int Numero_Entradas_Sala_Comercial,int Numero_Entradas_Sala_House,int Numero_Entradas_Sala_Sofas,int Total_Clientes_Normais_Discoteca,int Total_Clientes_Normais_Sala_Rock,int Total_Clientes_Normais_Sala_Comercial,int Total_Clientes_Normais_Sala_House,int Total_Clientes_Normais_Sala_Sofas,int Total_Clientes_VIPS_Discoteca,int Total_Clientes_VIPS_Sala_Rock,int Total_Clientes_VIPS_Sala_Comercial,int Total_Clientes_VIPS_Sala_House,int Total_Clientes_VIPS_Sala_Sofas,int Numero_Desistencias_Fila_Discoteca,int Numero_Desistencias_Fila_Sala_Rock,int Numero_Desistencias_Fila_Sala_Comercial,int Numero_Desistencias_Fila_Sala_House,int Numero_Desistencias_Fila_Sala_Sofas,float Tempo_Medio_Espera_Fila_Antes_Entrar_Discoteca,float Tempo_Medio_Espera_Fila_Antes_Entrar_Sala_Rock,float Tempo_Medio_Espera_Fila_Antes_Entrar_Sala_Comercial,float Tempo_Medio_Espera_Fila_Antes_Entrar_Sala_House,float Tempo_Medio_Espera_Fila_Antes_Entrar_Sala_Sofas,float Tempo_Medio_Espera_Fila_Antes_Desistir_Discoteca,float Tempo_Medio_Espera_Fila_Antes_Desistir_Sala_Rock,float Tempo_Medio_Espera_Fila_Antes_Desistir_Sala_Comercial,float Tempo_Medio_Espera_Fila_Antes_Desistir_Sala_House,float Tempo_Medio_Espera_Fila_Antes_Desistir_Sala_Sofas,int Tempo_Estadia_Maximo_Fila_Antes_Entrar_Discoteca,int Tempo_Estadia_Maximo_Fila_Antes_Entrar_Sala_Rock,int Tempo_Estadia_Maximo_Fila_Antes_Entrar_Sala_Comercial,int Tempo_Estadia_Maximo_Fila_Antes_Entrar_Sala_House,int Tempo_Estadia_Maximo_Fila_Antes_Entrar_Sala_Sofas, int Tempo_Estadia_Maximo_Fila_Antes_Desistir_Discoteca, int Tempo_Estadia_Maximo_Fila_Antes_Desistir_Sala_Rock, int Tempo_Estadia_Maximo_Fila_Antes_Desistir_Sala_Comercial, int Tempo_Estadia_Maximo_Fila_Antes_Desistir_Sala_House, int Tempo_Estadia_Maximo_Fila_Antes_Desistir_Sala_Sofas*/ ){
+	void creat_stats (int ola, int hora, int saida /*int Numero_Entradas_Discoteca,int Numero_Entradas_Sala_Rock,int Numero_Entradas_Sala_Comercial,int Numero_Entradas_Sala_House,int Numero_Entradas_Sala_Sofas,int Total_Clientes_Normais_Discoteca,int Total_Clientes_Normais_Sala_Rock,int Total_Clientes_Normais_Sala_Comercial,int Total_Clientes_Normais_Sala_House,int Total_Clientes_Normais_Sala_Sofas,int Total_Clientes_VIPS_Discoteca,int Total_Clientes_VIPS_Sala_Rock,int Total_Clientes_VIPS_Sala_Comercial,int Total_Clientes_VIPS_Sala_House,int Total_Clientes_VIPS_Sala_Sofas,int Numero_Desistencias_Fila_Discoteca,int Numero_Desistencias_Fila_Sala_Rock,int Numero_Desistencias_Fila_Sala_Comercial,int Numero_Desistencias_Fila_Sala_House,int Numero_Desistencias_Fila_Sala_Sofas,float Tempo_Medio_Espera_Fila_Antes_Entrar_Discoteca,float Tempo_Medio_Espera_Fila_Antes_Entrar_Sala_Rock,float Tempo_Medio_Espera_Fila_Antes_Entrar_Sala_Comercial,float Tempo_Medio_Espera_Fila_Antes_Entrar_Sala_House,float Tempo_Medio_Espera_Fila_Antes_Entrar_Sala_Sofas,float Tempo_Medio_Espera_Fila_Antes_Desistir_Discoteca,float Tempo_Medio_Espera_Fila_Antes_Desistir_Sala_Rock,float Tempo_Medio_Espera_Fila_Antes_Desistir_Sala_Comercial,float Tempo_Medio_Espera_Fila_Antes_Desistir_Sala_House,float Tempo_Medio_Espera_Fila_Antes_Desistir_Sala_Sofas,int Tempo_Estadia_Maximo_Fila_Antes_Entrar_Discoteca,int Tempo_Estadia_Maximo_Fila_Antes_Entrar_Sala_Rock,int Tempo_Estadia_Maximo_Fila_Antes_Entrar_Sala_Comercial,int Tempo_Estadia_Maximo_Fila_Antes_Entrar_Sala_House,int Tempo_Estadia_Maximo_Fila_Antes_Entrar_Sala_Sofas, int Tempo_Estadia_Maximo_Fila_Antes_Desistir_Discoteca, int Tempo_Estadia_Maximo_Fila_Antes_Desistir_Sala_Rock, int Tempo_Estadia_Maximo_Fila_Antes_Desistir_Sala_Comercial, int Tempo_Estadia_Maximo_Fila_Antes_Desistir_Sala_House, int Tempo_Estadia_Maximo_Fila_Antes_Desistir_Sala_Sofas*/ ){
 		//char * recebido = "0";
 	//	int Total_Desistencia_Filas=Numero_Desistencias_Fila_Discoteca+Numero_Desistencias_Fila_Sala_Rock+Numero_Desistencias_Fila_Sala_Comercial+Numero_Desistencias_Fila_Sala_House+Numero_Desistencias_Fila_Sala_Sofas;//Soma de todas as desistencias
 		printf("   │   ■─[ Clientes ]────────────────────────────────────────────────────┐   │\n");
-		printf("   │   │   Number of clients have been in Aquapark :               %s   │   │\n",three_digit_number(60));
-		printf("   │   │   number of VIP clients have been in pool :               %s   │   │\n",three_digit_number(67));
-		printf("   │   │   Number of clients have been in Race :                   %s   │   │\n",three_digit_number(54));
+		printf("   │   │   Number of clients have been in Aquapark :        ID     %s   │   │\n",three_digit_number(ola));
+		printf("   │   │   number of VIP clients have been in pool :    Entrada    %s   │   │\n",make_hours(hora));
+		printf("   │   │   Number of clients have been in Race :        Saida      %s   │   │\n",make_hours(hora_saida));
 		printf("   │   │   Number of clients have been in Tobogan :                %s   │   │\n",three_digit_number(34));
 		printf("   │   │   Number of clients have been in Sunbath :                %s   │   │\n",three_digit_number(20));
 		printf("   │   │   Number of clients have been in Slow River :             %s ┌─┤   │\n",three_digit_number(60));
@@ -253,7 +326,7 @@ void print_body(int tab){
 			for(i=0; i<24;i++) write_decoder(real_time_log[i][0], real_time_log[i][1], real_time_log[i][2]);
 			fill_empty(1);
 			break;
-		case 2: creat_stats(); break;
+		case 2: creat_stats(teste, hora, hora_saida); break;
 		case 3: creat_graph(); break;
 		case 4:
 			printf("   │                                                                         │\n   │   ■─[ Joao Borges ]─────────────────────────────────────────────────┐   │\n   │   │                                                                 │   │\n   │   │   2016311                                                     ┌─┤   │\n   │   └───────────────────────────────────────────────────────────────┴─┘   │\n   │                                                                         │\n   │   ■─[ Nuno Rodrigues ]──────────────────────────────────────────────┐   │\n   │   │                                                                 │   │\n   │   │   2044009                                                     ┌─┤   │\n   │   └───────────────────────────────────────────────────────────────┴─┘   │\n   │                                                                         │\n   │   ■─[ Vitor Paixao ]────────────────────────────────────────────────┐   │\n   │   │                                                                 │   │\n   │   │   2023212                                                     ┌─┤   │\n   │   └───────────────────────────────────────────────────────────────┴─┘   │\n");
@@ -264,4 +337,23 @@ void print_body(int tab){
 }
 void print_footer(){
 	printf("   └─────────────────────────────────────────────────────────────────────────┘\n   ┌─────────────────────────────────────────────────────────────────────────┐\n   │  Aquapark Simulation                                        ■ 5 - Exit  │\n");
+}
+
+void clear_memory(struct s_aquapark *s_aquapark){
+
+  while (s_aquapark != NULL)
+    {
+      struct s_aquapark *next = s_aquapark -> next;
+      free (s_aquapark -> ID);
+			free (s_aquapark -> entrada);
+			free (s_aquapark -> saida);
+      free (s_aquapark);
+      s_aquapark = next;
+			}
+		if(s_aquapark == NULL){
+			printf("tá lá!!");
+		}
+		else{
+			printf("alguma coisa está mal!");
+		}
 }
