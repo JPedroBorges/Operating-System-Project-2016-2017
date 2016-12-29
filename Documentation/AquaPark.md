@@ -35,11 +35,8 @@
 		starts: always running
 	Queue: Instant access
 # Person:
-	VIP:0 - 10%
 	Age: 0 - 122
 	time on park: 0 - 12h
 	maximum waiting time: 0 - 600 seconds
 
-# Rules:
-	A person has to walk from attraction to attraction
-	couples stick together all the time
+# No Rules:
