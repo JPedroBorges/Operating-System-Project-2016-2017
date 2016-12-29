@@ -39,15 +39,29 @@ pthread_t t_sunbath;
 pthread_t t_cliente[267785];
 
 sem_t s_aquapark;
+sem_t s_client_in_pool;
+sem_t s_client_out_pool;
+sem_t s_pool;
 
 pthread_mutex_t t_comunicate;
 /*********************************** Functions *******************************************/
-void * sunbath(){
-	printf("[%s] The Solario is now open!\n", make_hours(simulator.minute));
-	while(aquapark_open){
-		// recives clients
-	}
-	printf("[%s] The Solario is now closed!\n", make_hours(simulator.minute));
+void sunbath(int duration, int id){
+
+	//arriver at the sunbath
+
+	pthread_mutex_lock(&t_comunicate);
+	send_message(newsockfd,simulator.minute,5,id);
+	usleep(300000);
+	pthread_mutex_unlock(&t_comunicate);
+
+	sleep(duration);
+
+	pthread_mutex_lock(&t_comunicate);
+	send_message(newsockfd,simulator.minute,25,id);
+	usleep(300000);
+	pthread_mutex_unlock(&t_comunicate);
+
+
 }
 void * swimming_pool(){
 	printf("[%s] The Swimming Pool is now open!\n", make_hours(simulator.minute));
@@ -77,6 +91,44 @@ void * race(){ // leves evary minute
 	}
 	printf("[%s] The Race tobogan is now closed!\n", make_hours(simulator.minute));
 }
+void select_where_to_go(int current_place, int id){
+	
+	switch(current_place){
+		case 1: 
+			printf("client %d swiming pool.\n",id);break;
+		case 2: 
+			printf("client %d toboggan.\n",id);break;
+		case 3: 
+			printf("client %d race.\n",id);break;
+		case 4: 
+			printf("client %d sunbath.\n",id);break;
+		case 5: 
+			printf("client %d out.\n",id);break;
+		default: printf("Error selecting whero to go.\n");break;
+	}
+	sleep(2);
+
+	/*sleep(10);
+		pthread_mutex_lock(&t_comunicate);
+		send_message(newsockfd,simulator.minute,2,id);
+		usleep(300000);
+		pthread_mutex_unlock(&t_comunicate);
+		sleep(1);
+		pthread_mutex_lock(&t_comunicate);
+		send_message(newsockfd,simulator.minute,12,id);
+		usleep(300000);
+		pthread_mutex_unlock(&t_comunicate);
+		sleep(30);
+		pthread_mutex_lock(&t_comunicate);
+		send_message(newsockfd,simulator.minute,22,id);
+		usleep(300000);
+		pthread_mutex_unlock(&t_comunicate);
+		sleep(1);
+		pthread_mutex_lock(&t_comunicate);
+		send_message(newsockfd,simulator.minute,21,id);
+		usleep(300000);
+		pthread_mutex_unlock(&t_comunicate);*/
+}
 int * handle_client(int id){
 
 	
@@ -87,31 +139,23 @@ int * handle_client(int id){
 	// check ocupation
 	sem_wait(&s_aquapark);
 	// enters aquapark
+	int current_place = 4;
 	pthread_mutex_lock(&t_comunicate);
 	send_message(newsockfd,simulator.minute,11,id);
 	usleep(300000);
 	pthread_mutex_unlock(&t_comunicate);
-	sleep(30);
-	/*sleep(10);
-	pthread_mutex_lock(&t_comunicate);
-	send_message(newsockfd,simulator.minute,2,id);
-	usleep(300000);
-	pthread_mutex_unlock(&t_comunicate);
-	sleep(1);
-	pthread_mutex_lock(&t_comunicate);
-	send_message(newsockfd,simulator.minute,12,id);
-	usleep(300000);
-	pthread_mutex_unlock(&t_comunicate);
-	sleep(30);
-	pthread_mutex_lock(&t_comunicate);
-	send_message(newsockfd,simulator.minute,22,id);
-	usleep(300000);
-	pthread_mutex_unlock(&t_comunicate);
-	sleep(1);
-	pthread_mutex_lock(&t_comunicate);
-	send_message(newsockfd,simulator.minute,21,id);
-	usleep(300000);
-	pthread_mutex_unlock(&t_comunicate);*/
+
+
+	while (current_place =! 5 || simulator.minute < (simulator.end_time-30)){
+		
+		select_where_to_go(current_place, id);	
+		
+		int aux_current_place = current_place;
+		while (aux_current_place==current_place) aux_current_place = (rand()%4)+1;
+		current_place = aux_current_place;
+		
+	}
+	
 	// went out of aquapark
 	sem_post(&s_aquapark);
 	pthread_mutex_lock(&t_comunicate);
@@ -136,10 +180,7 @@ int * create_client(){
 int * aquapark(){
 	aquapark_open=1;
 	attraction_open=1;
-	if(pthread_create(&(t_sunbath), NULL ,(void *)&sunbath,NULL) != 0){ //thread sunbath
-		printf("Error creating thread\n");
-		exit(1);
-	}
+	
 	if(pthread_create(&(t_swimming_pool), NULL ,(void *)&swimming_pool,NULL) != 0){ //thread swimming pool
 		printf("Error creating thread\n");
 		exit(1);
@@ -164,6 +205,8 @@ int * aquapark(){
 	aquapark_open = 0;
 }
 int main(int argc, char **argv){
+
+	/***************************** Read configuration file ***********************************/
 	int *configuration_values = read_method(argc, argv[1]);
 
 	DEBUG = configuration_values[0];
@@ -177,11 +220,13 @@ int main(int argc, char **argv){
 	simulator.vip = configuration_values[6];
 	if(DEBUG) printf("max_population:%d\tstart_time:%d\tminute:%d\nend_time:%d\tcapacity:%d\tqueue:%d\tvip:%d\n", simulator.max_population,	simulator.start_time,simulator.minute,simulator.end_time,simulator.capacity,simulator.queue,simulator.vip);
 
+	/****************************** Semaphores and mutex init ********************************/
 
 	sem_init(&s_aquapark,0,10);
 
 	pthread_mutex_init(&t_comunicate,NULL);
-/************************************ Socket **********************************************/
+	
+	/************************************ Socket *********************************************/
 	int clilen;
 	char buffer[256];
 	struct sockaddr_in serv_addr, cli_addr;
@@ -206,10 +251,13 @@ int main(int argc, char **argv){
 
 	printf("Simulation started\n");
 
+	/*********************************** creates threads **********************************/
+
 	if(pthread_create(&(t_aquapark), NULL ,(void *)&aquapark,NULL) != 0){ //thread sunbath
 		printf("Error creating thread\n");
 		exit(1);
 	}
+
 	create_client();
 
 	//closes in the next departure
