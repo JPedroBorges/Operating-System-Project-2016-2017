@@ -50,6 +50,12 @@ int write_log(int hour, int state, int client_id){
 		case 33: fprintf(file_log,"[%s] ❌ Client %d gave up on Toboggan, was waiting for too long\n", make_hours(hour), client_id); break;
 		case 34: fprintf(file_log,"[%s] ❌ Client %d gave up on Race, was waiting for too long\n", make_hours(hour), client_id); break;
 		case 35: fprintf(file_log,"[%s] ❌ Client %d gave up on Sunbath, was waiting for too long\n", make_hours(hour), client_id); break;
+
+		case 43: fprintf(file_log,"[%s] ➤ Toboggan wooooooo.\n", make_hours(hour)); break;
+		case 44: fprintf(file_log,"[%s] ➤ Race wooooooo.\n", make_hours(hour)); break;
+		case 53: fprintf(file_log,"[%s] ➤ Toboggan trip is over.\n", make_hours(hour)); break;
+		case 54: fprintf(file_log,"[%s] ➤ Race trip is over.\n", make_hours(hour)); break;
+
 		case 100: fprintf(file_log,"[%s] ⛬ Simulation started.\n", make_hours(hour)); break;
 		case 101: fprintf(file_log,"[%s] ⛬ Simulation is over.\n", make_hours(hour)); break;
 		default: fprintf(file_log,"[%s] Error: didnt get what you mean", make_hours(hour)); break;
@@ -138,6 +144,12 @@ void write_decoder(int hour, int state, int client_id) {
 		case 33: printf("   │  [%s] ❌ Client",make_hours(hour)); printf(" %s gave up on Toboggan, was waiting for too long     │\n", three_digit_number(client_id)); break;
 		case 34: printf("   │  [%s] ❌ Client",make_hours(hour)); printf(" %s gave up on Race, was waiting for too long         │\n", three_digit_number(client_id)); break;
 		case 35: printf("   │  [%s] ❌ Client",make_hours(hour)); printf(" %s gave up on Sunbath, was waiting for too long      │\n", three_digit_number(client_id)); break;
+
+		case 43: break;
+		case 44: break;
+		case 53: break;
+		case 54: break;
+
 		case 100: printf("   │  [%s] ⛬ Simulation started.                                          │\n", make_hours(hour)); break;
 		case 101: printf("   │  [%s] ⛬ Simulation is over.                                          │\n", make_hours(hour)); break;
 		case -1: printf("   │                                                                         │\n"); break;
