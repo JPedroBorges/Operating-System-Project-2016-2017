@@ -15,6 +15,7 @@ typedef struct{
 	int capacity;
 	int queue;
 	int vip;
+	int person_frequency;
 } s_simulator;
 typedef struct{
 	int id;
@@ -76,9 +77,9 @@ void * race(){ // leves evary minute
 	printf("[%s] The Race tobogan is now closed!\n", make_hours(simulator.minute));
 }
 int * handle_client(int id){
-	pthread_mutex_lock(&t_comunicate);
+	//pthread_mutex_lock(&t_comunicate);
 	send_message(newsockfd,simulator.minute,1,id);
-	usleep(300000);
+	/*usleep(300000);
 	pthread_mutex_unlock(&t_comunicate);
 	sleep(10);
 	pthread_mutex_lock(&t_comunicate);
@@ -99,20 +100,25 @@ int * handle_client(int id){
 	pthread_mutex_lock(&t_comunicate);
 	send_message(newsockfd,simulator.minute,21,id);
 	usleep(300000);
-	pthread_mutex_unlock(&t_comunicate);
+	pthread_mutex_unlock(&t_comunicate);*/
 }
 int * create_client(){
 	int i;
 	int finaltimeforarrival = simulator.end_time-30;
 	for(i=0; i<=simulator.max_population && simulator.minute < finaltimeforarrival; i++){
 		if(i<simulator.max_population){
-			if(pthread_create(&(t_cliente[i]), NULL ,(void *)&handle_client,i) != 0){
-				printf("Error creating thread\n");
-				exit(1);
+
+			int random = (rand()%100);
+			if(random>simulator.person_frequency) i--;
+			else{
+				if(pthread_create(&(t_cliente[i]), NULL ,(void *)&handle_client,i) != 0){
+					printf("Error creating thread\n");
+					exit(1);
+				}
+				printf("[%s] A person arrived to the Park entrance\n", make_hours(simulator.minute));
 			}
-			printf("[%s] A person arrived to the Park entrance\n", make_hours(simulator.minute));
-			sleep(2);
 		}else printf("[%s] There is no more people living in Madeira\n", make_hours(simulator.minute));
+		sleep(1);
 	}
 }
 int * aquapark(){
@@ -146,6 +152,8 @@ int * aquapark(){
 	aquapark_open = 0;
 }
 int main(int argc, char **argv){
+	srand(time(NULL));
+
 	int *configuration_values = read_method(argc, argv[1]);
 
 	DEBUG = configuration_values[0];
@@ -157,6 +165,7 @@ int main(int argc, char **argv){
 	simulator.capacity = configuration_values[4];
 	simulator.queue = configuration_values[5];
 	simulator.vip = configuration_values[6];
+	simulator.person_frequency = configuration_values[8];
 	if(DEBUG) printf("max_population:%d\tstart_time:%d\tminute:%d\nend_time:%d\tcapacity:%d\tqueue:%d\tvip:%d\n", simulator.max_population,	simulator.start_time,simulator.minute,simulator.end_time,simulator.capacity,simulator.queue,simulator.vip);
 
 	pthread_mutex_init(&t_comunicate,NULL);
