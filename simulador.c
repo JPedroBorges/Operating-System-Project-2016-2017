@@ -42,6 +42,10 @@ pthread_t t_cliente[267785];
 
 sem_t s_aquapark;
 sem_t s_pool;
+sem_t s_client_tobogan;
+sem_t s_client_tobogan_prio;
+sem_t s_tobogan;
+sem_t s_end_tobogan;
 
 pthread_mutex_t t_comunicate;
 /*********************************** Functions *******************************************/
@@ -51,7 +55,7 @@ void sunbath( int id){
 	send_message(newsockfd,simulator.minute,5,id);
 	usleep(300000);
 	pthread_mutex_unlock(&t_comunicate);
-	printf("[%s] The client %d went to the sunbath.\n",make_hours(simulator.minute),id);
+	//printf("[%s] The client %d went to the sunbath.\n",make_hours(simulator.minute),id);
 	sleep(cliente[id].duration);
 	//sends the information that the client exited to the sunbath
 	pthread_mutex_lock(&t_comunicate);
@@ -72,7 +76,7 @@ void swimming_pool( int id){
 	send_message(newsockfd,simulator.minute,12,id);
 	usleep(300000);
 	pthread_mutex_unlock(&t_comunicate);
-	printf("[%s] The client %d went to the swiming pool.\n",make_hours(simulator.minute),id);
+	//printf("[%s] The client %d went to the swiming pool.\n",make_hours(simulator.minute),id);
 	sleep(cliente[id].duration);
 	//sends the information that the client exited to the swiming pool
 	pthread_mutex_lock(&t_comunicate);
@@ -82,14 +86,28 @@ void swimming_pool( int id){
 	sem_post(&s_pool);
 }
 void * toboggan(){ // leaves when 2 or 4 clients are ready waiting at least 3 minute for each departure
-	printf("[%s] The tobogan is now open!\n", make_hours(simulator.minute));
+	int i;
 	
+	printf("[%s] The tobogan is now open!\n", make_hours(simulator.minute));
 	while(attraction_open){
-		//printf("[%s] The tobogan is ready to get more costumers!\n", make_hours(simulator.minute));
-		//whaits for 2 costumres then departures
-		//printf("[%s] The tobogan is departing!\n", make_hours(simulator.minute));
-		sleep(3);
-		// waits a minute so the constumers get to the end
+		
+		printf("[%s] The tobogan is ready to get more costumers!\n", make_hours(simulator.minute));
+		int number_inside = 0;
+		while(number_inside<2){	//fills tobogan
+			sem_wait(&s_client_tobogan);
+			number_inside++;
+			//printf("+1 client inside\n");
+		}
+
+
+		printf("[%s] The tobogan is departing!\n", make_hours(simulator.minute));
+
+		sleep(5);
+		for (i = 0; i <= number_inside; ++i){
+			sem_post(&s_end_tobogan);			//tells clients that where inside that it ended
+			sem_post(&s_tobogan);				//frees the slots for more clients
+		}
+		
 	}
 	printf("[%s] The tobogan is now closed!\n", make_hours(simulator.minute));
 }
@@ -109,7 +127,7 @@ void select_where_to_go(int id){
 	time_t t;
 	srand((unsigned) time(&t));
 	//gets a random time to go if its needed
-	cliente[id].duration = (rand() % 10) + 2;
+	cliente[id].duration = 1;//(rand() % 10) + 2;
 
 	//selects where to go
 	switch(cliente[id].current_place){
@@ -120,20 +138,26 @@ void select_where_to_go(int id){
 		case 2:
 		case 3:  
 			printf("[%s] The client %d went to the tobogan.\n",make_hours(simulator.minute),id);
+			sem_wait(&s_tobogan);
+			sem_post(&s_client_tobogan);
+			printf("[%s] The client %d is riding on the tobogan.\n",make_hours(simulator.minute),id);
+			sem_wait(&s_end_tobogan);
+			printf("[%s] The client %d  leaves the tobogan.\n",make_hours(simulator.minute),id);
 			break;
 		case 4:
 		case 5:
-			printf("[%s] The client %d went to the race tobogan.\n",make_hours(simulator.minute),id);
+			//printf("[%s] The client %d went to the race tobogan.\n",make_hours(simulator.minute),id);
+			sleep(2);
 			break;
 		case 6:
 		case 7: 
 			sunbath(id);
 			break;
 		case 8: 
-			printf("[%s] The client %d went out.\n",make_hours(simulator.minute),id);break;
+			printf("[%s] The client %d went out of the park.\n",make_hours(simulator.minute),id);break;
 		default: printf("Error selecting whero to go.\n");break;
 	}
-	sleep(2);
+	
 }
 
 int * handle_client(int id){
@@ -170,7 +194,7 @@ int * handle_client(int id){
 			select_where_to_go(id);
 
 			cliente[id].current_place = getRandom();
-			printf("current current_place %d\n",cliente[id].current_place);
+			//printf("current current_place %d\n",cliente[id].current_place);
 		}else{
 			break;
 		}
@@ -196,7 +220,7 @@ int create_client(){
 				exit(1);
 			}
 			printf("[%s] The client %d arrived at the Aquapark.\n",make_hours(simulator.minute),i);
-			sleep(1);
+			sleep(2);
 		}else printf("[%s] There is no more people living in Madeira\n", make_hours(simulator.minute));
 	}
 	return i;
@@ -245,6 +269,11 @@ int main(int argc, char **argv){
 
 	sem_init(&s_aquapark,0,10);
 	sem_init(&s_pool,0,3);
+	sem_init(&s_tobogan,0,2);
+	sem_init(&s_end_tobogan,0,0);
+	sem_init(&s_client_tobogan,0,0);
+	sem_init(&s_client_tobogan_prio,0,0);
+
 
 	pthread_mutex_init(&t_comunicate,NULL);
 	
