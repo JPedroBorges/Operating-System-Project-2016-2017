@@ -34,10 +34,10 @@ s_simulator static simulator;
 s_cliente static cliente[267785];
 /************************** Threads, Mutex & Semaphores **********************************/
 pthread_t t_aquapark;
-pthread_t t_swimming_pool;
+//pthread_t t_swimming_pool;
 pthread_t t_toboggan;
 pthread_t t_race;
-pthread_t t_sunbath;
+//pthread_t t_sunbath;
 pthread_t t_cliente[267785];
 
 sem_t s_aquapark;
@@ -177,26 +177,29 @@ int * handle_client(int id){
 		
 	}
 	sem_post(&s_aquapark);
+	printf("[%s] The client %d went of the Aquapark.\n",make_hours(simulator.minute),id);
 	pthread_mutex_lock(&t_comunicate);
 	send_message(newsockfd,simulator.minute,21,id);
 	usleep(300000);
 	pthread_mutex_unlock(&t_comunicate);
 	return 0;
 }
-int * create_client(){
+int create_client(){
 	int i;
 	int finaltimeforarrival = simulator.end_time-30;
 
 	for(i=0; i<=simulator.max_population && simulator.minute < finaltimeforarrival; i++){
+
 		if(i<simulator.max_population){
 			if(pthread_create(&(t_cliente[i]), NULL ,(void *)&handle_client,i) != 0){
 				printf("Error creating thread\n");
 				exit(1);
 			}
-			printf("[%s] A person arrived to the Park entrance\n", make_hours(simulator.minute));
+			printf("[%s] The client %d arrived at the Aquapark.\n",make_hours(simulator.minute),i);
 			sleep(1);
 		}else printf("[%s] There is no more people living in Madeira\n", make_hours(simulator.minute));
 	}
+	return i;
 }
 int * aquapark(){
 	aquapark_open=1;
@@ -277,16 +280,21 @@ int main(int argc, char **argv){
 		exit(1);
 	}
 
-	create_client();
+	int created_clients = create_client();
 
 	//closes in the next departure
 	pthread_join(t_race , NULL);
 	pthread_join(t_toboggan , NULL);
-
+	//waits that all clients are over
+	int i;
+	for (i = 0; i <= created_clients; ++i)
+	{
+		pthread_join(t_cliente[i] , NULL);  // falta ver isto
+	}
 	//pthread_join(t_cliente[] , NULL);  // falta ver isto
 	// closes aquapark
-	pthread_join(t_sunbath , NULL);
-	pthread_join(t_swimming_pool , NULL);
+	//pthread_join(t_sunbath , NULL);
+	//pthread_join(t_swimming_pool , NULL);
 	printf("[%s] The Aquapark is now closed!\n", make_hours(simulator.minute));
 
 	pthread_mutex_lock(&t_comunicate);

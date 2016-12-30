@@ -57,5 +57,5 @@ void sunbath(int);
 void swimming_pool(int);
 void select_where_to_go(int);
 int * handle_client(int);
-int * create_client();
+int create_client();
 int * aquapark();
