@@ -25,6 +25,7 @@ typedef struct{
 	int max_waiting_time;
 } s_cliente;
 /********************************* Global Variables **************************************/
+
 int static sockfd, newsockfd;
 int static aquapark_open;
 int static attraction_open;
@@ -39,8 +40,6 @@ pthread_t t_sunbath;
 pthread_t t_cliente[267785];
 
 sem_t s_aquapark;
-sem_t s_client_in_pool;
-sem_t s_client_out_pool;
 sem_t s_pool;
 
 pthread_mutex_t t_comunicate;
@@ -63,19 +62,13 @@ void sunbath(int duration, int id){
 
 
 }
-void * swimming_pool(){
-	printf("[%s] The Swimming Pool is now open!\n", make_hours(simulator.minute));
-	while(aquapark_open){
-		// recives clients
-	}
-	printf("[%s] The he Swimming Pool is now closed!\n", make_hours(simulator.minute));
-}
+
 void * toboggan(){ // leaves when 2 or 4 clients are ready waiting at least 3 minute for each departure
 	printf("[%s] The tobogan is now open!\n", make_hours(simulator.minute));
 	while(attraction_open){
-		printf("[%s] The tobogan is ready to get more costumers!\n", make_hours(simulator.minute));
+		//printf("[%s] The tobogan is ready to get more costumers!\n", make_hours(simulator.minute));
 		//whaits for 2 costumres then departures
-		printf("[%s] The tobogan is departing!\n", make_hours(simulator.minute));
+		//printf("[%s] The tobogan is departing!\n", make_hours(simulator.minute));
 		sleep(3);
 		// waits a minute so the constumers get to the end
 	}
@@ -84,26 +77,53 @@ void * toboggan(){ // leaves when 2 or 4 clients are ready waiting at least 3 mi
 void * race(){ // leves evary minute
 	printf("[%s] The Race tobogan is now open!\n", make_hours(simulator.minute));
 	while(attraction_open){
-		printf("[%s] The Race tobogan is ready to get more costumers!\n", make_hours(simulator.minute));
+		//printf("[%s] The Race tobogan is ready to get more costumers!\n", make_hours(simulator.minute));
 		sleep(1);
 		// waits a minute
-		printf("[%s] The Race tobogan is departing!\n", make_hours(simulator.minute));
+		//printf("[%s] The Race tobogan is departing!\n", make_hours(simulator.minute));
 	}
 	printf("[%s] The Race tobogan is now closed!\n", make_hours(simulator.minute));
 }
 void select_where_to_go(int current_place, int id){
 	
 	switch(current_place){
+		case 0: 
 		case 1: 
-			printf("client %d swiming pool.\n",id);break;
-		case 2: 
-			printf("client %d toboggan.\n",id);break;
-		case 3: 
-			printf("client %d race.\n",id);break;
-		case 4: 
-			printf("client %d sunbath.\n",id);break;
-		case 5: 
-			printf("client %d out.\n",id);break;
+			//sends the information that the client is on the line to the swiming pool
+			pthread_mutex_lock(&t_comunicate);
+			send_message(newsockfd,simulator.minute,2,id);
+			usleep(300000);
+			pthread_mutex_unlock(&t_comunicate);
+			//waits in the line
+			sem_wait(&s_pool);
+			//sends the information that the client entered to the swiming pool
+			pthread_mutex_lock(&t_comunicate);
+			send_message(newsockfd,simulator.minute,12,id);
+			usleep(300000);
+			pthread_mutex_unlock(&t_comunicate);
+			printf("[%s] The client %d went to the swiming pool.\n",make_hours(simulator.minute),id);
+			sleep(15);
+			//sends the information that the client exited to the swiming pool
+			pthread_mutex_lock(&t_comunicate);
+			send_message(newsockfd,simulator.minute,22,id);
+			usleep(300000);
+			pthread_mutex_unlock(&t_comunicate);
+			sem_post(&s_pool);
+			break;
+		case 2:
+		case 3:  
+			printf("[%s] The client %d went to the tobogan.\n",make_hours(simulator.minute),id);
+			break;
+		case 4:
+		case 5:
+			printf("[%s] The client %d went to the race tobogan.\n",make_hours(simulator.minute),id);
+			break;
+		case 6:
+		case 7: 
+			printf("[%s] The client %d went to the sunbath.\n",make_hours(simulator.minute),id);
+			break;
+		case 8: 
+			printf("[%s] The client %d went out.\n",make_hours(simulator.minute),id);break;
 		default: printf("Error selecting whero to go.\n");break;
 	}
 	sleep(2);
@@ -129,8 +149,8 @@ void select_where_to_go(int current_place, int id){
 		usleep(300000);
 		pthread_mutex_unlock(&t_comunicate);*/
 }
-int * handle_client(int id){
 
+int * handle_client(int id){
 	
 	pthread_mutex_lock(&t_comunicate);
 	send_message(newsockfd,simulator.minute,1,id);
@@ -140,28 +160,47 @@ int * handle_client(int id){
 	sem_wait(&s_aquapark);
 	// enters aquapark
 	int current_place = 4;
+	// inicializes random
+	time_t t;
+	srand((unsigned) time(&t));
 	pthread_mutex_lock(&t_comunicate);
 	send_message(newsockfd,simulator.minute,11,id);
 	usleep(300000);
 	pthread_mutex_unlock(&t_comunicate);
 
+	int getRandom(current_place)
+	{
+		int myRandom = (rand() % 9) + 1;
+		if (current_place != myRandom)
+		{
+			return myRandom;
+		}
+		else
+		{
+			getRandom();
+		}
+	}
 
-	while (current_place =! 5 || simulator.minute < (simulator.end_time-30)){
-		
-		select_where_to_go(current_place, id);	
-		
-		int aux_current_place = current_place;
-		while (aux_current_place==current_place) aux_current_place = (rand()%4)+1;
-		current_place = aux_current_place;
+	for (;simulator.minute < simulator.end_time - 15;)
+	{
+		if (current_place <= 4)
+		{
+			select_where_to_go(current_place, id);
+
+			current_place = getRandom(current_place);
+		}else{
+			break;
+		}
 		
 	}
-	
-	// went out of aquapark
+
 	sem_post(&s_aquapark);
 	pthread_mutex_lock(&t_comunicate);
 	send_message(newsockfd,simulator.minute,21,id);
 	usleep(300000);
 	pthread_mutex_unlock(&t_comunicate);
+	return 0;
+	
 }
 int * create_client(){
 	int i;
@@ -173,7 +212,7 @@ int * create_client(){
 				exit(1);
 			}
 			printf("[%s] A person arrived to the Park entrance\n", make_hours(simulator.minute));
-			sleep(2);
+			sleep(1);
 		}else printf("[%s] There is no more people living in Madeira\n", make_hours(simulator.minute));
 	}
 }
@@ -181,10 +220,6 @@ int * aquapark(){
 	aquapark_open=1;
 	attraction_open=1;
 	
-	if(pthread_create(&(t_swimming_pool), NULL ,(void *)&swimming_pool,NULL) != 0){ //thread swimming pool
-		printf("Error creating thread\n");
-		exit(1);
-	}
 	if(pthread_create(&(t_toboggan), NULL ,(void *)&toboggan,NULL) != 0){ //thread toboggan
 		printf("Error creating thread\n");
 		exit(1);
@@ -223,6 +258,7 @@ int main(int argc, char **argv){
 	/****************************** Semaphores and mutex init ********************************/
 
 	sem_init(&s_aquapark,0,10);
+	sem_init(&s_pool,0,3);
 
 	pthread_mutex_init(&t_comunicate,NULL);
 	
