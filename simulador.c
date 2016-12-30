@@ -24,6 +24,7 @@ typedef struct{
 	int exit_time;
 	int max_waiting_time;
 } s_cliente;
+
 /********************************* Global Variables **************************************/
 int static sockfd, newsockfd;
 int static aquapark_open;
@@ -82,7 +83,7 @@ int * handle_client(int id){
 	pthread_mutex_unlock(&t_comunicate);
 	sleep(10);
 	pthread_mutex_lock(&t_comunicate);
-	send_message(newsockfd,simulator.minute,2,id);
+	send_message(newsockfd,simulator.minute,31,id);
 	usleep(300000);
 	pthread_mutex_unlock(&t_comunicate);
 	sleep(1);
@@ -97,7 +98,7 @@ int * handle_client(int id){
 	pthread_mutex_unlock(&t_comunicate);
 	sleep(1);
 	pthread_mutex_lock(&t_comunicate);
-	send_message(newsockfd,simulator.minute,21,id);
+	send_message(newsockfd,simulator.minute,23,id);
 	usleep(300000);
 	pthread_mutex_unlock(&t_comunicate);
 }
