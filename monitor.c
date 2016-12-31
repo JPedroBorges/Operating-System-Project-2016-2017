@@ -115,6 +115,7 @@ int main(){
 		fill_realtimelog(info[0],info[1],info[2]);
 		write_log(info[0],info[1],info[2]);
 		print_screen(info[0],info[1],info[2]);
+		calc_stat_average_aqua();
 	}
 
 	pthread_join(t_reader , NULL);

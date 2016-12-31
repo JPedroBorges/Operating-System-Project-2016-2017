@@ -20,6 +20,7 @@
 #include <netinet/in.h>
 #include <netdb.h>
 
+
 #define ADDRESS      "champ_socket"
 
 #define UNIXSTR_PATH "/tmp/socket.unix.stream"
@@ -55,3 +56,4 @@ void creat_graph();
 void creat_stats();
 void clear_memory();
 //void insert_struct();
+void calc_stat_average_aqua();

@@ -10,7 +10,7 @@ RUNSI = ./simulador
 CC = gcc -o
 CFLAGS = -g
 LIBS = -lns -lnsl
-LIBS = -lnsl -lpthread
+LIBS = -lm -lnsl -lpthread
 
 all: clean monitor simulador runm
 
