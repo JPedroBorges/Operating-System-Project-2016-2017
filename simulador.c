@@ -77,6 +77,13 @@ void * race(){ // leves evary minute
 	printf("[%s] The Race tobogan is now closed!\n", make_hours(simulator.minute));
 }
 int * handle_client(int id){
+	printf("[%s] ⚫ A person arrived to the Park entrance", make_hours(simulator.minute));
+	int random = (rand()%100);
+	if(random<simulator.vip){
+		cliente[id].vip = 1;
+		printf(" and it is an VIP\n", id);
+	}else printf(" and it's not a VIP\n", id);
+
 	//pthread_mutex_lock(&t_comunicate);
 	send_message(newsockfd,simulator.minute,1,id);
 	/*usleep(300000);
@@ -107,7 +114,6 @@ int * create_client(){
 	int finaltimeforarrival = simulator.end_time-30;
 	for(i=0; i<=simulator.max_population && simulator.minute < finaltimeforarrival; i++){
 		if(i<simulator.max_population){
-
 			int random = (rand()%100);
 			if(random>simulator.person_frequency) i--;
 			else{
@@ -115,7 +121,6 @@ int * create_client(){
 					printf("Error creating thread\n");
 					exit(1);
 				}
-				printf("[%s] A person arrived to the Park entrance\n", make_hours(simulator.minute));
 			}
 		}else printf("[%s] There is no more people living in Madeira\n", make_hours(simulator.minute));
 		sleep(1);
