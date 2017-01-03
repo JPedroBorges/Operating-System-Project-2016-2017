@@ -97,29 +97,35 @@ void * toboggan(){ // leaves when 2 or 4 clients are ready waiting at least 3 mi
 
 		printf("[%s] The tobogan is ready to get more costumers!\n", make_hours(simulator.minute));
 		int number_inside = 0;
+
 		while(number_inside<2 && attraction_open){	//fills tobogan
 			sem_wait(&s_client_tobogan);
-			pthread_mutex_lock(&t_tobogan);
+			number_inside++;	
+		}
+
+		pthread_mutex_lock(&t_tobogan);
+		printf("clients_prio_tobogan %d\n", clients_prio_tobogan);
+		for (i = 0; i < number_inside; ++i){ // tells clients to start
 			if (clients_prio_tobogan>=1){
 				sem_post(&s_client_tobogan_prio);
 				clients_prio_tobogan--;
 			}else{
 				sem_post(&s_client_tobogan_no_prio);
 			}
-			number_inside++;
-			pthread_mutex_unlock(&t_tobogan);
 		}
-
-
+		pthread_mutex_unlock(&t_tobogan);
+		
 		printf("[%s] The tobogan is departing!\n", make_hours(simulator.minute));
 
-		sleep(3);
+		sleep(5); // duration of the tobogan
+
 		for (i = 0; i < number_inside; ++i){
 			sem_post(&s_end_tobogan);			//tells clients that where inside that it ended
 			sem_post(&s_tobogan);				//frees the slots for more clients
 		}
 
 	}
+
 	printf("[%s] The tobogan is now closed!\n", make_hours(simulator.minute));
 }
 void * race(){ // leves evary minute
@@ -148,7 +154,7 @@ void select_where_to_go(int id){
 			break;
 		case 2:
 		case 3:
-			printf("[%s] The client %d went to the tobogan.\n",make_hours(simulator.minute),id);
+			printf("[%s] The client %d went to the tobogan. vip :%d \n",make_hours(simulator.minute),id,cliente[id].vip);
 			sem_wait(&s_tobogan);
 			pthread_mutex_lock(&t_tobogan);
 			sem_post(&s_client_tobogan);
@@ -235,7 +241,7 @@ int * handle_client(int id){
 
 	}
 	sem_post(&s_aquapark);
-	printf("[%s] The client %d went of the Aquapark.\n",make_hours(simulator.minute),id);
+	//printf("[%s] The client %d went of the Aquapark.\n",make_hours(simulator.minute),id);
 	pthread_mutex_lock(&t_comunicate);
 	send_message(newsockfd,simulator.minute,21,id);
 	usleep(300000);
@@ -315,6 +321,12 @@ int main(int argc, char **argv){
 	sem_init(&s_client_tobogan_no_prio,0,0);
 
 	pthread_mutex_init(&t_comunicate,NULL);
+
+
+	/**************************** Initializes global variables *******************************/
+	aquapark_open = 0;
+	attraction_open = 0;
+	clients_prio_tobogan = 0;
 
 	/************************************ Socket *********************************************/
 	int clilen;
