@@ -122,9 +122,9 @@ void * toboggan(){ // leaves when 2 or 4 clients are ready waiting at least 3 mi
 
 		sleep(2); // duration of the tobogan
 
-		/*for (i = 0; i < number_inside; ++i){
+		for (i = 0; i < number_inside; ++i){
 			sem_post(&s_mid_tobogan);			//tells clients that thei are inside the tobogan
-		}*/
+		}
 
 		sleep(2); // duration of the tobogan
 
@@ -185,7 +185,7 @@ void select_where_to_go(int id){
 		
 			//sem_wait(&s_mid_tobogan);
 			printf("[%s] The client %d is riding on the tobogan.\n",make_hours(simulator.minute),id);
-			//sem_wait(&s_mid_tobogan);
+			sem_wait(&s_mid_tobogan);
 			sem_wait(&s_end_tobogan);
 			printf("[%s] The client %d  leaves the tobogan.\n",make_hours(simulator.minute),id);
 			break;
