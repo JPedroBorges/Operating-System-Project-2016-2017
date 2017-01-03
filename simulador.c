@@ -193,7 +193,7 @@ int * handle_client(int id){
 
 	//pthread_mutex_lock(&t_comunicate);
 	send_message(newsockfd,simulator.minute,1,id);
-	/*usleep(300000);
+	usleep(300000);
 	pthread_mutex_unlock(&t_comunicate);
 	// check ocupation
 	sem_wait(&s_aquapark);
