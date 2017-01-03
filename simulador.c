@@ -104,17 +104,17 @@ void * toboggan(){ // leaves when 2 or 4 clients are ready waiting at least 3 mi
 				sem_post(&s_client_tobogan_prio);
 				clients_prio_tobogan--;
 			}else{
-				sem_post(&s_client_tobogan_prio);
+				sem_post(&s_client_tobogan_no_prio);
 			}
 			number_inside++;
-			pthread_mutex_lock(&t_tobogan);
+			pthread_mutex_unlock(&t_tobogan);
 		}
 
 
 		printf("[%s] The tobogan is departing!\n", make_hours(simulator.minute));
 
-		sleep(5);
-		for (i = 0; i <= number_inside; ++i){
+		sleep(3);
+		for (i = 0; i < number_inside; ++i){
 			sem_post(&s_end_tobogan);			//tells clients that where inside that it ended
 			sem_post(&s_tobogan);				//frees the slots for more clients
 		}
@@ -174,19 +174,23 @@ void select_where_to_go(int id){
 			sunbath(id);
 			break;
 		case 8:
-			printf("[%s] The client %d went out of the park.\n",make_hours(simulator.minute),id);break;
+				break;
+			//printf("[%s] The client %d went out of the park.\n",make_hours(simulator.minute),id);break;
 		default: printf("Error selecting whero to go.\n");break;
 	}
 
 }
 
 int * handle_client(int id){
-	printf("[%s] ⚫ A person arrived to the Park entrance", make_hours(simulator.minute));
+	printf("[%s] ⚫ The client %d arrived to the Park entrance", make_hours(simulator.minute),id);
 	int random = (rand()%100);
 	if(random<simulator.vip){
 		cliente[id].vip = 1;
-		printf(" and it is an VIP\n", id);
-	}else printf(" and it's not a VIP\n", id);
+		printf(" and it is an VIP\n");
+	}else {
+		cliente[id].vip = 0;
+		printf(" and it's not a VIP\n");
+	}
 
 	//inicialization of variables
 	pthread_mutex_lock(&t_comunicate);
@@ -198,7 +202,7 @@ int * handle_client(int id){
 	// check ocupation
 	sem_wait(&s_aquapark);
 	// enters aquapark
-	cliente[id].current_place=7;
+	cliente[id].current_place=3; // test
 	pthread_mutex_lock(&t_comunicate);
 	send_message(newsockfd,simulator.minute,11,id);
 	usleep(300000);
@@ -219,12 +223,13 @@ int * handle_client(int id){
 	}
 
 	for (;simulator.minute < simulator.end_time - 30;){
-		if (cliente[id].current_place <= 8){
+		if (cliente[id].current_place < 8){
 			select_where_to_go(id);
 
-			cliente[id].current_place = getRandom();
+			cliente[id].current_place = 8;//getRandom();
 			//printf("current current_place %d\n",cliente[id].current_place);
 		}else{
+			printf("[%s] The client %d wants to leave.\n",make_hours(simulator.minute),id);
 			break;
 		}
 
@@ -251,6 +256,7 @@ int create_client(){
 					printf("Error creating thread\n");
 					exit(1);
 				}
+				number_clients++;
 			}
 		}else printf("[%s] There is no more people living in Madeira\n", make_hours(simulator.minute));
 		sleep(1);
@@ -350,7 +356,7 @@ int main(int argc, char **argv){
 	pthread_join(t_toboggan , NULL);
 	//waits that all clients are over
 	int i;
-	for (i = 0; i <= created_clients; ++i)
+	for (i = 0; i < created_clients; ++i)
 	{
 		pthread_join(t_cliente[i] , NULL);  // falta ver isto
 	}
