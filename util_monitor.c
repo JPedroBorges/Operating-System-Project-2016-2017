@@ -10,6 +10,7 @@
 
 
 typedef struct geral{
+	char nome[5];
 		int ID;
 		int chegada;
 		int entrada;
@@ -32,8 +33,6 @@ typedef struct geral{
 struct geral aquapark;
 struct geral swimming_pool;
 
-
-
 geral *inicio_aqua = NULL;
 geral *inicio_swim = NULL;
 
@@ -42,18 +41,30 @@ int num_clients_aqua = 0;
 int num_desistencia_aqua = 0;
 int num_clients_swimming = 0;
 
+pthread_mutex_t t_teste;
+
+char name[10];
 int teste;
 int hora_chegada;
 int hora_entrada;
 int hora_saida;
 int hora_desistencia;
-int chega;
-int entra;
-float total = 0;
-int final = 0;
-int olax = 0;
-int tes;
 
+int chega_a;
+int entra_a;
+float total_a;
+
+int chega_s;
+int entra_s;
+float total_s;
+
+int final_swimm = 0;
+int ola_swimm = 1;
+float dif_swimm = 0;
+
+int final_aqua = 0;
+int ola_aqua = 1;
+float dif_aqua = 0;
 
 
 int max_person_aqua = 10000;
@@ -71,46 +82,73 @@ void fill_realtimelog(int hour, int state, int client_id){
 	real_time_log[23][1]=state;
 	real_time_log[23][2]=client_id;
 }
+
 void calc_stat_average_aqua(){
 //int total1 = 0;
-int total1 = 0;
+dif_aqua = 0;
+int total_aqua = 0;
 
-		geral *aux2 = inicio_aqua;
+		geral *aux2 = &*inicio_aqua;
 
 				while (aux2 != NULL){
 					//geral *aux1 = inicio_aqua;
 
 					if(aux2 -> entrada != 0){
 						//aux1 -> entrada = hour;
-						chega = aux2 -> chegada;
-						entra = aux2 -> entrada;
-
-						total = total + (entra - chega);
-						total1++;
-
+						chega_a = aux2 -> chegada;
+						entra_a = aux2 -> entrada;
+						total_a = 0;
+						total_a = (entra_a - chega_a);
+						total_aqua++;
 					}
 					aux2 = aux2 -> next;
-
-					olax = (int)(total / total1);
-					final = (int)round(olax);
-					tes = total1;
-
+					dif_aqua = dif_aqua + total_a;
 				}
-
-
-
-
-
+				ola_aqua = (int)(dif_aqua / total_aqua);
+				final_aqua = (int)round(ola_aqua);
 
 
 	}
 
-void insert_struct(struct geral *a, int hour, int client_id, int estr){
+void calc_stat_average_swimm(){
+	dif_swimm = 0;
+	int total_swimm = 0;
+
+			geral *aux3 = &*inicio_swim;
+
+					while (aux3 != NULL){
+						//geral *aux1 = inicio_aqua;
+
+						if(aux3 -> entrada != 0){
+							//aux1 -> entrada = hour
+							chega_s = aux3 -> chegada;
+							entra_s = aux3 -> entrada;
+							total_s = 0;
+							total_s = (entra_s - chega_s);
+							total_swimm++;
+						}
+						aux3 = aux3 -> next;
+						dif_swimm = dif_swimm + total_s;
+					}
+					ola_swimm = (int)(dif_swimm / total_swimm);
+					final_swimm = (int)round(ola_swimm);
+}
+/*void calc_stats(){
+	calc_stat_average_aqua();
+	calc_stat_average_swimm();
+
+}*/
+
+void insert_struct(struct geral *a, int hour, int client_id, geral *estr){
 
 			a = (struct geral*) malloc(sizeof(struct geral));
 
-			//geral *ola = pointer;
-
+			geral *ola = estr;
+			if(ola == inicio_aqua){
+				a->nome[5] = 'A';
+			}else if(ola == inicio_swim){
+				a->nome[5] = 'S';
+			}
 			a->ID = client_id;
 			a->chegada = hour;
 			a->entrada = 0;
@@ -118,21 +156,28 @@ void insert_struct(struct geral *a, int hour, int client_id, int estr){
 			a->desistencia = 0;
 			a->next = NULL;
 
-			num_clients_aqua ++;
 
+			name[10] = a -> nome[5];
 			teste = a -> ID;
 			hora_chegada = a -> chegada;
 			hora_entrada = a -> entrada;
 			hora_saida = a -> saida;
 			hora_desistencia = a -> desistencia;
 
-			if(estr == 1){
-					geral *ola1 = inicio_aqua;
 
-						if( ola1 == NULL){
-							ola1 = a;
-							if(estr ==1){
+					geral *ola1 = estr;
+
+						//geral *ola1 = inicio_swim;
+
+						if( estr == NULL){
+							//ola1 = a;
+							if(estr == inicio_aqua){
 								inicio_aqua = a;
+								ola1 = a;
+							}else
+							if (estr == inicio_swim){
+								inicio_swim = a;
+								ola1 = a;
 							}
 							//inicio_aqua = a;
 						}
@@ -143,19 +188,20 @@ void insert_struct(struct geral *a, int hour, int client_id, int estr){
 										}
 								ola1-> next = a;
 						}
-			}
+		//	}}
 }
 
-void out_activity(int hour, int client_id, int estr){
+void out_activity(int hour, int client_id, geral *estr){
 
-	if(estr == 1){
-			geral *aux1 = inicio_aqua;
+
+geral *aux1 = &*estr;
 
 	while (aux1 != NULL){
 		//geral *aux1 = inicio_aqua;
 		if(aux1 -> ID == client_id){
 			aux1 -> saida = hour;
 
+			name[10] = aux1 -> nome[5];
 			teste = aux1 -> ID;
 			hora_chegada = aux1 -> chegada;
 			hora_entrada = aux1 -> entrada;
@@ -168,12 +214,17 @@ void out_activity(int hour, int client_id, int estr){
 
 }
 
-}
 
-void entry_activity(int hour, int client_id, int estr){
-	if(estr == 1){
-			geral *aux1 = inicio_aqua;
 
+void entry_activity(int hour, int client_id, geral *estr){
+
+
+//	if(estr == 1){
+		//	geral *aux1 = inicio_aqua;
+	//		if(estr == 2){
+	//			geral*aux1 = inicio_swim;
+
+geral *aux1 = &*estr;
 	while (aux1 != NULL){
 		//geral *aux1 = inicio_aqua;
 		if(aux1 -> ID == client_id){
@@ -189,23 +240,57 @@ void entry_activity(int hour, int client_id, int estr){
 		aux1 = aux1 -> next;
 	}
 
-}
-
+//}}
 }
 
 void save_info(int hour, int state, int client_id){
-
-
+pthread_mutex_lock(&t_teste);
+calc_stat_average_aqua();
+pthread_mutex_unlock(&t_teste);
+pthread_mutex_lock(&t_teste);
+calc_stat_average_swimm();
+pthread_mutex_unlock(&t_teste);
 
 	switch(state){
 		case 1:
-					insert_struct(&aquapark, hour, client_id, 1);
+		pthread_mutex_lock(&t_teste);
+					insert_struct(&aquapark, hour, client_id, &*inicio_aqua);
+					num_clients_aqua ++;
+
+					pthread_mutex_unlock(&t_teste);
 					break;
 		case 11:
-					entry_activity(hour, client_id,1);
-					break;
+		pthread_mutex_lock(&t_teste);
+					entry_activity(hour, client_id, &*inicio_aqua);
+//calc_stat_average_aqua();
+
+					pthread_mutex_unlock(&t_teste);
+						break;
 		case 21:
-					out_activity(hour, client_id, 1);
+		pthread_mutex_lock(&t_teste);
+					out_activity(hour, client_id, &*inicio_aqua);
+
+					pthread_mutex_unlock(&t_teste);
+					break;
+		case 2:
+		pthread_mutex_lock(&t_teste);
+					insert_struct(&swimming_pool, hour, client_id, &*inicio_swim);
+					num_clients_swimming ++;
+
+					pthread_mutex_unlock(&t_teste);
+					break;
+		case 12:
+		pthread_mutex_lock(&t_teste);
+					entry_activity(hour, client_id, &*inicio_swim);
+				//	calc_stat_average_swimm();
+
+					pthread_mutex_unlock(&t_teste);
+					break;
+		case 22:
+		pthread_mutex_lock(&t_teste);
+					out_activity(hour, client_id, &*inicio_swim);
+
+					pthread_mutex_unlock(&t_teste);
 					break;
 	}
 }
@@ -479,16 +564,16 @@ void creat_graph(/*int aqua, int pool, int race, int race_status, int tobogan, i
 		//if(i<percent_aqua) printf("██         \n", );
 	}
 
-	void creat_stats (int num_clients, int id, int chegada, int entrada, int saida, int desistencia, int total2 /*int Numero_Entradas_Discoteca,int Numero_Entradas_Sala_Rock,int Numero_Entradas_Sala_Comercial,int Numero_Entradas_Sala_House,int Numero_Entradas_Sala_Sofas,int Total_Clientes_Normais_Discoteca,int Total_Clientes_Normais_Sala_Rock,int Total_Clientes_Normais_Sala_Comercial,int Total_Clientes_Normais_Sala_House,int Total_Clientes_Normais_Sala_Sofas,int Total_Clientes_VIPS_Discoteca,int Total_Clientes_VIPS_Sala_Rock,int Total_Clientes_VIPS_Sala_Comercial,int Total_Clientes_VIPS_Sala_House,int Total_Clientes_VIPS_Sala_Sofas,int Numero_Desistencias_Fila_Discoteca,int Numero_Desistencias_Fila_Sala_Rock,int Numero_Desistencias_Fila_Sala_Comercial,int Numero_Desistencias_Fila_Sala_House,int Numero_Desistencias_Fila_Sala_Sofas,float Tempo_Medio_Espera_Fila_Antes_Entrar_Discoteca,float Tempo_Medio_Espera_Fila_Antes_Entrar_Sala_Rock,float Tempo_Medio_Espera_Fila_Antes_Entrar_Sala_Comercial,float Tempo_Medio_Espera_Fila_Antes_Entrar_Sala_House,float Tempo_Medio_Espera_Fila_Antes_Entrar_Sala_Sofas,float Tempo_Medio_Espera_Fila_Antes_Desistir_Discoteca,float Tempo_Medio_Espera_Fila_Antes_Desistir_Sala_Rock,float Tempo_Medio_Espera_Fila_Antes_Desistir_Sala_Comercial,float Tempo_Medio_Espera_Fila_Antes_Desistir_Sala_House,float Tempo_Medio_Espera_Fila_Antes_Desistir_Sala_Sofas,int Tempo_Estadia_Maximo_Fila_Antes_Entrar_Discoteca,int Tempo_Estadia_Maximo_Fila_Antes_Entrar_Sala_Rock,int Tempo_Estadia_Maximo_Fila_Antes_Entrar_Sala_Comercial,int Tempo_Estadia_Maximo_Fila_Antes_Entrar_Sala_House,int Tempo_Estadia_Maximo_Fila_Antes_Entrar_Sala_Sofas, int Tempo_Estadia_Maximo_Fila_Antes_Desistir_Discoteca, int Tempo_Estadia_Maximo_Fila_Antes_Desistir_Sala_Rock, int Tempo_Estadia_Maximo_Fila_Antes_Desistir_Sala_Comercial, int Tempo_Estadia_Maximo_Fila_Antes_Desistir_Sala_House, int Tempo_Estadia_Maximo_Fila_Antes_Desistir_Sala_Sofas*/ ){
+	void creat_stats (int num_aqua, int num_swim, int chegada, int entrada, int saida, int desistencia, int fin_aqua, int fin_swimm, char a /*int Numero_Entradas_Discoteca,int Numero_Entradas_Sala_Rock,int Numero_Entradas_Sala_Comercial,int Numero_Entradas_Sala_House,int Numero_Entradas_Sala_Sofas,int Total_Clientes_Normais_Discoteca,int Total_Clientes_Normais_Sala_Rock,int Total_Clientes_Normais_Sala_Comercial,int Total_Clientes_Normais_Sala_House,int Total_Clientes_Normais_Sala_Sofas,int Total_Clientes_VIPS_Discoteca,int Total_Clientes_VIPS_Sala_Rock,int Total_Clientes_VIPS_Sala_Comercial,int Total_Clientes_VIPS_Sala_House,int Total_Clientes_VIPS_Sala_Sofas,int Numero_Desistencias_Fila_Discoteca,int Numero_Desistencias_Fila_Sala_Rock,int Numero_Desistencias_Fila_Sala_Comercial,int Numero_Desistencias_Fila_Sala_House,int Numero_Desistencias_Fila_Sala_Sofas,float Tempo_Medio_Espera_Fila_Antes_Entrar_Discoteca,float Tempo_Medio_Espera_Fila_Antes_Entrar_Sala_Rock,float Tempo_Medio_Espera_Fila_Antes_Entrar_Sala_Comercial,float Tempo_Medio_Espera_Fila_Antes_Entrar_Sala_House,float Tempo_Medio_Espera_Fila_Antes_Entrar_Sala_Sofas,float Tempo_Medio_Espera_Fila_Antes_Desistir_Discoteca,float Tempo_Medio_Espera_Fila_Antes_Desistir_Sala_Rock,float Tempo_Medio_Espera_Fila_Antes_Desistir_Sala_Comercial,float Tempo_Medio_Espera_Fila_Antes_Desistir_Sala_House,float Tempo_Medio_Espera_Fila_Antes_Desistir_Sala_Sofas,int Tempo_Estadia_Maximo_Fila_Antes_Entrar_Discoteca,int Tempo_Estadia_Maximo_Fila_Antes_Entrar_Sala_Rock,int Tempo_Estadia_Maximo_Fila_Antes_Entrar_Sala_Comercial,int Tempo_Estadia_Maximo_Fila_Antes_Entrar_Sala_House,int Tempo_Estadia_Maximo_Fila_Antes_Entrar_Sala_Sofas, int Tempo_Estadia_Maximo_Fila_Antes_Desistir_Discoteca, int Tempo_Estadia_Maximo_Fila_Antes_Desistir_Sala_Rock, int Tempo_Estadia_Maximo_Fila_Antes_Desistir_Sala_Comercial, int Tempo_Estadia_Maximo_Fila_Antes_Desistir_Sala_House, int Tempo_Estadia_Maximo_Fila_Antes_Desistir_Sala_Sofas*/ ){
 		//char * recebido = "0";
 	//	int Total_Desistencia_Filas=Numero_Desistencias_Fila_Discoteca+Numero_Desistencias_Fila_Sala_Rock+Numero_Desistencias_Fila_Sala_Comercial+Numero_Desistencias_Fila_Sala_House+Numero_Desistencias_Fila_Sala_Sofas;//Soma de todas as desistencias
 		printf("   │   ■─[ Clientes ]────────────────────────────────────────────────────┐   │\n");
-		printf("   │   │   Number of clients have been in Aquapark :               %s   │   │\n",three_digit_number(num_clients));
-		printf("   │   │   number of VIP clients have been in pool :        ID:    %s   │   │\n",three_digit_number(id));
-		printf("   │   │   Number of clients have been in Race :       chegada:    %s   │   │\n",make_hours(chegada));
-		printf("   │   │   Number of clients have been in Tobogan :    entrada:    %s   │   │\n",make_hours(entrada));
-		printf("   │   │   Number of clients have been in Sunbath :      saida:    %s   │   │\n",make_hours(saida));
-		printf("   │   │Number of clients have been in Slow River: desistencia:    %s ┌─┤   │\n",make_hours(desistencia));
+		printf("   │   │   Number of clients have been in Aquapark :               %s   │   │\n",three_digit_number(num_aqua));
+			printf("   │   │   number of VIP clients have been in pool :               %s   │   │\n",three_digit_number(num_swim));
+		printf("   │   │   Number of clients have been in Race :                   %s   │   │\n",make_hours(chegada));
+		printf("   │   │   Number of clients have been in Tobogan :                %s   │   │\n",make_hours(entrada));
+		printf("   │   │   Number of clients have been in Sunbath :                %s   │   │\n",make_hours(saida));
+		printf("   │   │   Number of clients have been in Slow River:              %c ┌─┤   │\n",a);
 	  printf("   │   └───────────────────────────────────────────────────────────────┴─┘   │\n");
 	  printf("   │                                                                         │\n");
 		printf("   │   ■─[ Desistencias ]────────────────────────────────────────────────┐   │\n");
@@ -501,8 +586,8 @@ void creat_graph(/*int aqua, int pool, int race, int race_status, int tobogan, i
 	  printf("   │   └───────────────────────────────────────────────────────────────┴─┘   │\n");
 	  printf("   │                                                                         │\n");
 		printf("   │   ■─[ Tempos Medios ]───────────────────────────────────────────────┐   │\n");
-		printf("   │   │   Average time in queue to get in Aquapark :              %d   │   │\n",total2);
-		printf("   │   │   Average time in queue to get in Pool :                  %s   │   │\n",three_digit_number(0));
+		printf("   │   │   Average time in queue to get in Aquapark :              %s   │   │\n",make_hours(fin_aqua));
+		printf("   │   │   Average time in queue to get in Pool :                  %s   │   │\n",make_hours(fin_swimm));
 		printf("   │   │   Average time in queue to get in Race :                  %s   │   │\n",three_digit_number(0));
 		printf("   │   │   Average time in queue to get in Tobogan :               %s   │   │\n",three_digit_number(0));
 		printf("   │   │   Average time in queue to get in Slow River :            %s ┌─┤   │\n",three_digit_number(0));
@@ -525,7 +610,7 @@ void print_body(int tab){
 			for(i=0; i<24;i++) write_decoder(real_time_log[i][0], real_time_log[i][1], real_time_log[i][2]);
 			fill_empty(1);
 			break;
-		case 2: creat_stats(num_clients_aqua, teste, hora_chegada, hora_entrada, hora_saida, hora_desistencia, tes); break;
+		case 2: creat_stats(teste, num_clients_swimming, hora_chegada, hora_entrada, hora_saida, hora_desistencia, final_aqua, final_swimm, name[10] ); break;
 		case 3: creat_graph(); break;
 		case 4:
 			printf("   │                                                                         │\n   │   ■─[ Joao Borges ]─────────────────────────────────────────────────┐   │\n   │   │                                                                 │   │\n   │   │   2016311                                                     ┌─┤   │\n   │   └───────────────────────────────────────────────────────────────┴─┘   │\n   │                                                                         │\n   │   ■─[ Nuno Rodrigues ]──────────────────────────────────────────────┐   │\n   │   │                                                                 │   │\n   │   │   2044009                                                     ┌─┤   │\n   │   └───────────────────────────────────────────────────────────────┴─┘   │\n   │                                                                         │\n   │   ■─[ Vitor Paixao ]────────────────────────────────────────────────┐   │\n   │   │                                                                 │   │\n   │   │   2023212                                                     ┌─┤   │\n   │   └───────────────────────────────────────────────────────────────┴─┘   │\n");

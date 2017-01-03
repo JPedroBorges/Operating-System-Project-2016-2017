@@ -79,28 +79,34 @@ void * race(){ // leves evary minute
 int * handle_client(int id){
 	pthread_mutex_lock(&t_comunicate);
 	send_message(newsockfd,simulator.minute,1,id);
-	usleep(300000);
+	usleep(350000);
 	pthread_mutex_unlock(&t_comunicate);
-	sleep(5);
+	sleep(3);
+	pthread_mutex_lock(&t_comunicate);
+	send_message(newsockfd,simulator.minute,2,id);
+	usleep(350000);
+	pthread_mutex_unlock(&t_comunicate);
+	sleep(3);
 	pthread_mutex_lock(&t_comunicate);
 	send_message(newsockfd,simulator.minute,11,id);
-	usleep(300000);
+	usleep(350000);
 	pthread_mutex_unlock(&t_comunicate);
-	sleep(5);
+	sleep(3);
 	pthread_mutex_lock(&t_comunicate);
 	send_message(newsockfd,simulator.minute,12,id);
-	usleep(300000);
+	usleep(350000);
 	pthread_mutex_unlock(&t_comunicate);
-	sleep(5);
+	sleep(3);
 	pthread_mutex_lock(&t_comunicate);
 	send_message(newsockfd,simulator.minute,22,id);
-	usleep(300000);
+	usleep(350000);
 	pthread_mutex_unlock(&t_comunicate);
 	sleep(3);
 pthread_mutex_lock(&t_comunicate);
 	send_message(newsockfd,simulator.minute,21,id);
-	usleep(300000);
+	usleep(350000);
 	pthread_mutex_unlock(&t_comunicate);
+	sleep(3);
 }
 int * create_client(){
 	int i;
@@ -112,7 +118,7 @@ int * create_client(){
 				exit(1);
 			}
 			printf("[%s] A person arrived to the Park entrance\n", make_hours(simulator.minute));
-			sleep(2);
+			sleep(5);
 		}else printf("[%s] There is no more people living in Madeira\n", make_hours(simulator.minute));
 	}
 }
