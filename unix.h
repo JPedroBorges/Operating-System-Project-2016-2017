@@ -20,6 +20,12 @@
 #include <netinet/in.h>
 #include <netdb.h>
 
+#include <assert.h>
+#include <errno.h>
+#include <signal.h>
+
+
+
 #define ADDRESS      "champ_socket"
 
 #define UNIXSTR_PATH "/tmp/socket.unix.stream"

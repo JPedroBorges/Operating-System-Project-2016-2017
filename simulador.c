@@ -26,6 +26,7 @@ typedef struct{
 	int exit_time;
 	int max_waiting_time;
 } s_cliente;
+
 /********************************* Global Variables **************************************/
 
 int static sockfd, newsockfd;
@@ -51,9 +52,39 @@ sem_t s_client_tobogan_no_prio;
 sem_t s_tobogan;
 sem_t s_end_tobogan;
 sem_t s_mid_tobogan;
+
 pthread_mutex_t t_tobogan;
 
 pthread_mutex_t t_comunicate;
+
+
+/*	#### ##    ## #### ########          ########        ###        ######     ########
+ 	##  ###   ##  ##     ##             ##     ##      ## ##      ##    ##    ##
+ 	##  ####  ##  ##     ##             ##     ##     ##   ##     ##          ##
+ 	##  ## ## ##  ##     ##             ########     ##     ##    ##          ######
+ 	##  ##  ####  ##     ##             ##   ##      #########    ##          ##
+ 	##  ##   ###  ##     ##             ##    ##     ##     ##    ##    ##    ##
+   #### ##    ## ####    ##             ##     ##    ##     ##     ######     ######## */
+#define handle_error(msg) \
+	do { perror(msg); exit(EXIT_FAILURE); } while (0)
+
+sem_t s_race;
+
+static void handler(int sig){
+	write(STDOUT_FILENO, "sem_post() from handler\n", 24);
+	if(sem_post(&s_race) == -1){
+		write(STDERR_FILENO, "sem_post() failed\n", 18);
+		_exit(EXIT_FAILURE);
+	}
+}
+/*	######## ##    ## ########           ########        ###        ######     ########
+	##       ###   ## ##     ##          ##     ##      ## ##      ##    ##    ##
+	##       ####  ## ##     ##          ##     ##     ##   ##     ##          ##
+	######   ## ## ## ##     ##          ########     ##     ##    ##          ######
+	##       ##  #### ##     ##          ##   ##      #########    ##          ##
+	##       ##   ### ##     ##          ##    ##     ##     ##    ##    ##    ##
+	######## ##    ## ########           ##     ##    ##     ##     ######     ######## */
+
 /*********************************** Functions *******************************************/
 void sunbath( int id){
 	//sends the information that the client entered to the sunbath
@@ -92,7 +123,7 @@ void swimming_pool( int id){
 	sem_post(&s_pool);
 }
 void * toboggan(){ // leaves when 2 or 4 clients are ready waiting at least 3 minute for each departure
-	int i;
+/*	int i;
 
 	printf("[%s] The tobogan is now open!\n", make_hours(simulator.minute));
 	while(attraction_open){
@@ -102,7 +133,7 @@ void * toboggan(){ // leaves when 2 or 4 clients are ready waiting at least 3 mi
 
 		while(number_inside<2 && attraction_open){	//fills tobogan
 			sem_wait(&s_client_tobogan);
-			number_inside++;	
+			number_inside++;
 		}
 
 		pthread_mutex_lock(&t_tobogan);
@@ -135,18 +166,43 @@ void * toboggan(){ // leaves when 2 or 4 clients are ready waiting at least 3 mi
 
 	}
 
-	printf("[%s] The tobogan is now closed!\n", make_hours(simulator.minute));
+	printf("[%s] The tobogan is now closed!\n", make_hours(simulator.minute));*/
 }
-void * race(){ // leves evary minute
-	/*printf("[%s] The Race tobogan is now open!\n", make_hours(simulator.minute));
+void * race(){
+	// leves evary minute
+	printf("[%s] The Race tobogan is now open!\n", make_hours(simulator.minute));
 
+	struct sigaction sa;
+	struct timespec ts;
+	int s;
+
+	if(sem_init(&s_race, 0, 0) == -1) handle_error("sem_init");
+	// ----------------------------------------------------------------------------------------------
+	/* Establish SIGALRM handler; */
+	//sa.sa_handler = handler;
+	//sigemptyset(&sa.sa_mask);
+	//sa.sa_flags = 0;
+	//if (sigaction(SIGALRM, &sa, NULL) == -1) handle_error("sigaction");
+	//
+	//alarm(5);
+	// ----------------------------------------------------------------------------------------------
+	/* Calculate relative interval as current time plus number departure time */
 	while(attraction_open){
-		//printf("[%s] The Race tobogan is ready to get more costumers!\n", make_hours(simulator.minute));
-		sleep(1);
-		// waits a minute
-		//printf("[%s] The Race tobogan is departing!\n", make_hours(simulator.minute));
+		if (clock_gettime(CLOCK_REALTIME, &ts) == -1) handle_error("clock_gettime");
+
+		// departure time
+		ts.tv_sec += 5;
+		/* Restart if interrupted by handler */
+		while((s=sem_timedwait(&s_race, &ts)) == -1 && errno == EINTR) continue;
+
+		/* Check what happened */
+		if(s==-1){
+			if(errno == ETIMEDOUT) printf("[%s] The Race tobogan is departing!\n", make_hours(simulator.minute));
+			else perror("sem_timedwait");
+		}else printf("sem_timedwait() succeeded\n");
+
+		printf("[%s] The Race tobogan is ready to get more costumers!\n", make_hours(simulator.minute));
 	}
-	printf("[%s] The Race tobogan is now closed!\n", make_hours(simulator.minute));*/
 }
 void select_where_to_go(int id){
 	// inicializes random
@@ -174,7 +230,7 @@ void select_where_to_go(int id){
 			}
 
 			sem_post(&s_client_tobogan);
-			//sem_wait(&s_tobogan); 
+			//sem_wait(&s_tobogan);
 
 			if (cliente[id].vip){
 				sem_wait(&s_client_tobogan_prio);
@@ -182,7 +238,7 @@ void select_where_to_go(int id){
 			else{
 				sem_wait(&s_client_tobogan_no_prio);
 			}
-		
+
 			//sem_wait(&s_mid_tobogan);
 			printf("[%s] The client %d is riding on the tobogan.\n",make_hours(simulator.minute),id);
 			sem_wait(&s_mid_tobogan);
@@ -206,7 +262,7 @@ void select_where_to_go(int id){
 
 }
 
-int * handle_client(int id){
+int * handle_client(int id){/*
 	printf("[%s] ⚫ The client %d arrived to the Park entrance", make_hours(simulator.minute),id);
 	int random = (rand()%100);
 	if(random<simulator.vip){
@@ -264,7 +320,7 @@ int * handle_client(int id){
 	pthread_mutex_lock(&t_comunicate);
 	send_message(newsockfd,simulator.minute,21,id);
 	usleep(300000);
-	pthread_mutex_unlock(&t_comunicate);
+	pthread_mutex_unlock(&t_comunicate);*/
 	return 0;
 }
 int create_client(){
