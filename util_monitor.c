@@ -30,8 +30,8 @@ typedef struct geral{
 	struct s_swimming *next;
 }s_swimming;*/
 //------------------------------------------
-struct geral aquapark;
-struct geral swimming_pool;
+struct geral str_aquapark;
+struct geral str_swimming_pool;
 
 geral *inicio_aqua = NULL;
 geral *inicio_swim = NULL;
@@ -246,7 +246,7 @@ pthread_mutex_unlock(&t_teste);
 	switch(state){
 		case 1:
 					pthread_mutex_lock(&t_teste);
-					insert_struct(&aquapark, hour, client_id, &*inicio_aqua);
+					insert_struct(&str_aquapark, hour, client_id, &*inicio_aqua);
 					num_clients_aqua ++;
 
 					pthread_mutex_unlock(&t_teste);
@@ -266,7 +266,7 @@ pthread_mutex_unlock(&t_teste);
 					break;
 		case 2:
 					pthread_mutex_lock(&t_teste);
-					insert_struct(&swimming_pool, hour, client_id, &*inicio_swim);
+					insert_struct(&str_swimming_pool, hour, client_id, &*inicio_swim);
 					num_clients_swimming ++;
 
 					pthread_mutex_unlock(&t_teste);
@@ -558,7 +558,7 @@ void creat_graph(/*int aqua, int pool, int race, int race_status, int tobogan, i
 		//if(i<percent_aqua) printf("██         \n", );
 	}
 
-	void creat_stats (int num_aqua, int num_swim, int chegada, int entrada, int saida, int desistencia, int fin_aqua, int fin_swimm, char a /*int Numero_Entradas_Discoteca,int Numero_Entradas_Sala_Rock,int Numero_Entradas_Sala_Comercial,int Numero_Entradas_Sala_House,int Numero_Entradas_Sala_Sofas,int Total_Clientes_Normais_Discoteca,int Total_Clientes_Normais_Sala_Rock,int Total_Clientes_Normais_Sala_Comercial,int Total_Clientes_Normais_Sala_House,int Total_Clientes_Normais_Sala_Sofas,int Total_Clientes_VIPS_Discoteca,int Total_Clientes_VIPS_Sala_Rock,int Total_Clientes_VIPS_Sala_Comercial,int Total_Clientes_VIPS_Sala_House,int Total_Clientes_VIPS_Sala_Sofas,int Numero_Desistencias_Fila_Discoteca,int Numero_Desistencias_Fila_Sala_Rock,int Numero_Desistencias_Fila_Sala_Comercial,int Numero_Desistencias_Fila_Sala_House,int Numero_Desistencias_Fila_Sala_Sofas,float Tempo_Medio_Espera_Fila_Antes_Entrar_Discoteca,float Tempo_Medio_Espera_Fila_Antes_Entrar_Sala_Rock,float Tempo_Medio_Espera_Fila_Antes_Entrar_Sala_Comercial,float Tempo_Medio_Espera_Fila_Antes_Entrar_Sala_House,float Tempo_Medio_Espera_Fila_Antes_Entrar_Sala_Sofas,float Tempo_Medio_Espera_Fila_Antes_Desistir_Discoteca,float Tempo_Medio_Espera_Fila_Antes_Desistir_Sala_Rock,float Tempo_Medio_Espera_Fila_Antes_Desistir_Sala_Comercial,float Tempo_Medio_Espera_Fila_Antes_Desistir_Sala_House,float Tempo_Medio_Espera_Fila_Antes_Desistir_Sala_Sofas,int Tempo_Estadia_Maximo_Fila_Antes_Entrar_Discoteca,int Tempo_Estadia_Maximo_Fila_Antes_Entrar_Sala_Rock,int Tempo_Estadia_Maximo_Fila_Antes_Entrar_Sala_Comercial,int Tempo_Estadia_Maximo_Fila_Antes_Entrar_Sala_House,int Tempo_Estadia_Maximo_Fila_Antes_Entrar_Sala_Sofas, int Tempo_Estadia_Maximo_Fila_Antes_Desistir_Discoteca, int Tempo_Estadia_Maximo_Fila_Antes_Desistir_Sala_Rock, int Tempo_Estadia_Maximo_Fila_Antes_Desistir_Sala_Comercial, int Tempo_Estadia_Maximo_Fila_Antes_Desistir_Sala_House, int Tempo_Estadia_Maximo_Fila_Antes_Desistir_Sala_Sofas*/ ){
+	void creat_stats (int num_aqua, int num_swim, int chegada, int entrada, int saida, int desistencia, int fin_aqua, int fin_swimm, char a ){
 		//char * recebido = "0";
 	//	int Total_Desistencia_Filas=Numero_Desistencias_Fila_Discoteca+Numero_Desistencias_Fila_Sala_Rock+Numero_Desistencias_Fila_Sala_Comercial+Numero_Desistencias_Fila_Sala_House+Numero_Desistencias_Fila_Sala_Sofas;//Soma de todas as desistencias
 		printf("   │   ■─[ Clientes ]────────────────────────────────────────────────────┐   │\n");

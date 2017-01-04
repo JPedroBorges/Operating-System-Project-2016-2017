@@ -53,7 +53,7 @@ void print_body(int);
 void print_footer();
 void fill_realtimelog(int,int,int);
 void creat_graph();
-void creat_stats();
+//void creat_stats();
 //void creat_stats();
 void clear_memory();
 //void insert_struct();
