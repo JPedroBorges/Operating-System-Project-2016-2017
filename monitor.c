@@ -58,8 +58,7 @@ int * reader(){
 	}
 }
 int main(){
-	srand(time(NULL));
-	printf("%s\n", "Running monitor");
+	printf("%s\n", "Running monitor"); srand(time(NULL));
 
 	FILE *file_log = fopen("simulation.log", "w");
 	fprintf(file_log,"-------------------------------Monitor Log-------------------------------\n");

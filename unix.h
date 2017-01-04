@@ -53,8 +53,16 @@ void print_body(int);
 void print_footer();
 void fill_realtimelog(int,int,int);
 void creat_graph();
+void creat_stats();
 //void creat_stats();
 void clear_memory();
 //void insert_struct();
 void calc_stat_average_aqua();
 void calc_stat_average_swimm();
+/**************************** simulador ****************************/
+void sunbath(int);
+void swimming_pool(int);
+void select_where_to_go(int);
+int * handle_client(int);
+int create_client();
+int * aquapark();
