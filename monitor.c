@@ -58,6 +58,7 @@ int * reader(){
 	}
 }
 int main(){
+	srand(time(NULL));
 	printf("%s\n", "Running monitor");
 
 	FILE *file_log = fopen("simulation.log", "w");
@@ -116,7 +117,7 @@ int main(){
 		write_log(info[0],info[1],info[2]);
 		print_screen(info[0],info[1],info[2]);
 		//calc_stats();
-		
+
 	//	calc_stat_average_swimm();
 	}
 

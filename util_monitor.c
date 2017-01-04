@@ -133,17 +133,13 @@ void calc_stat_average_swimm(){
 					ola_swimm = (int)(dif_swimm / total_swimm);
 					final_swimm = (int)round(ola_swimm);
 }
-/*void calc_stats(){
-	calc_stat_average_aqua();
-	calc_stat_average_swimm();
 
-}*/
 
 void insert_struct(struct geral *a, int hour, int client_id, geral *estr){
 
 			a = (struct geral*) malloc(sizeof(struct geral));
 
-			geral *ola = estr;
+			geral *ola = &*estr;
 			if(ola == inicio_aqua){
 				a->nome[5] = 'A';
 			}else if(ola == inicio_swim){
@@ -165,17 +161,17 @@ void insert_struct(struct geral *a, int hour, int client_id, geral *estr){
 			hora_desistencia = a -> desistencia;
 
 
-					geral *ola1 = estr;
+					geral *ola1 = &*estr;
 
 						//geral *ola1 = inicio_swim;
 
-						if( estr == NULL){
+						if( ola1 == NULL){
 							//ola1 = a;
-							if(estr == inicio_aqua){
+							if(ola1 == inicio_aqua){
 								inicio_aqua = a;
 								ola1 = a;
 							}else
-							if (estr == inicio_swim){
+							if (ola1 == inicio_swim){
 								inicio_swim = a;
 								ola1 = a;
 							}
@@ -186,7 +182,7 @@ void insert_struct(struct geral *a, int hour, int client_id, geral *estr){
 										while(ola1 -> next != NULL){
 												ola1 = ola1 -> next;
 										}
-								ola1-> next = a;
+								ola1 -> next = a;
 						}
 		//	}}
 }
@@ -218,12 +214,6 @@ geral *aux1 = &*estr;
 
 void entry_activity(int hour, int client_id, geral *estr){
 
-
-//	if(estr == 1){
-		//	geral *aux1 = inicio_aqua;
-	//		if(estr == 2){
-	//			geral*aux1 = inicio_swim;
-
 geral *aux1 = &*estr;
 	while (aux1 != NULL){
 		//geral *aux1 = inicio_aqua;
@@ -243,6 +233,8 @@ geral *aux1 = &*estr;
 //}}
 }
 
+
+
 void save_info(int hour, int state, int client_id){
 pthread_mutex_lock(&t_teste);
 calc_stat_average_aqua();
@@ -253,45 +245,47 @@ pthread_mutex_unlock(&t_teste);
 
 	switch(state){
 		case 1:
-		pthread_mutex_lock(&t_teste);
+					pthread_mutex_lock(&t_teste);
 					insert_struct(&aquapark, hour, client_id, &*inicio_aqua);
 					num_clients_aqua ++;
 
 					pthread_mutex_unlock(&t_teste);
 					break;
 		case 11:
-		pthread_mutex_lock(&t_teste);
+					pthread_mutex_lock(&t_teste);
 					entry_activity(hour, client_id, &*inicio_aqua);
 //calc_stat_average_aqua();
 
 					pthread_mutex_unlock(&t_teste);
-						break;
+					break;
 		case 21:
-		pthread_mutex_lock(&t_teste);
+					pthread_mutex_lock(&t_teste);
 					out_activity(hour, client_id, &*inicio_aqua);
 
 					pthread_mutex_unlock(&t_teste);
 					break;
 		case 2:
-		pthread_mutex_lock(&t_teste);
+					pthread_mutex_lock(&t_teste);
 					insert_struct(&swimming_pool, hour, client_id, &*inicio_swim);
 					num_clients_swimming ++;
 
 					pthread_mutex_unlock(&t_teste);
 					break;
 		case 12:
-		pthread_mutex_lock(&t_teste);
+					pthread_mutex_lock(&t_teste);
 					entry_activity(hour, client_id, &*inicio_swim);
 				//	calc_stat_average_swimm();
 
 					pthread_mutex_unlock(&t_teste);
 					break;
 		case 22:
-		pthread_mutex_lock(&t_teste);
+					pthread_mutex_lock(&t_teste);
 					out_activity(hour, client_id, &*inicio_swim);
 
 					pthread_mutex_unlock(&t_teste);
 					break;
+		default:
+		break;
 	}
 }
 
@@ -569,7 +563,7 @@ void creat_graph(/*int aqua, int pool, int race, int race_status, int tobogan, i
 	//	int Total_Desistencia_Filas=Numero_Desistencias_Fila_Discoteca+Numero_Desistencias_Fila_Sala_Rock+Numero_Desistencias_Fila_Sala_Comercial+Numero_Desistencias_Fila_Sala_House+Numero_Desistencias_Fila_Sala_Sofas;//Soma de todas as desistencias
 		printf("   │   ■─[ Clientes ]────────────────────────────────────────────────────┐   │\n");
 		printf("   │   │   Number of clients have been in Aquapark :               %s   │   │\n",three_digit_number(num_aqua));
-			printf("   │   │   number of VIP clients have been in pool :               %s   │   │\n",three_digit_number(num_swim));
+		printf("   │   │   number of VIP clients have been in pool :               %s   │   │\n",three_digit_number(num_swim));
 		printf("   │   │   Number of clients have been in Race :                   %s   │   │\n",make_hours(chegada));
 		printf("   │   │   Number of clients have been in Tobogan :                %s   │   │\n",make_hours(entrada));
 		printf("   │   │   Number of clients have been in Sunbath :                %s   │   │\n",make_hours(saida));
@@ -610,7 +604,7 @@ void print_body(int tab){
 			for(i=0; i<24;i++) write_decoder(real_time_log[i][0], real_time_log[i][1], real_time_log[i][2]);
 			fill_empty(1);
 			break;
-		case 2: creat_stats(teste, num_clients_swimming, hora_chegada, hora_entrada, hora_saida, hora_desistencia, final_aqua, final_swimm, name[10] ); break;
+		case 2: creat_stats(num_clients_aqua, num_clients_swimming, hora_chegada, hora_entrada, hora_saida, hora_desistencia, final_aqua, final_swimm, name[10]); break;
 		case 3: creat_graph(); break;
 		case 4:
 			printf("   │                                                                         │\n   │   ■─[ Joao Borges ]─────────────────────────────────────────────────┐   │\n   │   │                                                                 │   │\n   │   │   2016311                                                     ┌─┤   │\n   │   └───────────────────────────────────────────────────────────────┴─┘   │\n   │                                                                         │\n   │   ■─[ Nuno Rodrigues ]──────────────────────────────────────────────┐   │\n   │   │                                                                 │   │\n   │   │   2044009                                                     ┌─┤   │\n   │   └───────────────────────────────────────────────────────────────┴─┘   │\n   │                                                                         │\n   │   ■─[ Vitor Paixao ]────────────────────────────────────────────────┐   │\n   │   │                                                                 │   │\n   │   │   2023212                                                     ┌─┤   │\n   │   └───────────────────────────────────────────────────────────────┴─┘   │\n");
