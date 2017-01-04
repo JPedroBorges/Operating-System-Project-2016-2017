@@ -56,7 +56,7 @@ pthread_mutex_t t_tobogan;
 
 pthread_mutex_t t_comunicate;
 /*********************************** Functions *******************************************/
-void sunbath( int id){
+void sunbath( int id){ 
 	//sends the information that the client entered to the sunbath
 	pthread_mutex_lock(&t_comunicate);
 	printf("[%s] The client %d arrived on the sunbath.\n",make_hours(simulator.minute),id);
@@ -192,7 +192,7 @@ void select_where_to_go(int id){
 				sem_wait(&s_client_tobogan_no_prio);
 			}
 
-			
+
 			printf("[%s] The client %d is riding on the tobogan.\n",make_hours(simulator.minute),id);
 			sem_wait(&s_mid_tobogan);
 			sem_wait(&s_end_tobogan);
@@ -245,7 +245,7 @@ int * handle_client(int id){
 		cliente[id].vip = 0;
 		printf(" and it's not a VIP\n");
 	}
-	
+
 	// check ocupation
 	sem_wait(&s_aquapark);
 	pthread_mutex_lock(&t_comunicate);
