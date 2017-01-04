@@ -109,7 +109,7 @@ void * toboggan(){ 													// leaves when 2 clients are ready for departure
 		printf("[%s] The tobogan is ready to get more costumers!\n", make_hours(simulator.minute));
 		int number_inside = 0;
 
-		while(number_inside<2 && attraction_open){					//fills tobogan
+		while(number_inside<2){					//fills tobogan
 			sem_wait(&s_client_tobogan);
 			number_inside++;
 		}
@@ -192,7 +192,7 @@ void select_where_to_go(int id){
 				sem_wait(&s_client_tobogan_no_prio);
 			}
 
-			
+
 			printf("[%s] The client %d is riding on the tobogan.\n",make_hours(simulator.minute),id);
 			sem_wait(&s_mid_tobogan);
 			sem_wait(&s_end_tobogan);
@@ -245,7 +245,7 @@ int * handle_client(int id){
 		cliente[id].vip = 0;
 		printf(" and it's not a VIP\n");
 	}
-	
+
 	// check ocupation
 	sem_wait(&s_aquapark);
 	pthread_mutex_lock(&t_comunicate);
@@ -273,7 +273,7 @@ int * handle_client(int id){
 	sem_post(&s_aquapark);
 
 	pthread_mutex_lock(&t_comunicate);
-	printf("[%s] The client %d went of the Aquapark.\n",make_hours(simulator.minute),id);
+	printf("[%s] The client %d went out of the Aquapark.\n",make_hours(simulator.minute),id);
 	send_message(newsockfd,simulator.minute,21,id);
 	usleep(350000);
 	pthread_mutex_unlock(&t_comunicate);
@@ -283,7 +283,7 @@ int create_client(){
 	int i,number_clients=0;
 	int finaltimeforarrival = simulator.end_time-30;
 
-	for(i=1; i<=15/*simulator.max_population && simulator.minute < finaltimeforarrival*/; i++){
+	for(i=1; i<=simulator.max_population && simulator.minute < finaltimeforarrival; i++){
 
 		if(i<simulator.max_population){
 			int random = (rand()%100);
@@ -397,10 +397,10 @@ int main(int argc, char **argv){
 
 	//closes in the next departure
 	pthread_join(t_race , NULL);
-	pthread_join(t_toboggan , NULL);
+//	pthread_join(t_toboggan , NULL);
 	//waits that all clients are over
 	int i;
-	for (i = 0; i < created_clients; ++i)
+	for (i = 1; i < created_clients; ++i)
 	{
 		pthread_join(t_cliente[i] , NULL);  // falta ver isto
 	}

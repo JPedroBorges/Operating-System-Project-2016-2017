@@ -85,6 +85,7 @@ void fill_realtimelog(int hour, int state, int client_id){
 
 void calc_stat_average_aqua(){
 //int total1 = 0;
+total_a = 0;
 dif_aqua = 0;
 int total_aqua = 0;
 
@@ -140,11 +141,13 @@ void insert_struct(struct geral *a, int hour, int client_id, geral *estr){
 			a = (struct geral*) malloc(sizeof(struct geral));
 
 			geral *ola = &*estr;
+
 			if(ola == inicio_aqua){
 				a->nome[5] = 'A';
 			}else if(ola == inicio_swim){
 				a->nome[5] = 'S';
 			}
+
 			a->ID = client_id;
 			a->chegada = hour;
 			a->entrada = 0;

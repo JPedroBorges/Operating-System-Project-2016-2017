@@ -121,7 +121,7 @@ int main(){
 	}
 
 	pthread_join(t_reader , NULL);
-	pthread_join(t_monitor , NULL);
+	//pthread_join(t_monitor , NULL);
 
 	strcpy(buffer,"101");
 	n = write(sockfd,buffer,strlen(buffer));
