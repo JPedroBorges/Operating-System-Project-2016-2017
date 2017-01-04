@@ -192,7 +192,7 @@ void select_where_to_go(int id){
 				sem_wait(&s_client_tobogan_no_prio);
 			}
 
-			//sem_wait(&s_mid_tobogan);
+			
 			printf("[%s] The client %d is riding on the tobogan.\n",make_hours(simulator.minute),id);
 			sem_wait(&s_mid_tobogan);
 			sem_wait(&s_end_tobogan);
