@@ -57,8 +57,11 @@ void creat_graph();
 //void creat_stats();
 void clear_memory();
 //void insert_struct();
-void calc_stat_average_aqua();
-void calc_stat_average_swimm();
+int calc_stat_average();
+void drop_activity();
+int drop_counter();
+int number_counter();
+//void calc_stat_average_swimm();
 /**************************** simulador ****************************/
 void sunbath(int);
 void swimming_pool(int);

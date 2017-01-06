@@ -122,7 +122,7 @@ void * toboggan(){ 													// leaves when 2 clients are ready for departure
 				clients_prio_tobogan--;
 			}else{
 				sem_post(&s_client_tobogan_no_prio);
-				clients_norm_tobogan++;
+				clients_norm_tobogan--;
 			}
 		}
 		pthread_mutex_unlock(&t_tobogan);
@@ -131,9 +131,9 @@ void * toboggan(){ 													// leaves when 2 clients are ready for departure
 
 		sleep(2); 													// duration of the tobogan
 
-		for (i = 0; i < number_inside; ++i){
+		/*for (i = 0; i < number_inside; ++i){
 			sem_post(&s_mid_tobogan);								//tells clients that thei are inside the tobogan
-		}
+		}*/
 
 		sleep(2); 													// duration of the tobogan
 
@@ -141,6 +141,7 @@ void * toboggan(){ 													// leaves when 2 clients are ready for departure
 			sem_post(&s_end_tobogan);								//tells clients that where inside that it ended
 			//sem_post(&s_tobogan);									//frees the slots for more clients
 		}
+
 
 	}
 
@@ -162,7 +163,7 @@ void select_where_to_go(int id){
 	time_t t;
 	srand((unsigned) time(&t));
 	//gets a random time to go if its needed
-	cliente[id].duration = 3;//(rand() % 10) + 2;
+	cliente[id].duration = (rand() % 10) + 2;
 
 	//selects where to go
 	switch(cliente[id].current_place){
@@ -172,36 +173,50 @@ void select_where_to_go(int id){
 			break;
 		case 2:
 		case 3:
+			pthread_mutex_lock(&t_comunicate);
 			printf("[%s] The client %d went to the tobogan. vip :%d \n",make_hours(simulator.minute),id,cliente[id].vip);
+			send_message(newsockfd,simulator.minute,3,id);
+			usleep(300000);
+			pthread_mutex_unlock(&t_comunicate);
+
 			pthread_mutex_lock(&t_tobogan);
 			if (cliente[id].vip){
 				clients_prio_tobogan++;
-				pthread_mutex_unlock(&t_tobogan);
 			}else{
 				clients_norm_tobogan++;
-				pthread_mutex_unlock(&t_tobogan);
 			}
 
 			sem_post(&s_client_tobogan);
-			//sem_wait(&s_tobogan);
 
 			if (cliente[id].vip){
+				pthread_mutex_unlock(&t_tobogan);
 				sem_wait(&s_client_tobogan_prio);
 			}
 			else{
+				pthread_mutex_unlock(&t_tobogan);
 				sem_wait(&s_client_tobogan_no_prio);
 			}
 
-
+			//sem_wait(&s_mid_tobogan);
+			pthread_mutex_lock(&t_comunicate);
 			printf("[%s] The client %d is riding on the tobogan.\n",make_hours(simulator.minute),id);
-			sem_wait(&s_mid_tobogan);
+			send_message(newsockfd,simulator.minute,13,id);
+			usleep(300000);
+			pthread_mutex_unlock(&t_comunicate);
+
+
 			sem_wait(&s_end_tobogan);
+			pthread_mutex_lock(&t_comunicate);
 			printf("[%s] The client %d  leaves the tobogan.\n",make_hours(simulator.minute),id);
+			send_message(newsockfd,simulator.minute,23,id);
+			usleep(300000);
+			pthread_mutex_unlock(&t_comunicate);
+
 			break;
 		case 4:
 		case 5:
 			//printf("[%s] The client %d went to the race tobogan.\n",make_hours(simulator.minute),id);
-			sleep(2);
+			//sleep(2);
 			break;
 		case 6:
 		case 7:
@@ -254,7 +269,7 @@ int * handle_client(int id){
 	usleep(350000);
 	pthread_mutex_unlock(&t_comunicate);
 	// enters aquapark
-	cliente[id].current_place=1; // test
+	cliente[id].current_place= 7; // test
 
 
 
@@ -262,7 +277,7 @@ int * handle_client(int id){
 		if (cliente[id].current_place < 8){
 			select_where_to_go(id);
 
-			cliente[id].current_place = 8;//getRandom();
+			cliente[id].current_place = getRandom();
 			//printf("current current_place %d\n",cliente[id].current_place);
 		}else{
 			printf("[%s] The client %d wants to leave.\n",make_hours(simulator.minute),id);
@@ -296,7 +311,7 @@ int create_client(){
 				number_clients++;
 			}
 		}else printf("[%s] There is no more people living in Madeira\n", make_hours(simulator.minute));
-		sleep(1);
+		usleep(300000);
 	}
 	return number_clients;
 }
@@ -343,8 +358,8 @@ int main(int argc, char **argv){
 
 	/****************************** Semaphores and mutex init ********************************/
 
-	sem_init(&s_aquapark,0,10);
-	sem_init(&s_pool,0,3);
+	sem_init(&s_aquapark,0,50);
+	sem_init(&s_pool,0,20);
 	sem_init(&s_tobogan,0,2);
 	sem_init(&s_end_tobogan,0,0);
 	sem_init(&s_client_tobogan,0,0);
@@ -396,8 +411,8 @@ int main(int argc, char **argv){
 	printf("created_clients : %d\n",created_clients );
 
 	//closes in the next departure
-	pthread_join(t_race , NULL);
-//	pthread_join(t_toboggan , NULL);
+	//pthread_join(t_race , NULL);
+	//pthread_join(t_toboggan , NULL);
 	//waits that all clients are over
 	int i;
 	for (i = 1; i < created_clients; ++i)
