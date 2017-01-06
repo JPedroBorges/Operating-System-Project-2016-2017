@@ -63,6 +63,13 @@ void sunbath( int id){
 	send_message(newsockfd,simulator.minute,5,id);
 	usleep(300000);
 	pthread_mutex_unlock(&t_comunicate);
+
+	pthread_mutex_lock(&t_comunicate);
+	printf("[%s] The client %d arrived on the sunbath.\n",make_hours(simulator.minute),id);
+	send_message(newsockfd,simulator.minute,15,id);
+	usleep(300000);
+	pthread_mutex_unlock(&t_comunicate);
+
 	//printf("[%s] The client %d went to the sunbath.\n",make_hours(simulator.minute),id);
 	sleep(cliente[id].duration);
 	//sends the information that the client exited to the sunbath
@@ -77,7 +84,6 @@ void swimming_pool( int id){
 	pthread_mutex_lock(&t_comunicate);
 	printf("[%s] The client %d arrived to the swiming pool.\n",make_hours(simulator.minute),id);
 	send_message(newsockfd,simulator.minute,2,id);
-
 	usleep(300000);
 	pthread_mutex_unlock(&t_comunicate);
 
@@ -298,7 +304,7 @@ int create_client(){
 	int i,number_clients=0;
 	int finaltimeforarrival = simulator.end_time-30;
 
-	for(i=1; i<=simulator.max_population && simulator.minute < finaltimeforarrival; i++){
+	for(i=1; i<=100/*simulator.max_population && simulator.minute < finaltimeforarrival*/; i++){
 
 		if(i<simulator.max_population){
 			int random = (rand()%100);
@@ -311,7 +317,7 @@ int create_client(){
 				number_clients++;
 			}
 		}else printf("[%s] There is no more people living in Madeira\n", make_hours(simulator.minute));
-		usleep(300000);
+		sleep(1);
 	}
 	return number_clients;
 }
@@ -334,7 +340,7 @@ int * aquapark(){
 			printf("[%s] The Aquapark is closing in 30 minuts!\n", make_hours(simulator.minute));
 			attraction_open=0;
 		}
-		sleep(1);
+		usleep(400000);
 		simulator.minute++;
 	}
 	aquapark_open = 0;

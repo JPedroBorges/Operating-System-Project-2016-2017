@@ -116,10 +116,12 @@ int number_counter(geral *count_num){
 		int count = 0;
 		geral * aux_counter = &*count_num;
 
-		while (aux_counter != NULL){
-			count++;
-			aux_counter = aux_counter -> next;
-		}
+				while (aux_counter != NULL){
+					if(aux_counter -> entrada != 0){
+					count++;
+				}
+					aux_counter = aux_counter -> next;
+				}
 		return count;
 }
 
