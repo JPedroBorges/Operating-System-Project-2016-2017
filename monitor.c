@@ -10,19 +10,24 @@
 int static sockfd;
 pthread_t t_monitor;
 pthread_t t_reader;
+pthread_t t_print_screen;
 int static simulation=0;
 int static tab=0;
 int static hour=0;
 int static monitor_on=0;
+int static end_monitor = 1;
 int ola = 0;
 
-int print_screen(int hour, int state, int client_id){
-	if(simulation==0 && monitor_on==0) tab=0;
-	printf("\n");
-	print_header(tab,hour);
-	print_body(tab);
-	print_footer();
-	printf("$");
+int * print_screen(){
+	while (end_monitor) {
+		if(simulation==0 && monitor_on==0) tab=0;
+		printf("\n");
+		print_header(tab,hour);
+		print_body(tab);
+		print_footer();
+		printf("$");
+		sleep(2);
+	}
 }
 int * reader(){
 	// this should go to the reader at some point
@@ -86,11 +91,14 @@ int main(){
 
 	bzero(buffer,256);
 	//fgets(buffer,255,stdin);
-
-	print_screen(-1,0,0);
+	//printf("estou aqui 2\n" );
+	if(pthread_create(&(t_print_screen), NULL ,(int *)&print_screen,NULL) != 0){ //thread sunbath
+		printf("Error creating thread\n");
+		exit(1);
+	}
 	char enter;
 	while (enter != '\r' && enter != '\n') { enter = getchar(); }
-
+	//printf("estou aqui\n" );
 	strcpy(buffer,"100");
 	n = write(sockfd,buffer,strlen(buffer));
 	bzero(buffer,256);
@@ -99,10 +107,11 @@ int main(){
 	tab=1;
 	monitor_on=1;
 
-	if(pthread_create(&(t_reader), NULL ,(void *)&reader,NULL) != 0){ //thread sunbath
+	if(pthread_create(&(t_reader), NULL ,(int *)&reader,NULL) != 0){ //thread sunbath
 		printf("Error creating thread\n");
 		exit(1);
 	}
+
 
 	while(simulation){
 		bzero(buffer,256);
@@ -114,9 +123,11 @@ int main(){
 		save_info(info[0],info[1],info[2]);
 		fill_realtimelog(info[0],info[1],info[2]);
 		write_log(info[0],info[1],info[2]);
-		print_screen(info[0],info[1],info[2]);
+		//print_screen(info[0],info[1],info[2]);
 		//calc_stats();
-
+		// strcpy(buffer,"200");
+		// n = write(sockfd,buffer,strlen(buffer));
+		// bzero(buffer,256);
 	//	calc_stat_average_swimm();
 	}
 
@@ -126,6 +137,7 @@ int main(){
 	strcpy(buffer,"101");
 	n = write(sockfd,buffer,strlen(buffer));
 	bzero(buffer,256);
+	end_monitor = 0;
 
 	close(sockfd);
 	clear_memory();

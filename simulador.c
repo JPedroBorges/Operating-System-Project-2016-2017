@@ -61,13 +61,13 @@ void sunbath( int id){
 	pthread_mutex_lock(&t_comunicate);
 	printf("[%s] The client %d arrived on the sunbath.\n",make_hours(simulator.minute),id);
 	send_message(newsockfd,simulator.minute,5,id);
-	usleep(300000);
+	usleep(150000);
 	pthread_mutex_unlock(&t_comunicate);
 
 	pthread_mutex_lock(&t_comunicate);
 	printf("[%s] The client %d arrived on the sunbath.\n",make_hours(simulator.minute),id);
 	send_message(newsockfd,simulator.minute,15,id);
-	usleep(300000);
+	usleep(150000);
 	pthread_mutex_unlock(&t_comunicate);
 
 	//printf("[%s] The client %d went to the sunbath.\n",make_hours(simulator.minute),id);
@@ -76,7 +76,7 @@ void sunbath( int id){
 	pthread_mutex_lock(&t_comunicate);
 	printf("[%s] The client %d arrived on the sunbath.\n",make_hours(simulator.minute),id);
 	send_message(newsockfd,simulator.minute,25,id);
-	usleep(300000);
+	usleep(150000);
 	pthread_mutex_unlock(&t_comunicate);
 }
 void swimming_pool( int id){
@@ -84,7 +84,7 @@ void swimming_pool( int id){
 	pthread_mutex_lock(&t_comunicate);
 	printf("[%s] The client %d arrived to the swiming pool.\n",make_hours(simulator.minute),id);
 	send_message(newsockfd,simulator.minute,2,id);
-	usleep(300000);
+	usleep(150000);
 	pthread_mutex_unlock(&t_comunicate);
 
 	//waits in the line
@@ -93,7 +93,7 @@ void swimming_pool( int id){
 	pthread_mutex_lock(&t_comunicate);
 	printf("[%s] The client %d went to the swiming pool.\n",make_hours(simulator.minute),id);
 	send_message(newsockfd,simulator.minute,12,id);
-	usleep(300000);
+	usleep(150000);
 	pthread_mutex_unlock(&t_comunicate);
 
 	sleep(cliente[id].duration);
@@ -101,7 +101,7 @@ void swimming_pool( int id){
 	pthread_mutex_lock(&t_comunicate);
 	printf("[%s] The client %d went out of the swiming pool.\n",make_hours(simulator.minute),id);
 	send_message(newsockfd,simulator.minute,22,id);
-	usleep(300000);
+	usleep(150000);
 	pthread_mutex_unlock(&t_comunicate);
 
 	sem_post(&s_pool);
@@ -182,7 +182,7 @@ void select_where_to_go(int id){
 			pthread_mutex_lock(&t_comunicate);
 			printf("[%s] The client %d went to the tobogan. vip :%d \n",make_hours(simulator.minute),id,cliente[id].vip);
 			send_message(newsockfd,simulator.minute,3,id);
-			usleep(300000);
+			usleep(150000);
 			pthread_mutex_unlock(&t_comunicate);
 
 			pthread_mutex_lock(&t_tobogan);
@@ -207,7 +207,7 @@ void select_where_to_go(int id){
 			pthread_mutex_lock(&t_comunicate);
 			printf("[%s] The client %d is riding on the tobogan.\n",make_hours(simulator.minute),id);
 			send_message(newsockfd,simulator.minute,13,id);
-			usleep(300000);
+			usleep(150000);
 			pthread_mutex_unlock(&t_comunicate);
 
 
@@ -215,7 +215,7 @@ void select_where_to_go(int id){
 			pthread_mutex_lock(&t_comunicate);
 			printf("[%s] The client %d  leaves the tobogan.\n",make_hours(simulator.minute),id);
 			send_message(newsockfd,simulator.minute,23,id);
-			usleep(300000);
+			usleep(150000);
 			pthread_mutex_unlock(&t_comunicate);
 
 			break;
@@ -242,24 +242,24 @@ int * handle_client(int id){
 	time_t t;
 	srand((unsigned) time(&t));
 	// function that gets a diferant than the previous number
-	int getRandom(){
-		int myRandom = (rand() % 9) + 1;
+	int getRandom(int max, int min){
+		int myRandom = (rand() % max) + min;
 		if (cliente[id].current_place != myRandom){
 			return myRandom;
 		}
 		else{
-			getRandom();
+			getRandom(max,min);
 		}
 	}
 
 	pthread_mutex_lock(&t_comunicate);
 	printf("[%s] ⚫ The client %d arrived to the Park entrance", make_hours(simulator.minute),id);
 	send_message(newsockfd,simulator.minute,1,id);
-	usleep(350000);
+	usleep(150000);
 	pthread_mutex_unlock(&t_comunicate);
 
 
-	if(getRandom()<simulator.vip){
+	if(getRandom(100,0)<simulator.vip){
 		cliente[id].vip = 1;
 		printf(" and it is an VIP\n");
 	}else {
@@ -272,7 +272,7 @@ int * handle_client(int id){
 	pthread_mutex_lock(&t_comunicate);
 	send_message(newsockfd,simulator.minute,11,id);
 	printf("[%s] ⚫ The client %d entered the Park\n", make_hours(simulator.minute),id);
-	usleep(350000);
+	usleep(150000);
 	pthread_mutex_unlock(&t_comunicate);
 	// enters aquapark
 	cliente[id].current_place= 7; // test
@@ -283,7 +283,7 @@ int * handle_client(int id){
 		if (cliente[id].current_place < 8){
 			select_where_to_go(id);
 
-			cliente[id].current_place = getRandom();
+			cliente[id].current_place = getRandom(9,1);
 			//printf("current current_place %d\n",cliente[id].current_place);
 		}else{
 			printf("[%s] The client %d wants to leave.\n",make_hours(simulator.minute),id);
@@ -296,7 +296,7 @@ int * handle_client(int id){
 	pthread_mutex_lock(&t_comunicate);
 	printf("[%s] The client %d went out of the Aquapark.\n",make_hours(simulator.minute),id);
 	send_message(newsockfd,simulator.minute,21,id);
-	usleep(350000);
+	usleep(150000);
 	pthread_mutex_unlock(&t_comunicate);
 	return 0;
 }
@@ -317,7 +317,7 @@ int create_client(){
 				number_clients++;
 			}
 		}else printf("[%s] There is no more people living in Madeira\n", make_hours(simulator.minute));
-		sleep(1);
+		//usleep(1);
 	}
 	return number_clients;
 }

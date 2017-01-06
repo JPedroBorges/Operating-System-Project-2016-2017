@@ -69,3 +69,6 @@ void select_where_to_go(int);
 int * handle_client(int);
 int create_client();
 int * aquapark();
+/***************************** monitr ******************************/
+int * print_screen();
+int * reader();
