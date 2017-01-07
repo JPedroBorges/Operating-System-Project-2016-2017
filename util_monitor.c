@@ -562,10 +562,10 @@ void write_decoder(int hour, int state, int client_id) {
 		case 34: printf("   │  [%s] ❌ Client",make_hours(hour)); printf(" %s gave up on Race, was waiting for too long         │\n", three_digit_number(client_id)); break;
 		case 35: printf("   │  [%s] ❌ Client",make_hours(hour)); printf(" %s gave up on Sunbath, was waiting for too long      │\n", three_digit_number(client_id)); break;
 
-		case 43: printf("   |  [%s] ➤ Toboggan wooooooo.                                          |\n", make_hours(hour)); break;
-		case 44: printf("   |  [%s] ➤ Race wooooooo.                                              |\n", make_hours(hour)); break;
-		case 53: printf("   |  [%s] ➤ Toboggan trip is over.                                      |\n", make_hours(hour)); break;
-		case 54: printf("   |  [%s] ➤ Race trip is over.                                          |\n", make_hours(hour)); break;
+		case 43: printf("   |  [%s] ➤ Toboggan wooooooo.                                           |\n", make_hours(hour)); break;
+		case 44: printf("   |  [%s] ➤ Race wooooooo.                                               |\n", make_hours(hour)); break;
+		case 53: printf("   |  [%s] ➤ Toboggan trip is over.                                       |\n", make_hours(hour)); break;
+		case 54: printf("   |  [%s] ➤ Race trip is over.                                           |\n", make_hours(hour)); break;
 
 		case 100: printf("   │  [%s] ⛬ Simulation started.                                          │\n", make_hours(hour)); break;
 		case 101: printf("   │  [%s] ⛬ Simulation is over.                                          │\n", make_hours(hour)); break;
