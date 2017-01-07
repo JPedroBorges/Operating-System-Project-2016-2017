@@ -226,7 +226,7 @@ void select_where_to_go(int id){
 																								pthread_mutex_unlock(&t_tobogan);
 																								sem_wait(&s_client_tobogan_no_prio);
 																}
-																if (simulator.max_waiting_time > (simulator.minute - cliente[id].arrival_time && simulator.minute<=(simulator.end_time-30))) { // give up because of time
+																if (simulator.max_waiting_time > (simulator.minute - cliente[id].arrival_time) && simulator.minute<=(simulator.end_time-30)) { // give up because of time
 
 																								pthread_mutex_lock(&t_comunicate);
 																								printf("[%s] The client %d is riding on the tobogan.\n",make_hours(simulator.minute),id);
@@ -340,7 +340,7 @@ int * handle_client(int id){
 								}else{
 																pthread_mutex_lock(&t_comunicate);
 																printf("[%s] The client %d went home the Aquapark was closed.\n",make_hours(simulator.minute),id);
-																send_message(newsockfd,simulator.minute,21,id);
+																send_message(newsockfd,simulator.minute,31,id);
 																usleep(150000);
 																pthread_mutex_unlock(&t_comunicate);
 								}
@@ -401,8 +401,8 @@ int main(int argc, char **argv){
 
 								/****************************** Semaphores and mutex init ********************************/
 
-								sem_init(&s_aquapark,0,40);
-								sem_init(&s_pool,0,10);
+								sem_init(&s_aquapark,0,20);
+								sem_init(&s_pool,0,5);
 								sem_init(&s_end_tobogan,0,0);
 								sem_init(&s_client_tobogan,0,0);
 								sem_init(&s_client_tobogan_prio,0,0);

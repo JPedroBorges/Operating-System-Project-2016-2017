@@ -42,6 +42,7 @@ general *inicio_sunb = NULL;
 
 pthread_mutex_t t_teste;
 
+int atraction = 1;
 //-----------------------------TESTES-------------------------------------------
 char name[10];
 int teste;
@@ -75,7 +76,29 @@ void fill_realtimelog(int hour, int state, int client_id){
 	real_time_log[23][1]=state;
 	real_time_log[23][2]=client_id;
 }
+int max_time(general *t){
 
+int entra = 0;
+int saida = 0;
+int total = 0;
+int final = 0;
+	general *aux = &*t;
+	while(aux != NULL){
+		total = 0;
+		if(aux -> saida != 0){
+			entra = aux -> entrada;
+			saida = aux -> saida;
+			total = (saida - entra);
+			if(total > final){
+				final = total;
+			}
+		}
+
+		aux = aux -> next;
+	}
+	return final;
+
+}
 int current_number(general *c){
 	general *current = &*c;
 	int counte = 0;
@@ -85,6 +108,35 @@ int current_number(general *c){
 			current = current -> next;
 		}
 		return counte;
+}
+
+int average_time(general *t){
+
+int total;
+int saida = 0;
+int entra = 0;
+float dif = 0;
+int ola = 0;
+int final = 0;
+int total1 = 0;
+
+	general *aux2 = &*t;
+
+			while (aux2 != NULL){
+				total = 0;
+				if(aux2 -> entrada != 0){
+					saida = aux2 -> saida;
+					entra = aux2 -> entrada;
+					total = (saida - entra);
+					total1++;
+				}
+				aux2 = aux2 -> next;
+				dif = dif + total;
+			}
+			ola = (int)(dif / total1);
+			final = (int)round(ola);
+
+			return final;
 }
 
 void drop_activity(int hour, int client_id, general *c){
@@ -362,13 +414,12 @@ void save_info(int hour, int state, int client_id){
 		case 3:
 					pthread_mutex_lock(&t_teste);
 					insert_struct(&str_tobogan, hour, client_id, &*inicio_tobo,3);
-						counter.tobogan++;
+					counter.tobogan++;
 					pthread_mutex_unlock(&t_teste);
 					break;
 		case 13:
 					pthread_mutex_lock(&t_teste);
 					entry_activity(hour, client_id, &*inicio_tobo);
-
 					pthread_mutex_unlock(&t_teste);
 					break;
 		case 23:
@@ -433,6 +484,8 @@ void save_info(int hour, int state, int client_id){
 					counter.tobo = 0;
 					pthread_mutex_unlock(&t_teste);
 					break;
+		case 101:
+					atraction = 0;
 		default:
 		break;
 	}
@@ -490,35 +543,28 @@ int write_report(){
 
 	fprintf(file_report,"%s","---------------------------Simulation statistics--------------------------\n");
 	fprintf(file_report,"%s","Clientes:\n");
-	fprintf(file_report,"	%s : %d\n","Total clients on AquaPark", 2);
-	fprintf(file_report,"	%s : %d\n","Total clients on swimming pool", 1);
-	fprintf(file_report,"	%s : %d\n","Total clients on Toboggan", 0);
-	fprintf(file_report,"	%s : %d\n","Total clients on Race", 0);
-	fprintf(file_report,"	%s : %d\n","Total clients on Sunbath", 0);
-	fprintf(file_report,"	%s : %d\n","Average of VIP clients on AquaPark", 0);
-	fprintf(file_report,"	%s : %d\n","Average of VIP clients on swimming pool", 0);
-	fprintf(file_report,"	%s : %d\n","Average of VIP clients on Toboggan", 0);
-	fprintf(file_report,"	%s : %d\n","Average of VIP clients on Race", 0);
-	fprintf(file_report,"	%s : %d\n","Average of VIP clients on Sunbath", 0);
+	fprintf(file_report,"	%s : %d\n","Total clients on AquaPark", number_counter(&*inicio_aqua,1));
+	fprintf(file_report,"	%s : %d\n","Total clients on swimming pool", number_counter(&*inicio_swim,1));
+	fprintf(file_report,"	%s : %d\n","Total clients on Toboggan", number_counter(&*inicio_tobo,2));
+	fprintf(file_report,"	%s : %d\n","Total clients on Race", number_counter(&*inicio_race,1));
+	fprintf(file_report,"	%s : %d\n","Total clients on Sunbath", number_counter(&*inicio_sunb,1));
 	fprintf(file_report,"%s","Drops:\n");
-	fprintf(file_report,"	%s : %d\n","Total drops on queue",0);
-	fprintf(file_report,"	%s : %d\n","Drops on AquaPark",0);
-	fprintf(file_report,"	%s : %d\n","Drops on swimming pool",1);
-	fprintf(file_report,"	%s : %d\n","Drops on Toboggan",0);
-	fprintf(file_report,"	%s : %d\n","Drops on  Race",0);
-	fprintf(file_report,"	%s : %d\n","Drops on  Sunbath",0);
+	fprintf(file_report,"	%s : %d\n","Total drops on queue", drop_counter(&*inicio_aqua)+drop_counter(&*inicio_swim)+drop_counter(&*inicio_race)+drop_counter(&*inicio_tobo));
+	fprintf(file_report,"	%s : %d\n","Drops on AquaPark", drop_counter(&*inicio_aqua));
+	fprintf(file_report,"	%s : %d\n","Drops on swimming pool", drop_counter(&*inicio_swim));
+	fprintf(file_report,"	%s : %d\n","Drops on Toboggan", drop_counter(&*inicio_tobo));
+	fprintf(file_report,"	%s : %d\n","Drops on Race", drop_counter(&*inicio_race));
 	fprintf(file_report,"%s","Average time:\n");
-	fprintf(file_report,"	%s : %f\n","Average time on AquaPark",0.0);
-	fprintf(file_report,"	%s : %f\n","Average time on swimming pool",0.0);
-	fprintf(file_report,"	%s : %f\n","Average time on Toboggan",0.0);
-	fprintf(file_report,"	%s : %f\n","Average time on Race",0.0);
-	fprintf(file_report,"	%s : %f\n","Average time on Sunbath",0.0);
+	fprintf(file_report,"	%s : %s\n","Average time on AquaPark", make_hours(average_time(&*inicio_aqua)));
+	fprintf(file_report,"	%s : %s\n","Average time on swimming pool", make_hours(average_time(&*inicio_swim)));
+	fprintf(file_report,"	%s : %s\n","Average time on Toboggan", make_hours(average_time(&*inicio_tobo)));
+	fprintf(file_report,"	%s : %s\n","Average time on Race", make_hours(average_time(&*inicio_race)));
 	fprintf(file_report,"%s","Max time:\n");
-	fprintf(file_report,"	%s : %f\n","Max time on AquaPark",0.0);
-	fprintf(file_report,"	%s : %f\n","Max time on swimming pool",0.0);
-	fprintf(file_report,"	%s : %f\n","Max time on Toboggan",0.0);
-	fprintf(file_report,"	%s : %f\n","Max time on Race",0.0);
-	fprintf(file_report,"	%s : %f\n","Max time on Sunbath",0.0);
+	fprintf(file_report,"	%s : %s\n","Max time on AquaPark", make_hours(max_time(&*inicio_aqua)));
+	fprintf(file_report,"	%s : %s\n","Max time on swimming pool", make_hours(max_time(&*inicio_swim)));
+	fprintf(file_report,"	%s : %s\n","Max time on Toboggan", make_hours(max_time(&*inicio_tobo)));
+	fprintf(file_report,"	%s : %s\n","Max time on Race", make_hours(max_time(&*inicio_race)));
+	fprintf(file_report,"	%s : %s\n","Max time on Sunbath", make_hours(max_time(&*inicio_sunb)));
 	fprintf(file_report,"%s","\n--------------------------------------------------------------------------\n");
 	fclose(file_report);
 
@@ -595,15 +641,21 @@ void print_header(int tab, int hour){
 
 void creat_graph(/*int aqua, int pool, int race, int race_status, int tobogan, int tobogan_status*/){
 
-	 float percent_aqua = (current_number(&*inicio_aqua)*0.01)*20;
-	 float percent_pool = (current_number(&*inicio_swim)*0.07)*20;
+	 float percent_aqua = (current_number(&*inicio_aqua)*0.05)*20;
+	 float percent_pool = (current_number(&*inicio_swim)*0.2)*20;
 	 int tobogan = counter.tobogan;
 	 int tobo = counter.tobo;
 	 int cheat1 = random()%100;
-	 if(cheat1 < 1){
-		 if(mister_cheat == 4){mister_cheat = 0;}else{
-	 mister_cheat++;}
- 	 }
+		if(atraction == 1){
+					if(cheat1 < 1){
+				 			if(mister_cheat == 4){
+											mister_cheat = 0;
+										}else{
+			 							mister_cheat++;}
+					}
+				}else if(mister_cheat != 0 ){
+				mister_cheat--;
+			}
 
 	 printf("   │                             ┌──────────────────────────────────────────┐│\n ");
 	 printf("  │ ┌───────────────────────────┤             Real time events             ││\n");
@@ -631,8 +683,7 @@ void creat_graph(/*int aqua, int pool, int race, int race_status, int tobogan, i
    printf("   │ │      ┃    "); if(percent_aqua >= 1){printf("██");percent_aqua--;}else{printf("  ");} printf("         ");if(percent_pool >= 1){printf("██");percent_pool--;}else{printf("  ");} printf("    │ └─────────────────┸──────────────────┘ │ │\n");
    printf("   │ │      ┛                     │                                        │ │\n");
    printf("   │ └────────────────────────────┴────────────────────────────────────────┘ │\n");
-	//for(i=0; i<20; i++){
-		//if(i<percent_aqua) printf("██         \n", );
+
 	}
 
 	void creat_stats (int id, int chegada, int entrada, int saida, int desistencia, char a ){
@@ -643,26 +694,24 @@ void creat_graph(/*int aqua, int pool, int race, int race_status, int tobogan, i
 		printf("   │   │   Number of clients have been in Race :                   %s   │   │\n",three_digit_number(number_counter(&*inicio_race,1)));
 		printf("   │   │   Number of clients have been in Tobogan :                %s   │   │\n",three_digit_number(number_counter(&*inicio_tobo,2)));
 		printf("   │   │   Number of clients have been in Sunbath :                %s   │   │\n",three_digit_number(number_counter(&*inicio_sunb,1)));
-		printf("   │   │   number of VIP clients have been in pool :               %s ┌─┤   │\n",three_digit_number(0));
-	  printf("   │   └───────────────────────────────────────────────────────────────┴─┘   │\n");
+	  printf("   │   └─────────────────────────────────────────────────────────────────┘   │\n");
 	  printf("   │                                                                         │\n");
+			printf("   │                                                                         │\n");
 		printf("   │   ■─[ Desistencias ]────────────────────────────────────────────────┐   │\n");
-		printf("   │   │   Total number of drops in queue :                        %s   │   │\n",three_digit_number(0));
-		printf("   │   │   Number of drops in Aquapark :                           %s   │   │\n",three_digit_number(id));
-		printf("   │   │   Number of drops in Pool :                               %s   │   │\n",make_hours(chegada));
-		printf("   │   │   Number of drops in Race :                               %s   │   │\n",make_hours(entrada));
-		printf("   │   │   Number of drops in Tobogan :                            %s   │   │\n",make_hours(saida));
-		printf("   │   │   Number of drops in Slow River :                         %c ┌─┤   │\n",a);
-	  printf("   │   └───────────────────────────────────────────────────────────────┴─┘   │\n");
+		printf("   │   │   Total number of drops in queue :                        %s   │   │\n",three_digit_number(drop_counter(&*inicio_aqua)+drop_counter(&*inicio_swim)+drop_counter(&*inicio_race)+drop_counter(&*inicio_tobo)));
+		printf("   │   │   Number of drops in Aquapark :                           %s   │   │\n",three_digit_number(drop_counter(&*inicio_aqua)));
+		printf("   │   │   Number of drops in Pool :                               %s   │   │\n",three_digit_number(drop_counter(&*inicio_swim)));
+		printf("   │   │   Number of drops in Race :                               %s   │   │\n",three_digit_number(drop_counter(&*inicio_race)));
+		printf("   │   │   Number of drops in Tobogan :                            %s   │   │\n",three_digit_number(drop_counter(&*inicio_tobo)));
+	  printf("   │   └─────────────────────────────────────────────────────────────────┘   │\n");
+			printf("   │                                                                         │\n");
 	  printf("   │                                                                         │\n");
 		printf("   │   ■─[ Tempos Medios ]───────────────────────────────────────────────┐   │\n");
 		printf("   │   │   Average time in queue to get in Aquapark :            %s   │   │\n",make_hours(calc_stat_average(&*inicio_aqua)));
 		printf("   │   │   Average time in queue to get in Pool :                %s   │   │\n",make_hours(calc_stat_average(&*inicio_swim)));
 		printf("   │   │   Average time in queue to get in Race :                %s   │   │\n",make_hours(calc_stat_average(&*inicio_race)));
 		printf("   │   │   Average time in queue to get in Tobogan :             %s   │   │\n",make_hours(calc_stat_average(&*inicio_tobo)));
-		printf("   │   │   Average time in queue to get in Sunbath :               %s ┌─┤   │\n",three_digit_number(0));
-
-		printf("   │   └───────────────────────────────────────────────────────────────┴─┘   │\n");
+		printf("   │   └─────────────────────────────────────────────────────────────────┘   │\n");
 		printf("   │                                                                         │\n");
 
 	}

@@ -138,7 +138,7 @@ int main(){
 	n = write(sockfd,buffer,strlen(buffer));
 	bzero(buffer,256);
 	end_monitor = 0;
-
+ write_report();
 	close(sockfd);
 	clear_memory();
 }
