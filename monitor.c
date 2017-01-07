@@ -26,7 +26,7 @@ int * print_screen(){
 		print_body(tab);
 		print_footer();
 		printf("$");
-		sleep(2);
+		usleep(22500);
 	}
 }
 int * reader(){

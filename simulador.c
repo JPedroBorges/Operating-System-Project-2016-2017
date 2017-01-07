@@ -106,7 +106,7 @@ void swimming_pool( int id){
 
 	sem_post(&s_pool);
 }
-void * toboggan(){ 													// leaves when 2 clients are ready for departure
+void * toboggan(int id){ 													// leaves when 2 clients are ready for departure
 	int i;
 
 	printf("[%s] The tobogan is now open!\n", make_hours(simulator.minute));
@@ -134,7 +134,7 @@ void * toboggan(){ 													// leaves when 2 clients are ready for departure
 		pthread_mutex_unlock(&t_tobogan);
 
 		printf("[%s] The tobogan is departing!\n", make_hours(simulator.minute));
-
+		send_message(newsockfd,simulator.minute,43,id);
 		sleep(2); 													// duration of the tobogan
 
 		/*for (i = 0; i < number_inside; ++i){
@@ -147,7 +147,7 @@ void * toboggan(){ 													// leaves when 2 clients are ready for departure
 			sem_post(&s_end_tobogan);								//tells clients that where inside that it ended
 			//sem_post(&s_tobogan);									//frees the slots for more clients
 		}
-
+		send_message(newsockfd,simulator.minute,53,id);
 
 	}
 
@@ -213,7 +213,7 @@ void select_where_to_go(int id){
 
 			sem_wait(&s_end_tobogan);
 			pthread_mutex_lock(&t_comunicate);
-			printf("[%s] The client %d  leaves the tobogan.\n",make_hours(simulator.minute),id);
+			printf("[%s] The client %d leaves the tobogan.\n",make_hours(simulator.minute),id);
 			send_message(newsockfd,simulator.minute,23,id);
 			usleep(150000);
 			pthread_mutex_unlock(&t_comunicate);
@@ -340,7 +340,7 @@ int * aquapark(){
 			printf("[%s] The Aquapark is closing in 30 minuts!\n", make_hours(simulator.minute));
 			attraction_open=0;
 		}
-		usleep(400000);
+		sleep(1);
 		simulator.minute++;
 	}
 	aquapark_open = 0;
