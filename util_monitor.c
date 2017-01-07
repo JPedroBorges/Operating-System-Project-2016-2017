@@ -60,7 +60,7 @@ float total_s;
 //-----------------------------TESTES-------------------------------------------
 
 
-int max_person_aqua = 10000;
+int max_person_aqua = 100;
 int max_person_pool = 100;
 
 int real_time_log[24][3]={{-1,-1,-1},{-1,-1,-1},{-1,-1,-1},{-1,-1,-1},{-1,-1,-1},{-1,-1,-1},{-1,-1,-1},{-1,-1,-1},{-1,-1,-1},{-1,-1,-1},{-1,-1,-1},{-1,-1,-1},{-1,-1,-1},{-1,-1,-1},{-1,-1,-1},{-1,-1,-1},{-1,-1,-1},{-1,-1,-1},{-1,-1,-1},{-1,-1,-1},{-1,-1,-1},{-1,-1,-1},{-1,-1,-1},{-1,-1,-1}};
@@ -74,6 +74,16 @@ void fill_realtimelog(int hour, int state, int client_id){
 	real_time_log[23][0]=hour;
 	real_time_log[23][1]=state;
 	real_time_log[23][2]=client_id;
+}
+int current_number(geral *c){
+	geral *current = &*c;
+	int counte = 0;
+		while(current != NULL){
+			if(current -> saida == 0){
+			counte++;}
+			current = current -> next;
+		}
+		return counte;
 }
 
 void drop_activity(int hour, int client_id, geral *c){
@@ -664,29 +674,43 @@ void print_header(int tab, int hour){
 
 void creat_graph(/*int aqua, int pool, int race, int race_status, int tobogan, int tobogan_status*/){
 
-	// int percent_aqua = ((aqua*20)/max_person_aqua);
+	 //float lol = ((30*0.01));
+	// printf("%f",lol);
+	 //float percent_aqua = lol*20;
+	 //printf("%f",percent_aqua);
+	 //int fin_aqua = (int)round(fin_aqua*20);
+	 float percent_aqua = (current_number(&*inicio_aqua)*0.01)*20;
+
+	 printf("%f:",percent_aqua);
+	 float percent_pool = (current_number(&*inicio_swim)*0.07)*20;
+	 printf("%f",percent_pool);
+
+
 	 //printf("%d", percent_aqua);
-	 printf("   │                             ┌──────────────────────────────────────────┐│\n   │ ┌───────────────────────────┤             Real time events             ││\n   │ │        Aquapark     Pool  └┬────────────────────────────────────────┬┘│\n   │ │                            │                  Race                  │ │\n");
-	 printf("   │ │100 % ┫                     │ ┌────────────────────────────────────┐ │ │\n");
-	 printf("   │ │      ┃                     │ │               Waiting              │ │ │\n");
-	 printf("   │ │ 90 % ┫                     │ ├─────────────────┰──────────────────┤ │ │\n");
-	 printf("   │ │      ┃                     │ │        0        ╏                  │ │ │\n");
-	 printf("   │ │ 80 % ┫                     │ │       /█\\       ╏                  │ │ │\n");
-	 printf("   │ │      ┃    ██               │ │       .Π.       ╏                  │ │ │\n");
-   printf("   │ │ 70 % ┫    ██               │ │╸╸╸╸╸╸╸╸╸╸╸╸╸╸╸╸╸╏╺╺╺╺╺╺╺╺╺╺╺╺╺╺╺╺╺╺│ │ │\n");
-   printf("   │ │      ┃    ██               │ │                 ╏                  │ │ │\n");
-   printf("   │ │ 60 % ┫    ██               │ │                 ╏                  │ │ │\n");
-   printf("   │ │      ┃    ██               │ │                 ╏                  │ │ │\n");
-   printf("   │ │ 50 % ┫    ██               │ └─────────────────┸──────────────────┘ │ │\n");
-   printf("   │ │      ┃    ██         ██    ├────────────────────────────────────────┤ │\n");
-   printf("   │ │ 40 % ┫    ██         ██    │                Tobogan                 │ │\n");
-   printf("   │ │      ┃    ██         ██    │ ┌────────────────────────────────────┐ │ │\n");
-   printf("   │ │ 30 % ┫    ██         ██    │ │              On going              │ │ │\n");
-   printf("   │ │      ┃    ██         ██    │ ├─────────────────┰──────────────────┤ │ │\n");
-   printf("   │ │ 20 % ┫    ██         ██    │ │        0        ╏                  │ │ │\n");
-   printf("   │ │      ┃    ██         ██    │ │       /█\\       ╏                  │ │ │\n");
-   printf("   │ │ 10 % ┫    ██         ██    │ │       .Π.       ╏                  │ │ │\n");
-   printf("   │ │      ┃    ██         ██    │ └─────────────────┸──────────────────┘ │ │\n");
+	 printf("   │                             ┌──────────────────────────────────────────┐│\n ");
+	 printf("  │ ┌───────────────────────────┤             Real time events             ││\n");
+	 printf("   │ │        Aquapark     Pool  └┬────────────────────────────────────────┬┘│\n");
+	 printf("   │ │                            │                  Race                  │ │\n");
+	 printf("   │ │100 % ┫    "); if(percent_aqua >= 20){printf("██");percent_aqua--;}else{printf("  ");} printf("         ");if(percent_pool >= 20){printf("██");percent_pool--;}else{printf("  ");} printf("    │ ┌────────────────────────────────────┐ │ │\n");
+	 printf("   │ │      ┃    "); if(percent_aqua >= 19){printf("██");percent_aqua--;}else{printf("  ");} printf("         ");if(percent_pool >= 19){printf("██");percent_pool--;}else{printf("  ");} printf("    │ │               Waiting              │ │ │\n");
+	 printf("   │ │ 90 % ┫    "); if(percent_aqua >= 18){printf("██");percent_aqua--;}else{printf("  ");} printf("         ");if(percent_pool >= 18){printf("██");percent_pool--;}else{printf("  ");} printf("    │ ├─────────────────┰──────────────────┤ │ │\n");
+	 printf("   │ │      ┃    "); if(percent_aqua >= 17){printf("██");percent_aqua--;}else{printf("  ");} printf("         ");if(percent_pool >= 17){printf("██");percent_pool--;}else{printf("  ");} printf("    │ │        "); if(1==1){printf("0");}else{printf(" ");}printf("        ╏         ");if(1==0){printf("0");}else{printf(" ");} printf("        │ │ │\n");
+	 printf("   │ │ 80 % ┫    "); if(percent_aqua >= 16){printf("██");percent_aqua--;}else{printf("  ");} printf("         ");if(percent_pool >= 16){printf("██");percent_pool--;}else{printf("  ");} printf("    │ │       "); if(1==0){printf("/█\\");}else{printf("   ");}printf("       ╏        ");if(1==1){printf("/█\\");}else{printf("   ");} printf("       │ │ │\n");
+	 printf("   │ │      ┃    "); if(percent_aqua >= 15){printf("██");percent_aqua--;}else{printf("  ");} printf("         ");if(percent_pool >= 15){printf("██");percent_pool--;}else{printf("  ");} printf("    │ │       "); if(1==1){printf(".Π.");}else{printf("   ");}printf("       ╏        "); if(1==1){printf(".Π.");}else{printf("   ");} printf("       │ │ │\n");
+   printf("   │ │ 70 % ┫    "); if(percent_aqua >= 14){printf("██");percent_aqua--;}else{printf("  ");} printf("         ");if(percent_pool >= 14){printf("██");percent_pool--;}else{printf("  ");} printf("    │ │╸╸╸╸╸╸╸╸╸╸╸╸╸╸╸╸╸╏╺╺╺╺╺╺╺╺╺╺╺╺╺╺╺╺╺╺│ │ │\n");
+   printf("   │ │      ┃    "); if(percent_aqua >= 13){printf("██");percent_aqua--;}else{printf("  ");} printf("         ");if(percent_pool >= 13){printf("██");percent_pool--;}else{printf("  ");} printf("    │ │        "); if(1==1){printf("0");}else{printf(" ");}printf("        ╏         ");if(1==0){printf("0");}else{printf(" ");} printf("        │ │ │\n");
+   printf("   │ │ 60 % ┫    "); if(percent_aqua >= 12){printf("██");percent_aqua--;}else{printf("  ");} printf("         ");if(percent_pool >= 12){printf("██");percent_pool--;}else{printf("  ");} printf("    │ │       "); if(1==1){printf("/█\\");}else{printf("   ");}printf("       ╏        ");if(1==0){printf("/█\\");}else{printf("   ");} printf("       │ │ │\n");
+   printf("   │ │      ┃    "); if(percent_aqua >= 11){printf("██");percent_aqua--;}else{printf("  ");} printf("         ");if(percent_pool >= 11){printf("██");percent_pool--;}else{printf("  ");} printf("    │ │       "); if(1==1){printf(".Π.");}else{printf("   ");}printf("       ╏        "); if(1==0){printf(".Π.");}else{printf("   ");} printf("       │ │ │\n");
+   printf("   │ │ 50 % ┫    "); if(percent_aqua >= 10){printf("██");percent_aqua--;}else{printf("  ");} printf("         ");if(percent_pool >= 10){printf("██");percent_pool--;}else{printf("  ");} printf("    │ └─────────────────┸──────────────────┘ │ │\n");
+   printf("   │ │      ┃    "); if(percent_aqua >= 9){printf("██");percent_aqua--;}else{printf("  ");} printf("         ");if(percent_pool >= 9){printf("██");percent_pool--;}else{printf("  ");} printf("    ├────────────────────────────────────────┤ │\n");
+   printf("   │ │ 40 % ┫    "); if(percent_aqua >= 8){printf("██");percent_aqua--;}else{printf("  ");} printf("         ");if(percent_pool >= 8){printf("██");percent_pool--;}else{printf("  ");} printf("    │                Tobogan                 │ │\n");
+   printf("   │ │      ┃    "); if(percent_aqua >= 7){printf("██");percent_aqua--;}else{printf("  ");} printf("         ");if(percent_pool >= 7){printf("██");percent_pool--;}else{printf("  ");} printf("    │ ┌────────────────────────────────────┐ │ │\n");
+   printf("   │ │ 30 % ┫    "); if(percent_aqua >= 6){printf("██");percent_aqua--;}else{printf("  ");} printf("         ");if(percent_pool >= 6){printf("██");percent_pool--;}else{printf("  ");} printf("    │ │              On going              │ │ │\n");
+   printf("   │ │      ┃    "); if(percent_aqua >= 5){printf("██");percent_aqua--;}else{printf("  ");} printf("         ");if(percent_pool >= 5){printf("██");percent_pool--;}else{printf("  ");} printf("    │ ├─────────────────┰──────────────────┤ │ │\n");
+   printf("   │ │ 20 % ┫    "); if(percent_aqua >= 4){printf("██");percent_aqua--;}else{printf("  ");} printf("         ");if(percent_pool >= 4){printf("██");percent_pool--;}else{printf("  ");} printf("    │ │        "); if(1==1){printf("0");}else{printf(" ");}printf("        ╏         ");if(1==1){printf("0");}else{printf(" ");} printf("        │ │ │\n");
+   printf("   │ │      ┃    "); if(percent_aqua >= 3){printf("██");percent_aqua--;}else{printf("  ");} printf("         ");if(percent_pool >= 3){printf("██");percent_pool--;}else{printf("  ");} printf("    │ │       "); if(1==0){printf("/█\\");}else{printf("   ");}printf("       ╏        ");if(1==1){printf("/█\\");}else{printf("   ");} printf("       │ │ │\n");
+   printf("   │ │ 10 % ┫    "); if(percent_aqua >= 2){printf("██");percent_aqua--;}else{printf("  ");} printf("         ");if(percent_pool >= 2){printf("██");percent_pool--;}else{printf("  ");} printf("    │ │       "); if(1==1){printf(".Π.");}else{printf("   ");}printf("       ╏        "); if(1==0){printf(".Π.");}else{printf("   ");} printf("       │ │ │\n");
+   printf("   │ │      ┃    "); if(percent_aqua >= 1){printf("██");percent_aqua--;}else{printf("  ");} printf("         ");if(percent_pool >= 1){printf("██");percent_pool--;}else{printf("  ");} printf("    │ └─────────────────┸──────────────────┘ │ │\n");
    printf("   │ │      ┛                     │                                        │ │\n");
    printf("   │ └────────────────────────────┴────────────────────────────────────────┘ │\n");
 	//for(i=0; i<20; i++){
