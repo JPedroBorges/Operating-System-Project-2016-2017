@@ -122,17 +122,30 @@ int drop_counter(general *drop_num){
 		return count;
 }
 
-int number_counter(general *count_num){
+int number_counter(general *count_num, int state){
 
 		int count = 0;
 		general * aux_counter = &*count_num;
 
-				while (aux_counter != NULL){
-					if(aux_counter -> entrada != 0){
-					count++;
-				}
-					aux_counter = aux_counter -> next;
-				}
+		switch (state) {
+			case 1:
+						while (aux_counter != NULL){
+							if(aux_counter -> entrada != 0){
+							count++;
+						}
+							aux_counter = aux_counter -> next;
+						}
+						break;
+			case 2:
+						while (aux_counter != NULL){
+							if(aux_counter -> chegada != 0){
+							count++;
+						}
+							aux_counter = aux_counter -> next;
+						}
+						break;
+		}
+
 		return count;
 }
 
@@ -428,7 +441,6 @@ void save_info(int hour, int state, int client_id){
 }
 
 
-
 int write_log(int hour, int state, int client_id){
 	FILE *file_log = fopen("simulation.log", "a");
 	if(file_log == NULL){
@@ -594,7 +606,7 @@ void creat_graph(/*int aqua, int pool, int race, int race_status, int tobogan, i
 		 if(mister_cheat == 4){mister_cheat = 0;}else{
 	 mister_cheat++;}
  	 }
-	 //printf("%d", percent_aqua);
+
 	 printf("   │                             ┌──────────────────────────────────────────┐│\n ");
 	 printf("  │ ┌───────────────────────────┤             Real time events             ││\n");
 	 printf("   │ │        Aquapark     Pool  └┬────────────────────────────────────────┬┘│\n");
@@ -628,11 +640,11 @@ void creat_graph(/*int aqua, int pool, int race, int race_status, int tobogan, i
 	void creat_stats (int id, int chegada, int entrada, int saida, int desistencia, char a ){
 
 		printf("   │   ■─[ Clientes ]────────────────────────────────────────────────────┐   │\n");
-		printf("   │   │   Number of clients have been in Aquapark :               %s   │   │\n",three_digit_number(number_counter(&*inicio_aqua)));
-		printf("   │   │   Number of clients have been in Pool:                    %s   │   │\n",three_digit_number(number_counter(&*inicio_swim)));
-		printf("   │   │   Number of clients have been in Race :                   %s   │   │\n",three_digit_number(number_counter(&*inicio_race)));
-		printf("   │   │   Number of clients have been in Tobogan :                %s   │   │\n",three_digit_number(number_counter(&*inicio_tobo)));
-		printf("   │   │   Number of clients have been in Sunbath :                %s   │   │\n",three_digit_number(number_counter(&*inicio_sunb)));
+		printf("   │   │   Number of clients have been in Aquapark :               %s   │   │\n",three_digit_number(number_counter(&*inicio_aqua,1)));
+		printf("   │   │   Number of clients have been in Pool:                    %s   │   │\n",three_digit_number(number_counter(&*inicio_swim,1)));
+		printf("   │   │   Number of clients have been in Race :                   %s   │   │\n",three_digit_number(number_counter(&*inicio_race,1)));
+		printf("   │   │   Number of clients have been in Tobogan :                %s   │   │\n",three_digit_number(number_counter(&*inicio_tobo,2)));
+		printf("   │   │   Number of clients have been in Sunbath :                %s   │   │\n",three_digit_number(number_counter(&*inicio_sunb,1)));
 		printf("   │   │   number of VIP clients have been in pool :               %s ┌─┤   │\n",three_digit_number(0));
 	  printf("   │   └───────────────────────────────────────────────────────────────┴─┘   │\n");
 	  printf("   │                                                                         │\n");
