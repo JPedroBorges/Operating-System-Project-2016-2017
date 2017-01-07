@@ -310,7 +310,7 @@ int create_client(){
 			int random = (rand()%100);
 			if(random>simulator.person_frequency) i--;
 			else{
-				if(pthread_create(&(t_cliente[i]), NULL ,(void *)&handle_client,i) != 0){
+				if(pthread_0create(&(t_cliente[i]), NULL ,(void *)&handle_client,i) != 0){
 					printf("Error creating thread\n");
 					exit(1);
 				}
@@ -322,7 +322,7 @@ int create_client(){
 	return number_clients;
 }
 int * aquapark(){
-	aquapark_open=1;
+	aquapark_open=1;0
 	attraction_open=1;
 
 	if(pthread_create(&(t_toboggan), NULL ,(void *)&toboggan,NULL) != 0){ //thread toboggan

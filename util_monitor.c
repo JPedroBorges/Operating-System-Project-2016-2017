@@ -383,6 +383,7 @@ void save_info(int hour, int state, int client_id){
 		case 33:
 					pthread_mutex_lock(&t_teste);
 					drop_activity(hour, client_id, &*inicio_tobo);
+					counter.tobogan--;
 					pthread_mutex_unlock(&t_teste);
 					break;
 		case 4:
