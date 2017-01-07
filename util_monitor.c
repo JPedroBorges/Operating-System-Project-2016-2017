@@ -122,17 +122,30 @@ int drop_counter(general *drop_num){
 		return count;
 }
 
-int number_counter(general *count_num){
+int number_counter(general *count_num, int state){
 
 		int count = 0;
 		general * aux_counter = &*count_num;
 
-				while (aux_counter != NULL){
-					if(aux_counter -> entrada != 0){
-					count++;
-				}
-					aux_counter = aux_counter -> next;
-				}
+		switch (state) {
+			case 1:
+						while (aux_counter != NULL){
+							if(aux_counter -> entrada != 0){
+							count++;
+						}
+							aux_counter = aux_counter -> next;
+						}
+						break;
+			case 2:
+						while (aux_counter != NULL){
+							if(aux_counter -> chegada != 0){
+							count++;
+						}
+							aux_counter = aux_counter -> next;
+						}
+						break;
+		}
+
 		return count;
 }
 
@@ -349,11 +362,7 @@ void save_info(int hour, int state, int client_id){
 		case 3:
 					pthread_mutex_lock(&t_teste);
 					insert_struct(&str_tobogan, hour, client_id, &*inicio_tobo,3);
-					if(counter.tobogan == 2){
-						counter.tobogan = 0;
-					}else{
 						counter.tobogan++;
-					}
 					pthread_mutex_unlock(&t_teste);
 					break;
 		case 13:
@@ -365,11 +374,13 @@ void save_info(int hour, int state, int client_id){
 		case 23:
 					pthread_mutex_lock(&t_teste);
 					out_activity(hour, client_id, &*inicio_tobo);
+					counter.tobogan--;
 					pthread_mutex_unlock(&t_teste);
 					break;
 		case 33:
 					pthread_mutex_lock(&t_teste);
 					drop_activity(hour, client_id, &*inicio_tobo);
+					counter.tobogan--;
 					pthread_mutex_unlock(&t_teste);
 					break;
 		case 4:
@@ -426,7 +437,6 @@ void save_info(int hour, int state, int client_id){
 		break;
 	}
 }
-
 
 
 int write_log(int hour, int state, int client_id){
@@ -552,10 +562,10 @@ void write_decoder(int hour, int state, int client_id) {
 		case 34: printf("   │  [%s] ❌ Client",make_hours(hour)); printf(" %s gave up on Race, was waiting for too long         │\n", three_digit_number(client_id)); break;
 		case 35: printf("   │  [%s] ❌ Client",make_hours(hour)); printf(" %s gave up on Sunbath, was waiting for too long      │\n", three_digit_number(client_id)); break;
 
-		case 43: printf("   |  [%s] ➤ Toboggan wooooooo.                                         |\n", make_hours(hour)); break;
-		case 44: printf("   |  [%s] ➤ Race wooooooo.                                          |\n", make_hours(hour)); break;
-		case 53: printf("   |  [%s] ➤ Toboggan trip is over.                                    |\n", make_hours(hour)); break;
-		case 54: printf("   |  [%s] ➤ Race trip is over.                                         |\n", make_hours(hour)); break;
+		case 43: printf("   |  [%s] ➤ Toboggan wooooooo.                                          |\n", make_hours(hour)); break;
+		case 44: printf("   |  [%s] ➤ Race wooooooo.                                              |\n", make_hours(hour)); break;
+		case 53: printf("   |  [%s] ➤ Toboggan trip is over.                                      |\n", make_hours(hour)); break;
+		case 54: printf("   |  [%s] ➤ Race trip is over.                                          |\n", make_hours(hour)); break;
 
 		case 100: printf("   │  [%s] ⛬ Simulation started.                                          │\n", make_hours(hour)); break;
 		case 101: printf("   │  [%s] ⛬ Simulation is over.                                          │\n", make_hours(hour)); break;
@@ -569,7 +579,7 @@ void fill_empty(int qto){
 }
 void print_header(int tab, int hour){
 	// cria cabeçalho
-	printf("   ┌─────────────────────────────────────────────────────────────────────────┐\n   │                      Sistemas Operativos 2015/2016                      │\n   └─────────────────────────────────────────────────────────────────────────┘\n ┌────────────────┌────────────────────────────────────────────────────────────┐\n");
+	printf("   ┌─────────────────────────────────────────────────────────────────────────┐\n   │                      Sistemas Operativos 2016/2017                      │\n   └─────────────────────────────────────────────────────────────────────────┘\n ┌────────────────┌────────────────────────────────────────────────────────────┐\n");
 	switch(tab){
 		case 1: printf(" │      Log       │  ■ 1- Log  ■ 2- Statistics  ■ 3- Graph    ■ 4- About       │\n"); break;
 		case 2: printf(" │   Statistics   │  ■ 1- Log  ■ 2- Statistics  ■ 3- Graph    ■ 4- About       │\n"); break;
@@ -594,7 +604,7 @@ void creat_graph(/*int aqua, int pool, int race, int race_status, int tobogan, i
 		 if(mister_cheat == 4){mister_cheat = 0;}else{
 	 mister_cheat++;}
  	 }
-	 //printf("%d", percent_aqua);
+
 	 printf("   │                             ┌──────────────────────────────────────────┐│\n ");
 	 printf("  │ ┌───────────────────────────┤             Real time events             ││\n");
 	 printf("   │ │        Aquapark     Pool  └┬────────────────────────────────────────┬┘│\n");
@@ -613,11 +623,11 @@ void creat_graph(/*int aqua, int pool, int race, int race_status, int tobogan, i
    printf("   │ │      ┃    "); if(percent_aqua >= 9){printf("██");percent_aqua--;}else{printf("  ");} printf("         ");if(percent_pool >= 9){printf("██");percent_pool--;}else{printf("  ");} printf("    ├────────────────────────────────────────┤ │\n");
    printf("   │ │ 40 % ┫    "); if(percent_aqua >= 8){printf("██");percent_aqua--;}else{printf("  ");} printf("         ");if(percent_pool >= 8){printf("██");percent_pool--;}else{printf("  ");} printf("    │                Tobogan                 │ │\n");
    printf("   │ │      ┃    "); if(percent_aqua >= 7){printf("██");percent_aqua--;}else{printf("  ");} printf("         ");if(percent_pool >= 7){printf("██");percent_pool--;}else{printf("  ");} printf("    │ ┌────────────────────────────────────┐ │ │\n");
-   printf("   │ │ 30 % ┫    "); if(percent_aqua >= 6){printf("██");percent_aqua--;}else{printf("  ");} printf("         ");if(percent_pool >= 6){printf("██");percent_pool--;}else{printf("  ");} printf("    │ │              ");if(tobogan == 2){printf("On going");}else{printf(" Waiting");} printf("              │ │ │\n");
+   printf("   │ │ 30 % ┫    "); if(percent_aqua >= 6){printf("██");percent_aqua--;}else{printf("  ");} printf("         ");if(percent_pool >= 6){printf("██");percent_pool--;}else{printf("  ");} printf("    │ │              ");if(tobogan >= 2){printf("On going");}else{printf(" Waiting");} printf("              │ │ │\n");
    printf("   │ │      ┃    "); if(percent_aqua >= 5){printf("██");percent_aqua--;}else{printf("  ");} printf("         ");if(percent_pool >= 5){printf("██");percent_pool--;}else{printf("  ");} printf("    │ ├─────────────────┰──────────────────┤ │ │\n");
-   printf("   │ │ 20 % ┫    "); if(percent_aqua >= 4){printf("██");percent_aqua--;}else{printf("  ");} printf("         ");if(percent_pool >= 4){printf("██");percent_pool--;}else{printf("  ");} printf("    │ │        "); if(tobogan==2){printf("0");}else{printf(" ");}printf("        ╏         ");if(tobogan>=1){printf("0");}else{printf(" ");} printf("        │ │ │\n");
-   printf("   │ │      ┃    "); if(percent_aqua >= 3){printf("██");percent_aqua--;}else{printf("  ");} printf("         ");if(percent_pool >= 3){printf("██");percent_pool--;}else{printf("  ");} printf("    │ │       "); if(tobogan==2){printf("/█\\");}else{printf("   ");}printf("       ╏        ");if(tobogan>=1){printf("/█\\");}else{printf("   ");} printf("       │ │ │\n");
-   printf("   │ │ 10 % ┫    "); if(percent_aqua >= 2){printf("██");percent_aqua--;}else{printf("  ");} printf("         ");if(percent_pool >= 2){printf("██");percent_pool--;}else{printf("  ");} printf("    │ │       "); if(tobogan==2){printf(".Π.");}else{printf("   ");}printf("       ╏        "); if(tobogan>=1){printf(".Π.");}else{printf("   ");} printf("       │ │ │\n");
+   printf("   │ │ 20 % ┫    "); if(percent_aqua >= 4){printf("██");percent_aqua--;}else{printf("  ");} printf("         ");if(percent_pool >= 4){printf("██");percent_pool--;}else{printf("  ");} printf("    │ │        "); if(tobogan>=2){printf("0");}else{printf(" ");}printf("        ╏         ");if(tobogan>=1){printf("0");}else{printf(" ");} printf("        │ │ │\n");
+   printf("   │ │      ┃    "); if(percent_aqua >= 3){printf("██");percent_aqua--;}else{printf("  ");} printf("         ");if(percent_pool >= 3){printf("██");percent_pool--;}else{printf("  ");} printf("    │ │       "); if(tobogan>=2){printf("/█\\");}else{printf("   ");}printf("       ╏        ");if(tobogan>=1){printf("/█\\");}else{printf("   ");} printf("       │ │ │\n");
+   printf("   │ │ 10 % ┫    "); if(percent_aqua >= 2){printf("██");percent_aqua--;}else{printf("  ");} printf("         ");if(percent_pool >= 2){printf("██");percent_pool--;}else{printf("  ");} printf("    │ │       "); if(tobogan>=2){printf(".Π.");}else{printf("   ");}printf("       ╏        "); if(tobogan>=1){printf(".Π.");}else{printf("   ");} printf("       │ │ │\n");
    printf("   │ │      ┃    "); if(percent_aqua >= 1){printf("██");percent_aqua--;}else{printf("  ");} printf("         ");if(percent_pool >= 1){printf("██");percent_pool--;}else{printf("  ");} printf("    │ └─────────────────┸──────────────────┘ │ │\n");
    printf("   │ │      ┛                     │                                        │ │\n");
    printf("   │ └────────────────────────────┴────────────────────────────────────────┘ │\n");
@@ -628,11 +638,11 @@ void creat_graph(/*int aqua, int pool, int race, int race_status, int tobogan, i
 	void creat_stats (int id, int chegada, int entrada, int saida, int desistencia, char a ){
 
 		printf("   │   ■─[ Clientes ]────────────────────────────────────────────────────┐   │\n");
-		printf("   │   │   Number of clients have been in Aquapark :               %s   │   │\n",three_digit_number(number_counter(&*inicio_aqua)));
-		printf("   │   │   Number of clients have been in Pool:                    %s   │   │\n",three_digit_number(number_counter(&*inicio_swim)));
-		printf("   │   │   Number of clients have been in Race :                   %s   │   │\n",three_digit_number(number_counter(&*inicio_race)));
-		printf("   │   │   Number of clients have been in Tobogan :                %s   │   │\n",three_digit_number(number_counter(&*inicio_tobo)));
-		printf("   │   │   Number of clients have been in Sunbath :                %s   │   │\n",three_digit_number(number_counter(&*inicio_sunb)));
+		printf("   │   │   Number of clients have been in Aquapark :               %s   │   │\n",three_digit_number(number_counter(&*inicio_aqua,1)));
+		printf("   │   │   Number of clients have been in Pool:                    %s   │   │\n",three_digit_number(number_counter(&*inicio_swim,1)));
+		printf("   │   │   Number of clients have been in Race :                   %s   │   │\n",three_digit_number(number_counter(&*inicio_race,1)));
+		printf("   │   │   Number of clients have been in Tobogan :                %s   │   │\n",three_digit_number(number_counter(&*inicio_tobo,2)));
+		printf("   │   │   Number of clients have been in Sunbath :                %s   │   │\n",three_digit_number(number_counter(&*inicio_sunb,1)));
 		printf("   │   │   number of VIP clients have been in pool :               %s ┌─┤   │\n",three_digit_number(0));
 	  printf("   │   └───────────────────────────────────────────────────────────────┴─┘   │\n");
 	  printf("   │                                                                         │\n");
@@ -646,10 +656,10 @@ void creat_graph(/*int aqua, int pool, int race, int race_status, int tobogan, i
 	  printf("   │   └───────────────────────────────────────────────────────────────┴─┘   │\n");
 	  printf("   │                                                                         │\n");
 		printf("   │   ■─[ Tempos Medios ]───────────────────────────────────────────────┐   │\n");
-		printf("   │   │   Average time in queue to get in Aquapark :              %s   │   │\n",make_hours(calc_stat_average(&*inicio_aqua)));
-		printf("   │   │   Average time in queue to get in Pool :                  %s   │   │\n",make_hours(calc_stat_average(&*inicio_swim)));
-		printf("   │   │   Average time in queue to get in Race :                  %s   │   │\n",make_hours(calc_stat_average(&*inicio_race)));
-		printf("   │   │   Average time in queue to get in Tobogan :               %s   │   │\n",make_hours(calc_stat_average(&*inicio_tobo)));
+		printf("   │   │   Average time in queue to get in Aquapark :            %s   │   │\n",make_hours(calc_stat_average(&*inicio_aqua)));
+		printf("   │   │   Average time in queue to get in Pool :                %s   │   │\n",make_hours(calc_stat_average(&*inicio_swim)));
+		printf("   │   │   Average time in queue to get in Race :                %s   │   │\n",make_hours(calc_stat_average(&*inicio_race)));
+		printf("   │   │   Average time in queue to get in Tobogan :             %s   │   │\n",make_hours(calc_stat_average(&*inicio_tobo)));
 		printf("   │   │   Average time in queue to get in Sunbath :               %s ┌─┤   │\n",three_digit_number(0));
 
 		printf("   │   └───────────────────────────────────────────────────────────────┴─┘   │\n");
