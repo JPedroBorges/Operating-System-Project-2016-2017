@@ -71,7 +71,7 @@ void sunbath( int id){
 								usleep(150000);
 								pthread_mutex_unlock(&t_comunicate);
 
-								//printf("[%s] The client %d went to the sunbath.\n",make_hours(simulator.minute),id);
+
 								sleep(cliente[id].duration);
 								//sends the information that the client exited to the sunbath
 								pthread_mutex_lock(&t_comunicate);
@@ -143,13 +143,23 @@ void * toboggan(){              // leaves when 2 clients are ready for departure
 																}
 																pthread_mutex_unlock(&t_tobogan);
 
-																printf("[%s] The tobogan is departing!\n", make_hours(simulator.minute));
+																pthread_mutex_lock(&t_comunicate);
+																printf("[%s] The tobogan started.\n",make_hours(simulator.minute));
+																send_message(newsockfd,simulator.minute,43,1);
+																usleep(150000);
+																pthread_mutex_unlock(&t_comunicate);
 
 																sleep(4); // duration of the tobogan
 
 																for (i = 0; i < number_inside; ++i) {
 																								sem_post(&s_end_tobogan); //tells clients that where inside that it ended
 																}
+
+																pthread_mutex_lock(&t_comunicate);
+																printf("[%s] The tobogan ended.\n",make_hours(simulator.minute));
+																send_message(newsockfd,simulator.minute,53,1);
+																usleep(150000);
+																pthread_mutex_unlock(&t_comunicate);
 								}
 
 								for (i = 0; i <= clients_prio_tobogan; ++i) { // frees clients becous atraction has ended
@@ -176,7 +186,7 @@ void select_where_to_go(int id){
 								time_t t;
 								srand((unsigned) time(&t));
 								//gets a random time to go if its needed
-								cliente[id].duration = (rand() % 10) + 2;
+								cliente[id].duration = (rand() % 4) + 2;
 
 								//selects where to go
 								switch(cliente[id].current_place) {
@@ -211,14 +221,16 @@ void select_where_to_go(int id){
 																								sem_wait(&s_client_tobogan_no_prio);
 																}
 																if (simulator.max_waiting_time > (simulator.minute - cliente[id].arrival_time)) { // give up because of time
-																								//sem_wait(&s_mid_tobogan);
-																								pthread_mutex_lock(&t_comunicate);
-																								printf("[%s] The client %d is riding on the tobogan.\n",make_hours(simulator.minute),id);
-																								send_message(newsockfd,simulator.minute,13,id);
-																								usleep(150000);
-																								pthread_mutex_unlock(&t_comunicate);
+																								if (simulator.minute<=(simulator.end_time-30)) {
+																																pthread_mutex_lock(&t_comunicate);
+																																printf("[%s] The client %d is riding on the tobogan.\n",make_hours(simulator.minute),id);
+																																send_message(newsockfd,simulator.minute,13,id);
+																																usleep(150000);
+																																pthread_mutex_unlock(&t_comunicate);
 
-																								sem_wait(&s_end_tobogan);
+																																sem_wait(&s_end_tobogan);
+																								}
+
 																								pthread_mutex_lock(&t_comunicate);
 																								printf("[%s] The client %d  leaves the tobogan.\n",make_hours(simulator.minute),id);
 																								send_message(newsockfd,simulator.minute,23,id);
@@ -243,7 +255,6 @@ void select_where_to_go(int id){
 																break;
 								case 8:
 																break;
-								//printf("[%s] The client %d went out of the park.\n",make_hours(simulator.minute),id);break;
 								default: printf("Error selecting whero to go.\n"); break;
 								}
 
@@ -256,7 +267,9 @@ int * handle_client(int id){
 								srand((unsigned) time(&t));
 								// function that gets a diferant than the previous number
 								int getRandom(int max, int min){
+																//srand((unsigned) time(&t));
 																int myRandom = (rand() % max) + min;
+																//printf("random\n" );
 																if (cliente[id].current_place != myRandom) {
 																								return myRandom;
 																}
@@ -272,7 +285,7 @@ int * handle_client(int id){
 								pthread_mutex_unlock(&t_comunicate);
 
 
-								if(getRandom(100,0)<simulator.vip) {
+								if((rand() % 100)<simulator.vip) {
 																cliente[id].vip = 1;
 																printf(" and it is an VIP\n");
 								}else {
@@ -291,18 +304,16 @@ int * handle_client(int id){
 																								usleep(150000);
 																								pthread_mutex_unlock(&t_comunicate);
 																								// enters aquapark
-																								cliente[id].current_place= 7; // test
+																								cliente[id].current_place= 7; // sunbath
 
 
 
 																								for (; simulator.minute < simulator.end_time - 30; ) {
 																																if (cliente[id].current_place < 8) {
 																																								select_where_to_go(id);
-
 																																								cliente[id].current_place = getRandom(9,1);
-																																								//printf("current current_place %d\n",cliente[id].current_place);
 																																}else{
-																																								printf("[%s] The client %d wants to leave.\n",make_hours(simulator.minute),id);
+																																								//printf("[%s] The client %d wants to leave.\n",make_hours(simulator.minute),id);
 																																								break;
 																																}
 
@@ -322,15 +333,21 @@ int * handle_client(int id){
 																usleep(150000);
 																pthread_mutex_unlock(&t_comunicate);
 								}else{
+																pthread_mutex_lock(&t_comunicate);
 																printf("[%s] The client %d went home the Aquapark was closed.\n",make_hours(simulator.minute),id);
+																send_message(newsockfd,simulator.minute,21,id);
+																usleep(150000);
+																pthread_mutex_unlock(&t_comunicate);
 								}
 								return 0;
 }
 int create_client(){
 								int i,number_clients=0;
 								int finaltimeforarrival = simulator.end_time-30;
+								time_t t;
+								srand((unsigned) time(&t));
 
-								for(i=1; i<=100 /*simulator.max_population && simulator.minute < finaltimeforarrival*/; i++) {
+								for(i=1; i<=simulator.max_population && simulator.minute < finaltimeforarrival; i++) {
 
 																if(i<simulator.max_population) {
 																								int random = (rand()%100);
@@ -343,7 +360,7 @@ int create_client(){
 																																number_clients++;
 																								}
 																}else printf("[%s] There is no more people living in Madeira\n", make_hours(simulator.minute));
-																usleep(200000);
+																sleep(1);
 								}
 								return number_clients;
 }
@@ -391,9 +408,8 @@ int main(int argc, char **argv){
 
 								/****************************** Semaphores and mutex init ********************************/
 
-								sem_init(&s_aquapark,0,10);
-								sem_init(&s_pool,0,1);
-								sem_init(&s_tobogan,0,2);
+								sem_init(&s_aquapark,0,40);
+								sem_init(&s_pool,0,10);
 								sem_init(&s_end_tobogan,0,0);
 								sem_init(&s_client_tobogan,0,0);
 								sem_init(&s_client_tobogan_prio,0,0);
@@ -445,23 +461,19 @@ int main(int argc, char **argv){
 
 								//closes in the next departure
 								//pthread_join(t_race , NULL);
-								//pthread_join(t_toboggan , NULL);
+								pthread_join(t_toboggan , NULL);
 								//waits that all clients are over
 								int i;
 								for (i = 1; i < created_clients; ++i)
 								{
 																pthread_join(t_cliente[i], NULL); // falta ver isto
 								}
-								//pthread_join(t_cliente[] , NULL);  // falta ver isto
-								// closes aquapark
-								//pthread_join(t_sunbath , NULL);
-								//pthread_join(t_swimming_pool , NULL);
+
 								printf("[%s] The Aquapark is now closed!\n", make_hours(simulator.minute));
 
 								pthread_mutex_lock(&t_comunicate);
 								send_message(newsockfd,simulator.minute,101,-1);
 								pthread_mutex_unlock(&t_comunicate);
-
 
 								do {
 																n = read(newsockfd,buffer,255);
