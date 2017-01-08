@@ -91,7 +91,7 @@ void swimming_pool( int id){
 								//waits in the line
 								cliente[id].arrival_time = simulator.minute;
 								sem_wait(&s_pool);
-								if (simulator.max_waiting_time > (simulator.minute - cliente[id].arrival_time)) { // give up because of time
+								if (simulator.max_waiting_time > (simulator.minute - cliente[id].arrival_time) && simulator.minute<=(simulator.end_time-30)) { // give up because of time
 																//sends the information that the client entered to the swiming pool
 																pthread_mutex_lock(&t_comunicate);
 																printf("[%s] The client %d went to the swiming pool.\n",make_hours(simulator.minute),id);
@@ -99,7 +99,7 @@ void swimming_pool( int id){
 																usleep(150000);
 																pthread_mutex_unlock(&t_comunicate);
 
-																sleep(cliente[id].duration);
+																sleep(30);
 																//sends the information that the client exited to the swiming pool
 																pthread_mutex_lock(&t_comunicate);
 																printf("[%s] The client %d went out of the swiming pool.\n",make_hours(simulator.minute),id);
@@ -192,14 +192,14 @@ void select_where_to_go(int id){
 								time_t t;
 								srand((unsigned) time(&t));
 								//gets a random time to go if its needed
-								cliente[id].duration = (rand() % 4) + 2;
+								cliente[id].duration = (rand() % 8) + 2; // tempo de duração dentro das atividades
 
 								//selects where to go
 								switch(cliente[id].current_place) {
 								case 0:
 								case 1:
-																swimming_pool(id);
-																break;
+								sunbath(id);
+								break;
 								case 2:
 								case 3:
 																cliente[id].arrival_time = simulator.minute;
@@ -249,15 +249,16 @@ void select_where_to_go(int id){
 																								pthread_mutex_unlock(&t_comunicate);
 																}
 																break;
-								case 4:
+								case 4:;
 								case 5:
 																//printf("[%s] The client %d went to the race tobogan.\n",make_hours(simulator.minute),id);
 																//sleep(2);
 																break;
 								case 6:
 								case 7:
-																sunbath(id);
-																break;
+								swimming_pool(id);
+								break;
+
 								case 8:
 																break;
 								default: printf("Error selecting whero to go.\n"); break;
@@ -309,7 +310,7 @@ int * handle_client(int id){
 																								usleep(150000);
 																								pthread_mutex_unlock(&t_comunicate);
 																								// enters aquapark
-																								cliente[id].current_place= 7; // sunbath
+																								cliente[id].current_place = 0; // sunbath
 
 
 
@@ -401,8 +402,8 @@ int main(int argc, char **argv){
 
 								/****************************** Semaphores and mutex init ********************************/
 
-								sem_init(&s_aquapark,0,20);
-								sem_init(&s_pool,0,5);
+								sem_init(&s_aquapark,0,simulator.capacity);
+								sem_init(&s_pool,0,15);
 								sem_init(&s_end_tobogan,0,0);
 								sem_init(&s_client_tobogan,0,0);
 								sem_init(&s_client_tobogan_prio,0,0);

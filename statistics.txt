@@ -1,26 +1,26 @@
 ---------------------------Simulation statistics--------------------------
 Clientes:
-	Total clients on AquaPark : 33
-	Total clients on swimming pool : 7
-	Total clients on Toboggan : 16
+	Total clients on AquaPark : 182
+	Total clients on swimming pool : 84
+	Total clients on Toboggan : 115
 	Total clients on Race : 0
-	Total clients on Sunbath : 36
+	Total clients on Sunbath : 227
 Drops:
-	Total drops on queue : 11
-	Drops on AquaPark : 3
+	Total drops on queue : 95
+	Drops on AquaPark : 1
 	Drops on swimming pool : 0
-	Drops on Toboggan : 8
+	Drops on Toboggan : 94
 	Drops on Race : 0
 Average time:
-	Average time on AquaPark : 00:38
-	Average time on swimming pool : 00:16
-	Average time on Toboggan : 00:13
+	Average time on AquaPark : 02:55
+	Average time on swimming pool : 01:22
+	Average time on Toboggan : 00:11
 	Average time on Race : 00:00
 Max time:
-	Max time on AquaPark : 01:48
-	Max time on swimming pool : 00:23
-	Max time on Toboggan : 00:23
+	Max time on AquaPark : 10:46
+	Max time on swimming pool : 01:42
+	Max time on Toboggan : 00:19
 	Max time on Race : 00:00
-	Max time on Sunbath : 00:27
+	Max time on Sunbath : 01:12
 
 --------------------------------------------------------------------------

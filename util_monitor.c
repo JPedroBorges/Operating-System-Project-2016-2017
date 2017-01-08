@@ -43,22 +43,7 @@ general *inicio_sunb = NULL;
 pthread_mutex_t t_teste;
 
 int atraction = 1;
-//-----------------------------TESTES-------------------------------------------
-char name[10];
-int teste;
-int hora_chegada;
-int hora_entrada;
-int hora_saida;
-int hora_desistencia;
-int chega_a;
-int entra_a;
-float total_a;
-int chega_s;
-int entra_s;
-float total_s;
 int mister_cheat =0;
-
-//-----------------------------TESTES-------------------------------------------
 
 
 int max_person_aqua = 100;
@@ -103,7 +88,7 @@ int current_number(general *c){
 	general *current = &*c;
 	int counte = 0;
 		while(current != NULL){
-			if(current -> saida == 0){
+			if(current -> saida == 0 && current -> entrada != 0){
 			counte++;}
 			current = current -> next;
 		}
@@ -146,14 +131,6 @@ void drop_activity(int hour, int client_id, general *c){
 		while (drop_act != NULL){
 			if(drop_act -> ID == client_id){
 				drop_act -> desistencia = hour;
-
-				name[10] = drop_act -> nome[5];
-				teste = drop_act -> ID;
-				hora_chegada = drop_act -> chegada;
-				hora_entrada = drop_act -> entrada;
-				hora_saida = drop_act -> saida;
-				hora_desistencia = drop_act -> desistencia;
-
 			}
 			drop_act = drop_act -> next;
 		}
@@ -203,11 +180,13 @@ int number_counter(general *count_num, int state){
 
 
 int calc_stat_average(general *a){
-int ola_aqua = 1;
+int ola_aqua = 0;
 float dif_aqua = 0;
 int total_a = 0;
 int total_aqua = 0;
 int final_aqua = 0;
+int chega_a = 0;
+int entra_a = 0;
 		general *aux2 = &*a;
 
 				while (aux2 != NULL){
@@ -241,18 +220,11 @@ void insert_struct(struct general *a, int hour, int client_id, general *estr, in
 			a->desistencia = 0;
 			a->next = NULL;
 
-			teste = a -> ID;
-			hora_chegada = a -> chegada;
-			hora_entrada = a -> entrada;
-			hora_saida = a -> saida;
-			hora_desistencia = a -> desistencia;
-
 
 					switch (estado) {
 
 						case 1:
 						a->nome[5] = 'A';
-						name[10] = a -> nome[5];
 						if( ola1 == NULL){
 						inicio_aqua = a;
 						ola1 = a;
@@ -265,7 +237,7 @@ void insert_struct(struct general *a, int hour, int client_id, general *estr, in
 						break;
 						case 2:
 						a->nome[5] = 'S';
-						name[10] = a -> nome[5];
+
 						if( ola1 == NULL){
 						inicio_swim = a;
 						ola1 = a;
@@ -278,7 +250,7 @@ void insert_struct(struct general *a, int hour, int client_id, general *estr, in
 						break;
 						case 3:
 						a->nome[5] = 'T';
-						name[10] = a -> nome[5];
+
 						if( ola1 == NULL){
 						inicio_tobo = a;
 						ola1 = a;
@@ -291,7 +263,7 @@ void insert_struct(struct general *a, int hour, int client_id, general *estr, in
 						break;
 						case 4:
 						a->nome[5] = 'R';
-						name[10] = a -> nome[5];
+
 						if( ola1 == NULL){
 						inicio_race = a;
 						ola1 = a;
@@ -304,7 +276,7 @@ void insert_struct(struct general *a, int hour, int client_id, general *estr, in
 						break;
 						case 5:
 						a->nome[5] = 'B';
-						name[10] = a -> nome[5];
+
 						if( ola1 == NULL){
 						inicio_sunb = a;
 						ola1 = a;
@@ -332,13 +304,6 @@ general *aux1 = &*estr;
 		if(aux1 -> ID == client_id && aux1 -> saida == 0){
 			aux1 -> saida = hour;
 
-			name[10] = aux1 -> nome[5];
-			teste = aux1 -> ID;
-			hora_chegada = aux1 -> chegada;
-			hora_entrada = aux1 -> entrada;
-			hora_saida = aux1 -> saida;
-			hora_desistencia = aux1 -> desistencia;
-
 		}
 		aux1 = aux1 -> next;
 	}
@@ -352,13 +317,6 @@ general *aux1 = &*estr;
 
 		if(aux1 -> ID == client_id && aux1 -> entrada == 0){
 			aux1 -> entrada = hour;
-
-			teste = aux1 -> ID;
-			hora_chegada = aux1 -> chegada;
-			hora_entrada = aux1 -> entrada;
-			hora_saida = aux1 -> saida;
-			hora_desistencia = aux1 -> desistencia;
-
 		}
 		aux1 = aux1 -> next;
 	}
@@ -641,10 +599,10 @@ void print_header(int tab, int hour){
 
 void creat_graph(/*int aqua, int pool, int race, int race_status, int tobogan, int tobogan_status*/){
 
-	 float percent_aqua = (current_number(&*inicio_aqua)*0.05)*20;
-	 float percent_pool = (current_number(&*inicio_swim)*0.2)*20;
+	 float percent_aqua = (current_number(&*inicio_aqua)*0.0033333)*20;
+	 float percent_pool = (current_number(&*inicio_swim)*0.1)*20;
 	 int tobogan = counter.tobogan;
-	 int tobo = counter.tobo;
+
 	 int cheat1 = random()%100;
 		if(atraction == 1){
 					if(cheat1 < 1){
@@ -686,7 +644,7 @@ void creat_graph(/*int aqua, int pool, int race, int race_status, int tobogan, i
 
 	}
 
-	void creat_stats (int id, int chegada, int entrada, int saida, int desistencia, char a ){
+	void creat_stats (){
 
 		printf("   │   ■─[ Clientes ]────────────────────────────────────────────────────┐   │\n");
 		printf("   │   │   Number of clients have been in Aquapark :               %s   │   │\n",three_digit_number(number_counter(&*inicio_aqua,1)));
@@ -729,7 +687,7 @@ void print_body(int tab){
 			for(i=0; i<24;i++) write_decoder(real_time_log[i][0], real_time_log[i][1], real_time_log[i][2]);
 			fill_empty(1);
 			break;
-		case 2: creat_stats(teste, hora_chegada, hora_entrada, hora_saida, hora_desistencia, name[10]); break;
+		case 2: creat_stats(); break;
 		case 3: creat_graph(); break;
 		case 4:
 			printf("   │                                                                         │\n   │   ■─[ Joao Borges ]─────────────────────────────────────────────────┐   │\n   │   │                                                                 │   │\n   │   │   2016311                                                     ┌─┤   │\n   │   └───────────────────────────────────────────────────────────────┴─┘   │\n   │                                                                         │\n   │   ■─[ Nuno Rodrigues ]──────────────────────────────────────────────┐   │\n   │   │                                                                 │   │\n   │   │   2044009                                                     ┌─┤   │\n   │   └───────────────────────────────────────────────────────────────┴─┘   │\n   │                                                                         │\n   │   ■─[ Vitor Paixao ]────────────────────────────────────────────────┐   │\n   │   │                                                                 │   │\n   │   │   2023212                                                     ┌─┤   │\n   │   └───────────────────────────────────────────────────────────────┴─┘   │\n");
