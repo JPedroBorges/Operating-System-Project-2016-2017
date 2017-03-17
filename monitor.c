@@ -16,7 +16,10 @@ int static tab=0;
 int static hour=0;
 int static monitor_on=0;
 int static end_monitor = 1;
-int ola = 0;
+int ola = 0;.
+
+
+
 
 int * print_screen(){
 								while (end_monitor) {
