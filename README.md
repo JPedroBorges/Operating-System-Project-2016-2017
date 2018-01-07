@@ -1,6 +1,6 @@
-Grade we got 18 points (in a scale of 20).
+We got 18 points (in a scale of 20).
 
-best project in the year.
+Best project in the year.
 
 Project graded by Dr. Eduardo Marques @ University of Madeira.
 
