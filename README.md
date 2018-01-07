@@ -1,9 +1,3 @@
-We got 18 points (in a scale of 20).
-
-Best project in the year.
-
-Project graded by Dr. Eduardo Marques @ University of Madeira.
-
 # ProjectoSO2016-2017
 
 ## 1 Objetivos
@@ -62,3 +56,6 @@ Os dados sobre os acontecimentos da simulação poderão ter o seguinte formato:
 
 onde o ’Acontecimento’3 pode ser, por exemplo, um dos seguintes: criação do utilizador,
 chegada ao recursos, passagem em filas, entrada e saída dos recursos e desistência.
+
+
+Project graded by Dr. Eduardo Marques @ University of Madeira.
